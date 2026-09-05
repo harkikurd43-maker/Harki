@@ -41,7 +41,7 @@
             --input-bg: #f8fafc;
             --input-border: #cbd5e1;
             --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            --app-main-font: 'Noto Kufi Arabic', sans-serif;
+            --app-main-font: 'IBM Plex Sans Arabic', sans-serif;
             --num-font: 'Chakra Petch', 'Orbitron', monospace;
             --app-font-scale: 100%;
         }
@@ -1704,10 +1704,6 @@
                 <div class="result-item"><span>ڕیاڵی سعوودی</span><span id="res-SAR" class="badge-val">0</span></div>
                 <div class="result-item"><span>درهەمی ئیماراتی</span><span id="res-AED" class="badge-val">0</span></div>
             </div>
-
-            <button class="btn-calc-launcher fire-glow-card" onclick="document.getElementById('myCalc').style.display='flex'">
-                <i class="fa-solid fa-calculator" style="color:#059669; font-size:18px;"></i> <span>🧮 کردنەوەی حاسیبەی پێشکەوتووی Canon</span>
-            </button>
         </div>
     </div>
 
@@ -2920,8 +2916,8 @@
         <div style="font-size:0.78rem; font-weight:bold; margin-bottom:4px; color:var(--text-main);"><i class="fa-solid fa-font" style="color:var(--theme-color);"></i> هەڵبژاردنی فۆنت (کوردی و عەرەبی):</div>
         
         <div class="fonts-selector-grid">
-            <button class="btn-font-choice active" onclick="applyAppFont('Noto Kufi Arabic', this)">
-                <span style="font-family:'Noto Kufi Arabic'; font-size:0.85rem;">نۆتۆ کوفی (Noto Kufi)</span>
+            <button class="btn-font-choice" onclick="applyAppFont('IBM Plex Sans Arabic', this)">
+                <span style="font-family:'IBM Plex Sans Arabic'; font-size:0.85rem;">ئای بی ئێم (IBM Plex)</span>
             </button>
             <button class="btn-font-choice" onclick="applyAppFont('Vazirmatn', this)">
                 <span style="font-family:'Vazirmatn'; font-size:0.85rem;">وەزیرمەتن (Vazirmatn)</span>
@@ -2959,43 +2955,6 @@
         </div>
 
         <button class="btn-action-primary" onclick="closeSettingsModal()" style="margin-top:10px;"><i class="fa-solid fa-check"></i> جێبەجێکردن و داخران</button>
-    </div>
-</div>
-
-<!-- حاسیبەی Canon -->
-<div id="myCalc" class="calc-modal">
-    <div class="calc-wrapper fire-glow-card">
-        <div class="calc-brand-row">
-            <span class="calc-brand-name">Canon</span>
-            <button onclick="document.getElementById('myCalc').style.display='none'" style="border:none; background:none; color:var(--text-muted); font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="calc-display-area">
-            <div class="calc-kurdish-text" id="calcKurdText">سفر</div>
-            <input type="text" class="calc-screen" id="calcScreen" value="0" readonly>
-        </div>
-        <div class="calc-grid">
-            <button class="btn-calc btn-canon-orange" onclick="clearScreen()">CA</button>
-            <button class="btn-calc btn-canon-orange" onclick="pressDel()">⌫</button>
-            <button class="btn-calc btn-canon-orange" onclick="press('%')">%</button>
-            <button class="btn-calc btn-canon-orange" onclick="press('/')">÷</button>
-            <button class="btn-calc btn-canon-gray" onclick="press('7')">7</button>
-            <button class="btn-calc btn-canon-gray" onclick="press('8')">8</button>
-            <button class="btn-calc btn-canon-gray" onclick="press('9')">9</button>
-            <button class="btn-calc btn-canon-orange" onclick="press('*')">×</button>
-            <button class="btn-calc btn-canon-gray" onclick="press('4')">4</button>
-            <button class="btn-calc btn-canon-gray" onclick="press('5')">5</button>
-            <button class="btn-calc btn-canon-gray" onclick="press('6')">6</button>
-            <button class="btn-calc btn-canon-orange" onclick="press('-')">−</button>
-            <button class="btn-calc btn-canon-gray" onclick="press('1')">1</button>
-            <button class="btn-calc btn-canon-gray" onclick="press('2')">2</button>
-            <button class="btn-calc btn-canon-gray" onclick="press('3')">3</button>
-            <button class="btn-calc btn-canon-orange" onclick="press('+')">+</button>
-            <button class="btn-calc btn-canon-red" onclick="document.getElementById('myCalc').style.display='none'">✕</button>
-            <button class="btn-calc btn-canon-gray" onclick="press('0')">0</button>
-            <button class="btn-calc btn-canon-gray" onclick="press('00')">00</button>
-            <button class="btn-calc btn-canon-gray" onclick="press('.')">.</button>
-            <button class="btn-calc btn-canon-orange" style="grid-column: span 4; background:#059669; font-size:1.2rem;" onclick="calcResult()">=</button>
-        </div>
     </div>
 </div>
 
@@ -5638,136 +5597,17 @@ function updateTopNotifBadge() {
         });
     }
 
-/* =========================================================
-       سیستەمی حاسیبەی Canon (دەستبەجێ و بێ هەڵە)
-    ========================================================= */
-    let calcExpression = "0";
-
-    function updateCalcDisplay() {
-        const screen = document.getElementById('calcScreen');
-        const kurdText = document.getElementById('calcKurdText');
-        if (screen) screen.value = toEn(calcExpression);
-        if (kurdText) {
-            try {
-                // خوێندنەوەی ژمارەی ئەنجام بە کوردی
-                const num = eval(calcExpression.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-'));
-                kurdText.innerText = isFinite(num) ? numberToKurdishWords(Math.floor(num)) : "ژمارە نادیارە";
-            } catch(e) {
-                kurdText.innerText = "سفر";
-            }
-        }
-    }
-
-    function press(char) {
-        if (calcExpression === "0" && !isNaN(char)) {
-            calcExpression = char;
-        } else {
-            calcExpression += char;
-        }
-        updateCalcDisplay();
-    }
-
-    function clearScreen() {
-        calcExpression = "0";
-        updateCalcDisplay();
-        const kurdText = document.getElementById('calcKurdText');
-        if (kurdText) kurdText.innerText = "سفر";
-    }
-
-    function pressDel() {
-        if (calcExpression.length > 1) {
-            calcExpression = calcExpression.slice(0, -1);
-        } else {
-            calcExpression = "0";
-        }
-        updateCalcDisplay();
-    }
-
-    function calcResult() {
-        try {
-            let expr = calcExpression.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-').replace(/%/g, '/100');
-            let res = Function('"use strict";return (' + expr + ')')();
-            if (res !== undefined && !isNaN(res)) {
-                calcExpression = String(res);
-                updateCalcDisplay();
-            }
-        } catch (e) {
-            const screen = document.getElementById('calcScreen');
-            if (screen) screen.value = "Error";
-            calcExpression = "0";
-        }
-    }
-
-    // گۆڕینی ژمارەکان بۆ ووشەی کوردی لە سەر شاشەی حاسیبەکە
-    function numberToKurdishWords(num) {
-        if (num === 0) return "سفر";
-        if (num < 0) return "سالب " + numberToKurdishWords(Math.abs(num));
-
-        const ones = ["", "یەک", "دوو", "سێ", "چوار", "پێنج", "شەش", "حەوت", "هەشت", "نۆ"];
-        const teens = ["دە", "یازدە", "دوازدە", "سێزدە", "چواردە", "پازدە", "شازدە", "حەڤدە", "هەژدە", "نۆزدە"];
-        const tens = ["", "", "بیست", "سی", "چل", "پەنجا", "شەست", "حەفتا", "هەشتا", "نەوەد"];
-        const hundreds = ["", "سەد", "دووسەد", "سێسەد", "چوارسەد", "پێنجسەد", "شەشسەد", "حەوتسەد", "هەشتسەد", "نۆسەد"];
-
-        function convertThreeDigits(n) {
-            let str = "";
-            const h = Math.floor(n / 100);
-            const remainder = n % 100;
-            const t = Math.floor(remainder / 10);
-            const o = remainder % 10;
-
-            if (h > 0) {
-                str += hundreds[h];
-                if (remainder > 0) str += " و ";
-            }
-            if (remainder > 0) {
-                if (remainder < 10) {
-                    str += ones[remainder];
-                } else if (remainder < 20) {
-                    str += teens[remainder - 10];
-                } else {
-                    str += tens[t];
-                    if (o > 0) str += " و " + ones[o];
-                }
-            }
-            return str;
-        }
-
-        let words = "";
-        const billion = Math.floor(num / 1000000000);
-        let rem = num % 1000000000;
-        const million = Math.floor(rem / 1000000);
-        rem = rem % 1000000;
-        const thousand = Math.floor(rem / 1000);
-        const rest = rem % 1000;
-
-        if (billion > 0) {
-            words += (billion === 1 ? "یەک ملیار" : convertThreeDigits(billion) + " ملیار");
-            if (rem > 0) words += " و ";
-        }
-        if (million > 0) {
-            words += (million === 1 ? "یەک ملیۆن" : convertThreeDigits(million) + " ملیۆن");
-            if (thousand > 0 || rest > 0) words += " و ";
-        }
-        if (thousand > 0) {
-            words += (thousand === 1 ? "هەزار" : convertThreeDigits(thousand) + " هەزار");
-            if (rest > 0) words += " و ";
-        }
-        if (rest > 0) {
-            words += convertThreeDigits(rest);
-        }
-        return words;
-    }
-
     window.onload = function() {
-        const savedFont = localStorage.getItem('userSelectedFont');
-        if (savedFont) {
-            document.documentElement.style.setProperty('--app-main-font', `'${savedFont}', sans-serif`);
-            document.body.style.fontFamily = `'${savedFont}', sans-serif`;
-            document.querySelectorAll('.fonts-selector-grid .btn-font-choice').forEach(b => {
-                if (b.innerText.includes(savedFont)) b.classList.add('active');
-                else b.classList.remove('active');
-            });
-        }
+        const savedFont = localStorage.getItem('userSelectedFont') || 'IBM Plex Sans Arabic';
+        document.documentElement.style.setProperty('--app-main-font', `'${savedFont}', sans-serif`);
+        document.body.style.fontFamily = `'${savedFont}', sans-serif`;
+        document.querySelectorAll('.fonts-selector-grid .btn-font-choice').forEach(b => {
+            if (b.innerText.includes(savedFont) || (savedFont.includes('IBM') && b.innerText.includes('IBM'))) {
+                b.classList.add('active');
+            } else {
+                b.classList.remove('active');
+            }
+        });
 
         const savedScale = localStorage.getItem('userAppFontScale');
         if (savedScale) {
