@@ -13,6 +13,10 @@
     <meta name="theme-color" content="#090d16">
     <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/3/35/Flag_of_Kurdistan.svg">
     
+    <!-- کتێبخانەی یاری ئۆنلاین و دەنگ (PeerJS) -->
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
     <!-- ئایکۆنەکانی FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- نەخشەی پێشکەوتووی Leaflet -->
@@ -309,6 +313,63 @@
 .btn-maps-direct:active {
     transform: scale(0.97);
 }
+
+/* کاتژمێر و دوگمەکانی یاری داما */
+.top-header-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; }
+.tournament-clock-bar { display: flex; align-items: center; justify-content: center; gap: 12px; background: #14100d; border: 2px solid #381e0f; padding: 6px 12px; border-radius: 12px; flex: 1; }
+.digital-timer { display: flex; flex-direction: column; align-items: center; min-width: 65px; }
+.timer-val { font-family: 'Share Tech Mono', monospace; font-size: 20px; font-weight: 700; color: #71717a; background: #000; padding: 2px 8px; border-radius: 6px; border: 1px solid #27272a; }
+.digital-timer.active .timer-val { color: #22c55e; border-color: #22c55e; box-shadow: 0 0 10px rgba(34, 197, 94, 0.35); }
+.timer-lbl { font-size: 10px; font-weight: 700; margin-top: 2px; color: #a1a1aa; }
+.online-widget-bar { display: flex; align-items: center; gap: 6px; }
+.btn-icon-gold { background: linear-gradient(180deg, #5c3118 0%, #3a1c0d 100%); color: #fde68a; border: 1px solid #783d1c; padding: 7px 12px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.btn-mic { background: #27272a; color: #a1a1aa; border: 1px solid #3f3f46; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; }
+.btn-mic.active { background: #16a34a; color: #fff; border-color: #22c55e; box-shadow: 0 0 12px rgba(34, 197, 94, 0.6); }
+.btn-mic.muted { background: #dc2626; color: #fff; border-color: #ef4444; }
+
+/* تەختە و پیلەکان */
+.dama-tournament-frame { border-radius: 14px; padding: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
+.theme-walnut { background: #2b170c; border: 8px solid #422010; --cell-a: #dfba86; --cell-b: #cfa36b; --grid-border: #5a3017; }
+.theme-marble { background: #1c1917; border: 8px solid #d97706; --cell-a: #f5f5f4; --cell-b: #a8a29e; --grid-border: #78716c; }
+.theme-obsidian { background: #09090b; border: 8px solid #27272a; --cell-a: #3f3f46; --cell-b: #18181b; --grid-border: #52525b; }
+.theme-emerald { background: #064e3b; border: 8px solid #047857; --cell-a: #a7f3d0; --cell-b: #34d399; --grid-border: #065f46; }
+.theme-crimson { background: #450a0a; border: 8px solid #991b1b; --cell-a: #fecaca; --cell-b: #f87171; --grid-border: #7f1d1d; }
+
+.board-status-bar { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; background: rgba(0,0,0,0.5); border-radius: 6px; margin-bottom: 6px; }
+.board-status-bar.bottom { margin-bottom: 0; margin-top: 6px; }
+.dama-grid { display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); aspect-ratio: 1 / 1; width: 100%; border: 2px solid var(--grid-border); }
+.dama-cell { display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; border: 0.5px solid rgba(0,0,0,0.1); }
+.dama-cell:nth-child(even) { background: var(--cell-a); }
+.dama-cell:nth-child(odd) { background: var(--cell-b); }
+.dama-cell.selected { background: rgba(245, 158, 11, 0.65) !important; }
+.dama-cell.valid-dot::after { content: ''; width: 25%; height: 25%; border-radius: 50%; background: #22c55e; position: absolute; }
+.dama-cell.valid-capture-target { background: rgba(239, 68, 68, 0.55) !important; }
+
+.dama-piece { width: 84%; height: 84%; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; transition: transform 0.2s ease; }
+.pieces-concentric .dama-piece.white { background: radial-gradient(circle at 35% 30%, #fff, #d1d5db); border: 1.5px solid #d1d5db; box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
+.pieces-concentric .dama-piece.white .ring-1 { width: 75%; height: 75%; border-radius: 50%; border: 1.5px solid #b0b5bd; display: flex; align-items: center; justify-content: center; }
+.pieces-concentric .dama-piece.white .ring-2 { width: 55%; height: 55%; border-radius: 50%; border: 1.5px solid #8c939e; display: flex; align-items: center; justify-content: center; }
+.pieces-concentric .dama-piece.black { background: radial-gradient(circle at 35% 30%, #444, #141414); border: 1.5px solid #333; box-shadow: 0 4px 6px rgba(0,0,0,0.7); }
+.pieces-concentric .dama-piece.black .ring-1 { width: 75%; height: 75%; border-radius: 50%; border: 1.5px solid #222; display: flex; align-items: center; justify-content: center; }
+.pieces-concentric .dama-piece.black .ring-2 { width: 55%; height: 55%; border-radius: 50%; border: 1.5px solid #111; display: flex; align-items: center; justify-content: center; }
+
+.pieces-metallic .dama-piece.white { background: linear-gradient(135deg, #fff, #94a3b8); border: 2px solid #e2e8f0; }
+.pieces-metallic .dama-piece.black { background: linear-gradient(135deg, #78350f, #d97706); border: 2px solid #f59e0b; }
+.pieces-gem .dama-piece.white { background: radial-gradient(circle at 30% 30%, #fff, #0891b2); border: 2px solid #a5f3fc; }
+.pieces-gem .dama-piece.black { background: radial-gradient(circle at 30% 30%, #f43f5e, #4c0519); border: 2px solid #fda4af; }
+.pieces-antique .dama-piece.white { background: radial-gradient(circle at 40% 35%, #fef3c7, #78350f); border: 2px solid #b45309; }
+.pieces-antique .dama-piece.black { background: radial-gradient(circle at 40% 35%, #292524, #0c0a09); border: 2px solid #44403c; }
+.pieces-modern .dama-piece.white { background: #f8fafc; border: 2px solid #e2e8f0; }
+.pieces-modern .dama-piece.black { background: #18181b; border: 2px solid #3f3f46; }
+
+.king-badge { font-size: 14px; color: #f59e0b; }
+.settings-control-panel { display: flex; flex-wrap: wrap; gap: 6px; }
+.custom-select { background: #181310; color: #fde68a; border: 1px solid #5a3017; padding: 6px 8px; border-radius: 8px; font-weight: 700; font-size: 11px; outline: none; flex: 1; min-width: 105px; }
+
+.app-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 99999; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+.app-modal-overlay.show { opacity: 1; pointer-events: auto; }
+.app-modal-card { background: #20130b; border: 2px solid #f59e0b; border-radius: 14px; padding: 20px; text-align: center; max-width: 380px; width: 90%; }
+.room-code-badge { font-family: 'Share Tech Mono', monospace; font-size: 28px; font-weight: 800; background: #000; color: #22c55e; padding: 6px 14px; border-radius: 8px; border: 2px dashed #22c55e; letter-spacing: 3px; margin: 10px 0; display: inline-block; }
 
         /* کاتژمێری دیواری */
         .digital-wall-clock-card {
@@ -1957,6 +2018,216 @@
         </div>
     </div>
 
+<!-- ========================================================= -->
+<!-- بەشی گشتیی یارییەکان (Games Hub)                          -->
+<!-- ========================================================= -->
+<div id="gamesTab" class="app-tab-content" style="display:none;">
+
+    <!-- ١. پەڕەی سەرەکی: پێڕست و کارتی هەڵبژاردنی یارییەکان -->
+    <div id="gamesHubMenu">
+        <div class="section-card fire-glow-card">
+            <div class="card-header-title">
+                <i class="fa-solid fa-gamepad" style="color:#f59e0b;"></i> <span>کەتەلۆگی یارییەکان (یارییەک هەڵبژێرە):</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 6px;">
+                
+                <!-- کارتی یاری ١: داما (چالاک) -->
+                <div class="fire-glow-card" style="background: var(--input-bg); border: 2px solid var(--card-border); border-right: 5px solid #f59e0b; border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="openDamaGame()">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(245, 158, 11, 0.15); border: 1.5px solid #f59e0b; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #f59e0b;">
+                            ♟️
+                        </div>
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-main);">یاری داما (Dama)</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">دژی بۆتی ماستەر • دوو یاریزان • ئۆنلاین بە دەنگ</div>
+                        </div>
+                    </div>
+                    <button class="btn-city-pill active" style="font-size: 0.75rem; padding: 6px 12px; pointer-events: none;">دەستپێکردن ◀</button>
+                </div>
+
+                <!-- کارتی یاری ٢: شەتڕەنج (بۆ داهاتوو) -->
+                <div class="fire-glow-card" style="background: var(--input-bg); border: 1.5px solid var(--card-border); border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; opacity: 0.7;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(2, 132, 199, 0.1); border: 1.5px solid #0284c7; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #0284c7;">
+                            ♞
+                        </div>
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-main);">شەتڕەنج (Chess)</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">یاری کلاسیکی بیرکردنەوە</div>
+                        </div>
+                    </div>
+                    <span style="font-size: 0.68rem; color: #d97706; font-weight: 900; background: rgba(217, 119, 6, 0.12); padding: 4px 8px; border-radius: 8px;">بەم زووانە...</span>
+                </div>
+
+                <!-- کارتی یاری ٣: تاوڵە (بۆ داهاتوو) -->
+                <div class="fire-glow-card" style="background: var(--input-bg); border: 1.5px solid var(--card-border); border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; opacity: 0.7;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(5, 150, 105, 0.1); border: 1.5px solid #059669; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #059669;">
+                            🎲
+                        </div>
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-main);">تاوڵە (Backgammon)</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">تاوڵەی کوردی بە زار</div>
+                        </div>
+                    </div>
+                    <span style="font-size: 0.68rem; color: #d97706; font-weight: 900; background: rgba(217, 119, 6, 0.12); padding: 4px 8px; border-radius: 8px;">بەم زووانە...</span>
+                </div>
+
+                <!-- کارتی یاری ٤: X/O (بۆ داهاتوو) -->
+                <div class="fire-glow-card" style="background: var(--input-bg); border: 1.5px solid var(--card-border); border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; opacity: 0.7;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(139, 92, 246, 0.1); border: 1.5px solid #8b5cf6; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #8b5cf6;">
+                            ❌⭕
+                        </div>
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-main);">تیک تاک تۆ (X/O)</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">یاری خێرای زیرەکی</div>
+                        </div>
+                    </div>
+                    <span style="font-size: 0.68rem; color: #d97706; font-weight: 900; background: rgba(217, 119, 6, 0.12); padding: 4px 8px; border-radius: 8px;">بەم زووانە...</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ٢. پەڕەی یاری داما (تەنها کاتێک دەکرێتەوە کە کلیک لەسەر داما بکەیت) -->
+    <div id="damaGameView" style="display:none;">
+        <div class="section-card fire-glow-card" style="display: flex; flex-direction: column; align-items: center; padding: 12px 6px;">
+            
+            <!-- دوگمەی گەڕانەوە بۆ کەتەلۆگی یارییەکان -->
+            <div style="width: 100%; max-width: 500px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <button onclick="backToGamesHub()" class="btn-action-primary" style="width: auto; padding: 6px 14px; font-size: 0.75rem; background: #475569;">
+                    <i class="fa-solid fa-arrow-right"></i> <span>گەڕانەوە بۆ لیستی یارییەکان</span>
+                </button>
+                <span style="font-size: 0.84rem; font-weight: 900; color: #f59e0b;"><i class="fa-solid fa-chess-board"></i> یاری داما</span>
+            </div>
+
+            <audio id="remoteAudioPlayer" autoplay></audio>
+
+            <!-- کاتژمێر و دوگمەی ڕووم و مایکرۆفۆن -->
+            <div class="top-header-bar" style="width: 100%; max-width: 500px; margin-bottom: 8px;">
+                <div class="tournament-clock-bar">
+                    <div class="digital-timer" id="clockBlackWrap">
+                        <div class="timer-val" id="clockBlack">05:00</div>
+                        <div class="timer-lbl"><i class="fa-solid fa-circle" style="color: #444;"></i> ڕەش (Black)</div>
+                    </div>
+
+                    <div style="font-size: 14px; color: #f59e0b; font-weight: 800;">VS</div>
+
+                    <div class="digital-timer active" id="clockWhiteWrap">
+                        <div class="timer-val" id="clockWhite">05:00</div>
+                        <div class="timer-lbl"><i class="fa-solid fa-circle" style="color: #fff;"></i> سپی (White)</div>
+                    </div>
+                </div>
+
+                <div class="online-widget-bar">
+                    <button class="btn-icon-gold" onclick="openRoomModal()" title="ڕوومی ئۆنلاین">
+                        <i class="fa-solid fa-globe"></i>
+                        <span id="roomStatusText">ڕووم</span>
+                    </button>
+
+                    <button class="btn-mic" id="btnVoiceMic" onclick="toggleVoiceChat()" title="مایکرۆفۆن">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- تەختەی یاری داما -->
+            <div class="dama-tournament-frame theme-walnut pieces-concentric" id="mainDamaFrame" style="max-width: 500px; width: 100%;">
+                <div class="board-status-bar">
+                    <div style="display: flex; align-items: center; gap: 6px; color: #fbbf24; font-size: 12px;">
+                        <i class="fa-solid fa-chess-king"></i>
+                        <span id="txtBlackCount">ڕەش: 16</span>
+                    </div>
+                    <div id="evalScore" style="font-size: 11px; padding: 2px 6px; border-radius: 10px; background: #27272a; color: #a1a1aa;">هاوسەنگ (0.0)</div>
+                </div>
+
+                <div class="dama-grid" id="boardGrid"></div>
+
+                <div class="board-status-bar bottom">
+                    <div style="display: flex; align-items: center; gap: 6px; color: #fbbf24; font-size: 12px;">
+                        <i class="fa-solid fa-chess-queen"></i>
+                        <span id="txtWhiteCount">سپی: 16</span>
+                    </div>
+                    <span style="font-size: 11px; color: #a1a1aa;" id="lblStatus">نۆرەی سپییە</span>
+                </div>
+            </div>
+
+            <!-- هەڵبژاردنی دۆخ، تەختە، و پیلەکان -->
+            <div class="settings-control-panel" style="max-width: 500px; width: 100%; margin-top: 10px;">
+                <select id="gameModeSelect" class="custom-select" onchange="changeMode(this.value)">
+                    <option value="ai_easy">🟢 بۆت: ئاسان (Easy)</option>
+                    <option value="ai_medium">🟡 بۆت: مامناوەند (Medium)</option>
+                    <option value="ai_master" selected>🔴 بۆت: ماستەر (Master AI)</option>
+                    <option value="pvp">👥 دوو یاریزان (Local 2P)</option>
+                </select>
+
+                <select id="boardThemeSelect" class="custom-select" onchange="changeBoardTheme(this.value)">
+                    <option value="theme-walnut" selected>🪵 تەختە: دارینە</option>
+                    <option value="theme-marble">🏛️ تەختە: مەڕمەڕ</option>
+                    <option value="theme-obsidian">🖤 تەختە: تاریک</option>
+                    <option value="theme-emerald">💎 تەختە: یاقوت</option>
+                    <option value="theme-crimson">🍷 تەختە: سوور</option>
+                </select>
+
+                <select id="pieceDesignSelect" class="custom-select" onchange="changePieceDesign(this.value)">
+                    <option value="pieces-concentric" selected>🔘 پیل: کلاسیک</option>
+                    <option value="pieces-metallic">✨ پیل: کانزایی</option>
+                    <option value="pieces-gem">💎 پیل: کریستاڵ</option>
+                    <option value="pieces-antique">🪵 پیل: داری ئەنتیک</option>
+                    <option value="pieces-modern">⚪ پیل: ماتی مۆدێرن</option>
+                </select>
+
+                <button class="btn-icon-gold" style="flex: 1;" onclick="resetDamaGame()">
+                    <i class="fa-solid fa-arrow-rotate-right"></i> یاری نوێ
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- مۆداڵی ڕوومی ئۆنلاین -->
+    <div class="app-modal-overlay" id="roomModal">
+        <div class="app-modal-card">
+            <h2 style="font-size: 18px; color: #f59e0b; margin-bottom: 12px;">🌐 ڕوومی ئۆنلاین (Online Room)</h2>
+            
+            <div style="background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #442a18;">
+                <div style="font-size: 12px; color: #cbd5e1;">دروستکردنی ڕووم (تۆ سپی دەبیت):</div>
+                <button class="btn-icon-gold" style="margin: 8px auto 0;" onclick="createOnlineRoom()">
+                    <i class="fa-solid fa-plus"></i> دروستکردنی کۆد
+                </button>
+                <div id="createdRoomBox" style="display: none;">
+                    <div class="room-code-badge" id="displayRoomCode">------</div>
+                    <div style="font-size: 11px; color: #a1a1aa;">ئەم کۆدە بدە بە هاوڕێکەت!</div>
+                </div>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #442a18;">
+                <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 6px;">چوونەژوورەوە بە کۆد (تۆ ڕەش دەبیت):</div>
+                <div style="display: flex; gap: 6px; justify-content: center;">
+                    <input type="text" id="inputRoomCode" placeholder="کۆد بنووسە..." style="background: #000; border: 1px solid #5a3017; color: #fde68a; font-family: monospace; font-size: 14px; padding: 6px; border-radius: 8px; width: 120px; text-align: center;">
+                    <button class="btn-icon-gold" onclick="joinOnlineRoom()"><i class="fa-solid fa-right-to-bracket"></i> چوونەژوورەوە</button>
+                </div>
+            </div>
+
+            <button class="btn-icon-gold" style="margin: 0 auto;" onclick="closeRoomModal()">داخستن</button>
+        </div>
+    </div>
+
+    <!-- مۆداڵی بردنەوە -->
+    <div class="app-modal-overlay" id="winnerModal">
+        <div class="app-modal-card">
+            <h2 style="font-size: 24px; color: #f59e0b; margin-bottom: 8px;" id="winnerTitle">🎉 بردنەوە!</h2>
+            <p style="font-size: 14px; color: #e2e8f0; margin-bottom: 16px;" id="winnerDesc">یاریزانی سپی یارییەکەی بردەوە!</p>
+            <button class="btn-icon-gold" style="margin: 0 auto; padding: 8px 20px;" onclick="resetDamaGame()">
+                <i class="fa-solid fa-play"></i> دەستپێکردنەوە
+            </button>
+        </div>
+    </div>
+</div>
+
     <!-- ========================================================= -->
     <!-- بەشی ٥: پێوانی زەوی و دۆنم                                 -->
     <!-- ========================================================= -->
@@ -2739,6 +3010,9 @@
     
 <div id="drawerBackdrop" class="drawer-backdrop" onclick="closeDrawerMenu()"></div>
 
+<!-- مۆداڵی نیوە شاشەی سێ خاڵ (مینیۆی سەرەکی) -->
+<div id="drawerBackdrop" class="drawer-backdrop" onclick="closeDrawerMenu()"></div>
+
 <div id="sideMenuDrawer" class="half-screen-drawer">
     <div class="drawer-header">
         <div style="font-weight:900; font-size:0.9rem; display:flex; align-items:center; gap:6px;">
@@ -2786,8 +3060,14 @@
             <i class="fa-solid fa-screwdriver-wrench" style="color:#d97706;"></i> <span>٢٣ ئامراز (سکانەر)</span>
         </button>
 
+        <!-- بەشی تەسبیح و زیکرەکان -->
         <button class="drawer-nav-btn" onclick="selectDrawerTab('tasbihTab', 'تەسبیح و زیکرەکان', 'fa-hands-praying')">
             <i class="fa-solid fa-hands-praying" style="color:#8b5cf6;"></i> <span>📿 تەسبیح و زیکرەکان</span>
+        </button>
+
+        <!-- بەشی یارییەکان ڕێک لە بن تەسبیح -->
+        <button class="drawer-nav-btn" onclick="selectDrawerTab('gamesTab', 'بەشی یارییەکان', 'fa-gamepad')">
+            <i class="fa-solid fa-gamepad" style="color:#f59e0b;"></i> <span>🎮 بەشی یارییەکان (Games Hub)</span>
         </button>
 
         <div style="height:1px; background:var(--card-border); margin:4px 0;"></div>
@@ -3121,6 +3401,29 @@
         if (tabId === 'mapTab' && landMapInstance) {
             setTimeout(() => landMapInstance.invalidateSize(), 250);
         }
+
+        /* خستنەگەڕی یاری داما لە کاتی کردنەوەی بەشەکە */
+        /* لە کاتی کردنەوەی بەشی یارییەکان: سەرەتا کەتەلۆگ پیشان دەدات */
+        if (tabId === 'gamesTab') {
+            backToGamesHub();
+        }
+    }
+
+    /* کردنەوەی یاری داما لە ناو کەتەلۆگەکە */
+    function openDamaGame() {
+        document.getElementById('gamesHubMenu').style.display = 'none';
+        document.getElementById('damaGameView').style.display = 'block';
+        if (!board || board.length === 0) {
+            resetDamaGame();
+        } else {
+            render();
+        }
+    }
+
+    /* گەڕانەوە بۆ کەتەلۆگی هەموو یارییەکان */
+    function backToGamesHub() {
+        document.getElementById('gamesHubMenu').style.display = 'block';
+        document.getElementById('damaGameView').style.display = 'none';
     }
 
     /* =========================================================
@@ -5883,6 +6186,779 @@ function updateTopNotifBadge() {
         trackVisitorTelemetry();
         listenForLiveNotifications(); // چالاککردنی وەرگرتنی نۆتفیکەیشن بۆ هەمووان
     };
+    
+/* ==========================================================================
+       تەواوی ژیری و یاساکانی یاری داما (Dama Engine)
+       ========================================================================== */
+    const DAMA_ROWS = 8;
+    const DAMA_COLS = 8;
+    let board = [];
+    let turn = 'W';
+    let selectedPos = null;
+    let legalMovesForSelected = [];
+    let gameMode = 'ai_master';
+    let myOnlineColor = null;
+    let isGameOver = false;
+    let isAnimating = false;
+    let whiteTime = 300;
+    let blackTime = 300;
+    let clockInterval = null;
+
+    let peer = null;
+    let conn = null;
+    let localAudioStream = null;
+    let currentCall = null;
+    let isMicActive = false;
+
+    let damaAudioCtx = null;
+    function playAudio(type) {
+      try {
+        if (!damaAudioCtx) damaAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (damaAudioCtx.state === 'suspended') damaAudioCtx.resume();
+        const osc = damaAudioCtx.createOscillator();
+        const gain = damaAudioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(damaAudioCtx.destination);
+        const now = damaAudioCtx.currentTime;
+
+        if (type === 'move') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(170, now);
+          osc.frequency.exponentialRampToValueAtTime(70, now + 0.08);
+          gain.gain.setValueAtTime(0.35, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'capture') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(90, now + 0.14);
+          gain.gain.setValueAtTime(0.45, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.14);
+          osc.start(now);
+          osc.stop(now + 0.14);
+        } else if (type === 'king') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523, now);
+          osc.frequency.setValueAtTime(659, now + 0.09);
+          osc.frequency.setValueAtTime(783, now + 0.18);
+          gain.gain.setValueAtTime(0.35, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.32);
+          osc.start(now);
+          osc.stop(now + 0.32);
+        }
+      } catch(e){}
+    }
+
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    function resetDamaGame(sendOnlineSync = true) {
+      board = Array(DAMA_ROWS).fill(null).map(() => Array(DAMA_COLS).fill(null));
+      turn = 'W';
+      selectedPos = null;
+      legalMovesForSelected = [];
+      isGameOver = false;
+      isAnimating = false;
+      whiteTime = 300;
+      blackTime = 300;
+
+      for (let r = 0; r < DAMA_ROWS; r++) {
+        for (let c = 0; c < DAMA_COLS; c++) {
+          if (r === 1 || r === 2) board[r][c] = { color: 'B', isKing: false };
+          else if (r === 5 || r === 6) board[r][c] = { color: 'W', isKing: false };
+        }
+      }
+
+      clearInterval(clockInterval);
+      clockInterval = setInterval(updateClocks, 1000);
+
+      document.getElementById('winnerModal')?.classList.remove('show');
+      render();
+      updateDamaUI();
+
+      if (gameMode === 'online' && conn && conn.open && sendOnlineSync) {
+        conn.send({ type: 'RESET_GAME' });
+      }
+    }
+
+    function updateClocks() {
+      if (isGameOver || isAnimating) return;
+      if (turn === 'W') {
+        whiteTime--;
+        if (whiteTime <= 0) { whiteTime = 0; gameOver('B', 'کاتی سپی تەواوبوو!'); }
+      } else {
+        blackTime--;
+        if (blackTime <= 0) { blackTime = 0; gameOver('W', 'کاتی ڕەش تەواوبوو!'); }
+      }
+      updateClockDisplay();
+    }
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+    }
+
+    function updateClockDisplay() {
+      const elW = document.getElementById('clockWhite');
+      const elB = document.getElementById('clockBlack');
+      if (elW) elW.textContent = formatTime(whiteTime);
+      if (elB) elB.textContent = formatTime(blackTime);
+
+      const wrapW = document.getElementById('clockWhiteWrap');
+      const wrapB = document.getElementById('clockBlackWrap');
+      if (wrapW) wrapW.className = `digital-timer ${turn === 'W' ? 'active' : ''} ${whiteTime <= 30 ? 'danger' : ''}`;
+      if (wrapB) wrapB.className = `digital-timer ${turn === 'B' ? 'active' : ''} ${blackTime <= 30 ? 'danger' : ''}`;
+    }
+
+    function changeBoardTheme(t) {
+      const f = document.getElementById('mainDamaFrame');
+      if (f) {
+        f.classList.remove('theme-walnut', 'theme-marble', 'theme-obsidian', 'theme-emerald', 'theme-crimson');
+        f.classList.add(t);
+      }
+    }
+
+    function changePieceDesign(p) {
+      const f = document.getElementById('mainDamaFrame');
+      if (f) {
+        f.classList.remove('pieces-concentric', 'pieces-metallic', 'pieces-gem', 'pieces-antique', 'pieces-modern');
+        f.classList.add(p);
+      }
+    }
+
+    function changeMode(m) {
+      gameMode = m;
+      myOnlineColor = null;
+      const rTxt = document.getElementById('roomStatusText');
+      if (rTxt) rTxt.textContent = 'ڕووم';
+      resetDamaGame();
+    }
+
+    function inBounds(r, c) { return r >= 0 && r < DAMA_ROWS && c >= 0 && c < DAMA_COLS; }
+
+    const NORMAL_DIRS = {
+      'W': [[-1, 0], [0, -1], [0, 1]],
+      'B': [[1, 0], [0, -1], [0, 1]]
+    };
+    const KING_DIRS = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+
+    function getPieceCaptures(b, r, c) {
+      const p = b[r][c];
+      if (!p) return [];
+      const paths = [];
+
+      function search(currR, currC, currBoard, isKing, path) {
+        let hasJump = false;
+
+        if (!isKing) {
+          for (let [dr, dc] of NORMAL_DIRS[p.color]) {
+            const oppR = currR + dr, oppC = currC + dc;
+            const landR = currR + 2 * dr, landC = currC + 2 * dc;
+
+            if (inBounds(oppR, oppC) && inBounds(landR, landC)) {
+              const target = currBoard[oppR][oppC];
+              const landing = currBoard[landR][landC];
+
+              if (target && target.color !== p.color && !landing) {
+                hasJump = true;
+                const nextB = currBoard.map(row => row.slice());
+                nextB[currR][currC] = null;
+                nextB[oppR][oppC] = null;
+
+                const becomesKing = (p.color === 'W' && landR === 0) || (p.color === 'B' && landR === 7);
+                nextB[landR][landC] = { color: p.color, isKing: becomesKing };
+
+                search(landR, landC, nextB, becomesKing, [...path, { r: landR, c: landC, capR: oppR, capC: oppC }]);
+              }
+            }
+          }
+        } else {
+          for (let [dr, dc] of KING_DIRS) {
+            let scanR = currR + dr, scanC = currC + dc;
+            let enemyPos = null;
+
+            while (inBounds(scanR, scanC)) {
+              const cell = currBoard[scanR][scanC];
+              if (cell) {
+                if (cell.color === p.color) {
+                  break;
+                } else {
+                  if (enemyPos === null) enemyPos = { r: scanR, c: scanC };
+                  else break;
+                }
+              } else {
+                if (enemyPos !== null) {
+                  hasJump = true;
+                  const nextB = currBoard.map(row => row.slice());
+                  nextB[currR][currC] = null;
+                  nextB[enemyPos.r][enemyPos.c] = null;
+                  nextB[scanR][scanC] = { color: p.color, isKing: true };
+
+                  search(scanR, scanC, nextB, true, [...path, { r: scanR, c: scanC, capR: enemyPos.r, capC: enemyPos.c }]);
+                }
+              }
+              scanR += dr;
+              scanC += dc;
+            }
+          }
+        }
+
+        if (!hasJump && path.length > 0) {
+          paths.push({ startR: r, startC: c, path: path, count: path.length });
+        }
+      }
+
+      search(r, c, b, p.isKing, []);
+      return paths;
+    }
+
+    function getSimpleMoves(b, r, c) {
+      const p = b[r][c];
+      if (!p) return [];
+      const moves = [];
+
+      if (!p.isKing) {
+        for (let [dr, dc] of NORMAL_DIRS[p.color]) {
+          const nr = r + dr, nc = c + dc;
+          if (inBounds(nr, nc) && !b[nr][nc]) {
+            moves.push({ startR: r, startC: c, endR: nr, endC: nc, count: 0, path: [{ r: nr, c: nc }] });
+          }
+        }
+      } else {
+        for (let [dr, dc] of KING_DIRS) {
+          let nr = r + dr, nc = c + dc;
+          while (inBounds(nr, nc) && !b[nr][nc]) {
+            moves.push({ startR: r, startC: c, endR: nr, endC: nc, count: 0, path: [{ r: nr, c: nc }] });
+            nr += dr;
+            nc += dc;
+          }
+        }
+      }
+      return moves;
+    }
+
+    function getValidMoves(b, playerColor) {
+      let allCaptures = [];
+      let maxCount = 0;
+
+      for (let r = 0; r < DAMA_ROWS; r++) {
+        for (let c = 0; c < DAMA_COLS; c++) {
+          if (b[r][c] && b[r][c].color === playerColor) {
+            const caps = getPieceCaptures(b, r, c);
+            for (let cp of caps) {
+              if (cp.count > maxCount) {
+                maxCount = cp.count;
+                allCaptures = [cp];
+              } else if (cp.count === maxCount) {
+                allCaptures.push(cp);
+              }
+            }
+          }
+        }
+      }
+
+      if (maxCount > 0) return { isCapture: true, maxCount, list: allCaptures };
+
+      const simple = [];
+      for (let r = 0; r < DAMA_ROWS; r++) {
+        for (let c = 0; c < DAMA_COLS; c++) {
+          if (b[r][c] && b[r][c].color === playerColor) {
+            simple.push(...getSimpleMoves(b, r, c));
+          }
+        }
+      }
+      return { isCapture: false, maxCount: 0, list: simple };
+    }
+
+    function render(activeJumpPiecePos = null) {
+      const grid = document.getElementById('boardGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      for (let r = 0; r < DAMA_ROWS; r++) {
+        for (let c = 0; c < DAMA_COLS; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'dama-cell';
+
+          if (selectedPos && selectedPos.r === r && selectedPos.c === c) {
+            cell.classList.add('selected');
+          }
+
+          if (!isAnimating) {
+            const validDest = legalMovesForSelected.find(m => {
+              const last = m.path[m.path.length - 1];
+              return last.r === r && last.c === c;
+            });
+
+            if (validDest) {
+              if (validDest.count > 0) cell.classList.add('valid-capture-target');
+              else cell.classList.add('valid-dot');
+            }
+          }
+
+          const piece = board[r][c];
+          if (piece) {
+            const pEl = document.createElement('div');
+            pEl.className = `dama-piece ${piece.color === 'W' ? 'white' : 'black'}`;
+            if (activeJumpPiecePos && activeJumpPiecePos.r === r && activeJumpPiecePos.c === c) {
+              pEl.classList.add('jumping-active');
+            }
+
+            pEl.innerHTML = `
+              <div class="ring-1">
+                <div class="ring-2">
+                  ${piece.isKing ? '<i class="fa-solid fa-crown king-badge"></i>' : ''}
+                </div>
+              </div>
+            `;
+            cell.appendChild(pEl);
+          }
+
+          cell.onclick = () => onCellClick(r, c);
+          grid.appendChild(cell);
+        }
+      }
+    }
+
+    function onCellClick(r, c) {
+      if (isGameOver || isAnimating) return;
+      if (gameMode.startsWith('ai_') && turn === 'B') return;
+      if (gameMode === 'online' && turn !== myOnlineColor) return;
+
+      const p = board[r][c];
+      const validData = getValidMoves(board, turn);
+
+      if (p && p.color === turn) {
+        const allowed = validData.list.filter(m => m.startR === r && m.startC === c);
+        if (allowed.length > 0) {
+          selectedPos = { r, c };
+          legalMovesForSelected = allowed;
+          render();
+        } else {
+          showWarning();
+        }
+        return;
+      }
+
+      if (selectedPos) {
+        const chosen = legalMovesForSelected.find(m => {
+          const last = m.path[m.path.length - 1];
+          return last.r === r && last.c === c;
+        });
+
+        if (chosen) {
+          selectedPos = null;
+          legalMovesForSelected = [];
+          executeMoveAnimated(chosen);
+
+          if (gameMode === 'online' && conn && conn.open) {
+            conn.send({ type: 'MOVE', move: chosen });
+          }
+        } else {
+          selectedPos = null;
+          legalMovesForSelected = [];
+          render();
+        }
+      }
+    }
+
+    function showWarning() {
+      let toast = document.getElementById('warningToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'warningToast';
+        toast.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#ef4444; color:#fff; padding:8px 18px; border-radius:20px; font-size:12px; font-weight:bold; z-index:999999; box-shadow:0 4px 15px rgba(0,0,0,0.5);";
+        document.body.appendChild(toast);
+      }
+      toast.innerText = '⚠️ یاسای زۆرەملێ: دەبێت ئەو پارچەیە بجوڵێنیت کە زۆرترین دەخوات!';
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2000);
+    }
+
+    async function executeMoveAnimated(move) {
+      isAnimating = true;
+
+      const piece = board[move.startR][move.startC];
+      board[move.startR][move.startC] = null;
+
+      if (move.count === 0) {
+        const endR = move.endR, endC = move.endC;
+        if (!piece.isKing && ((piece.color === 'W' && endR === 0) || (piece.color === 'B' && endR === 7))) {
+          piece.isKing = true;
+          playAudio('king');
+        } else {
+          playAudio('move');
+        }
+
+        board[endR][endC] = piece;
+        render({ r: endR, c: endC });
+        await sleep(350);
+      } else {
+        let currentR = move.startR;
+        let currentC = move.startC;
+        let currentP = { ...piece };
+
+        for (let i = 0; i < move.path.length; i++) {
+          const step = move.path[i];
+          board[step.capR][step.capC] = null;
+
+          if (!currentP.isKing && ((currentP.color === 'W' && step.r === 0) || (currentP.color === 'B' && step.r === 7))) {
+            currentP.isKing = true;
+          }
+
+          board[currentR][currentC] = null;
+          board[step.r][step.c] = currentP;
+          currentR = step.r;
+          currentC = step.c;
+
+          playAudio('capture');
+          if (currentP.isKing && !piece.isKing && i === move.path.length - 1) playAudio('king');
+
+          render({ r: step.r, c: step.c });
+          updateDamaUI();
+          await sleep(480);
+        }
+      }
+
+      render();
+      isAnimating = false;
+
+      turn = turn === 'W' ? 'B' : 'W';
+      updateDamaUI();
+      checkEndGame();
+
+      if (!isGameOver && gameMode.startsWith('ai_') && turn === 'B') {
+        const lbl = document.getElementById('lblStatus');
+        if (lbl) lbl.textContent = 'بۆت لە قووڵایی بیرکردنەوەدایە...';
+        await sleep(600);
+        runAI();
+      }
+    }
+
+    function checkEndGame() {
+      const nextMoves = getValidMoves(board, turn);
+      const wCount = countPieces('W'), bCount = countPieces('B');
+
+      if (wCount === 0 || (turn === 'W' && nextMoves.list.length === 0)) {
+        gameOver('B', 'یاریزانی ڕەش یارییەکەی بردەوە!');
+      } else if (bCount === 0 || (turn === 'B' && nextMoves.list.length === 0)) {
+        gameOver('W', 'یاریزانی سپی یارییەکەی بردەوە!');
+      }
+    }
+
+    function countPieces(c) {
+      let cnt = 0;
+      for (let r = 0; r < DAMA_ROWS; r++) {
+        for (let col = 0; col < DAMA_COLS; col++) {
+          if (board[r][col] && board[r][col].color === c) cnt++;
+        }
+      }
+      return cnt;
+    }
+
+    function updateDamaUI() {
+      const wCnt = countPieces('W'), bCnt = countPieces('B');
+      const txtW = document.getElementById('txtWhiteCount');
+      const txtB = document.getElementById('txtBlackCount');
+      const lblS = document.getElementById('lblStatus');
+
+      if (txtW) txtW.textContent = `سپی: ${wCnt}`;
+      if (txtB) txtB.textContent = `ڕەش: ${bCnt}`;
+
+      if (lblS) {
+        if (gameMode === 'online') {
+          lblS.textContent = turn === myOnlineColor ? 'نۆرەی تۆیە!' : 'نۆرەی یاریزانی بەرامبەرە...';
+        } else {
+          lblS.textContent = turn === 'W' ? 'نۆرەی سپییە (Your Turn)' : 'نۆرەی ڕەشە';
+        }
+      }
+
+      const evalVal = (evaluateBoard(board, 'W') / 100).toFixed(1);
+      const evalEl = document.getElementById('evalScore');
+      if (evalEl) {
+        if (evalVal > 0) evalEl.textContent = `باڵادەستی سپی (+${evalVal})`;
+        else if (evalVal < 0) evalEl.textContent = `باڵادەستی ڕەش (${evalVal})`;
+        else evalEl.textContent = 'هاوسەنگ (0.0)';
+      }
+
+      updateClockDisplay();
+    }
+
+    function gameOver(winnerColor, reason) {
+      isGameOver = true;
+      clearInterval(clockInterval);
+      const title = document.getElementById('winnerTitle');
+      const desc = document.getElementById('winnerDesc');
+      if (title) title.textContent = winnerColor === 'W' ? '🏆 سپی سەرکەوت!' : '🏆 ڕەش سەرکەوت!';
+      if (desc) desc.textContent = reason;
+      document.getElementById('winnerModal')?.classList.add('show');
+    }
+
+    /* --------------------------------------------------------------------------
+       AI ENGINE (EASY, MEDIUM, MASTER)
+       -------------------------------------------------------------------------- */
+    function runAI() {
+      if (isGameOver || turn !== 'B') return;
+      const validData = getValidMoves(board, 'B');
+      if (validData.list.length === 0) { checkEndGame(); return; }
+
+      let chosenMove = null;
+
+      if (gameMode === 'ai_easy') {
+        if (Math.random() < 0.7) {
+          chosenMove = validData.list[Math.floor(Math.random() * validData.list.length)];
+        } else {
+          chosenMove = getBestMinimaxMove(validData.list, 1);
+        }
+      } else if (gameMode === 'ai_medium') {
+        chosenMove = getBestMinimaxMove(validData.list, 2);
+      } else {
+        chosenMove = getBestMinimaxMove(validData.list, 4);
+      }
+
+      if (chosenMove) executeMoveAnimated(chosenMove);
+    }
+
+    function getBestMinimaxMove(moves, depth) {
+      let bestMove = null;
+      let bestVal = -Infinity;
+      let alpha = -Infinity, beta = Infinity;
+
+      for (let move of moves) {
+        const simB = board.map(r => r.map(c => c ? { ...c } : null));
+        applySimMove(simB, move, 'B');
+
+        const val = minimax(simB, depth - 1, alpha, beta, false);
+        if (val > bestVal) {
+          bestVal = val;
+          bestMove = move;
+        }
+        alpha = Math.max(alpha, bestVal);
+      }
+      return bestMove;
+    }
+
+    function minimax(b, depth, alpha, beta, isMaximizing) {
+      const color = isMaximizing ? 'B' : 'W';
+      const valid = getValidMoves(b, color);
+
+      if (depth === 0 || valid.list.length === 0) {
+        return evaluateBoard(b, 'B');
+      }
+
+      if (isMaximizing) {
+        let maxEval = -Infinity;
+        for (let move of valid.list) {
+          const simB = b.map(r => r.map(c => c ? { ...c } : null));
+          applySimMove(simB, move, 'B');
+          const ev = minimax(simB, depth - 1, alpha, beta, false);
+          maxEval = Math.max(maxEval, ev);
+          alpha = Math.max(alpha, ev);
+          if (beta <= alpha) break;
+        }
+        return maxEval;
+      } else {
+        let minEval = Infinity;
+        for (let move of valid.list) {
+          const simB = b.map(r => r.map(c => c ? { ...c } : null));
+          applySimMove(simB, move, 'W');
+          const ev = minimax(simB, depth - 1, alpha, beta, true);
+          minEval = Math.min(minEval, ev);
+          beta = Math.min(beta, ev);
+          if (beta <= alpha) break;
+        }
+        return minEval;
+      }
+    }
+
+    function applySimMove(b, move, playerColor) {
+      const p = b[move.startR][move.startC];
+      b[move.startR][move.startC] = null;
+
+      if (move.count === 0) {
+        if (!p.isKing && ((playerColor === 'W' && move.endR === 0) || (playerColor === 'B' && move.endR === 7))) p.isKing = true;
+        b[move.endR][move.endC] = p;
+      } else {
+        let cur = { ...p };
+        for (let step of move.path) {
+          b[step.capR][step.capC] = null;
+          if (!cur.isKing && ((playerColor === 'W' && step.r === 0) || (playerColor === 'B' && step.r === 7))) cur.isKing = true;
+        }
+        const last = move.path[move.path.length - 1];
+        b[last.r][last.c] = cur;
+      }
+    }
+
+    function evaluateBoard(b, povColor) {
+      let score = 0;
+      for (let r = 0; r < DAMA_ROWS; r++) {
+        for (let c = 0; c < DAMA_COLS; c++) {
+          const p = b[r][c];
+          if (p) {
+            let pieceVal = p.isKing ? 420 : 100;
+            if (!p.isKing) pieceVal += (p.color === 'B' ? r * 8 : (7 - r) * 8);
+            if (c >= 2 && c <= 5) pieceVal += 6;
+
+            if (p.color === povColor) score += pieceVal;
+            else score -= pieceVal;
+          }
+        }
+      }
+      return score;
+    }
+
+    /* --------------------------------------------------------------------------
+       ONLINE MULTIPLAYER & WEBRTC VOICE CHAT
+       -------------------------------------------------------------------------- */
+    function openRoomModal() {
+      document.getElementById('roomModal')?.classList.add('show');
+    }
+    function closeRoomModal() {
+      document.getElementById('roomModal')?.classList.remove('show');
+    }
+
+    function initPeer(customId = null) {
+      if (peer) peer.destroy();
+      peer = customId ? new Peer(customId) : new Peer();
+
+      peer.on('error', (err) => {
+        console.error('Peer error:', err);
+        alert('کێشەی بەستنەوەی ڕووم: ' + err.type);
+      });
+
+      peer.on('call', (call) => {
+        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+          localAudioStream = stream;
+          call.answer(stream);
+          call.on('stream', (remoteStream) => {
+            const player = document.getElementById('remoteAudioPlayer');
+            if (player) player.srcObject = remoteStream;
+            setMicActiveUI(true);
+          });
+          currentCall = call;
+        }).catch(err => {
+          console.warn('Microphone permission denied', err);
+        });
+      });
+    }
+
+    function createOnlineRoom() {
+      const roomCode = Math.floor(100000 + Math.random() * 900000);
+      const peerId = 'dama-room-' + roomCode;
+
+      initPeer(peerId);
+
+      peer.on('open', () => {
+        const display = document.getElementById('displayRoomCode');
+        const box = document.getElementById('createdRoomBox');
+        if (display) display.textContent = roomCode;
+        if (box) box.style.display = 'block';
+
+        peer.on('connection', (c) => {
+          conn = c;
+          setupConnectionEvents();
+          gameMode = 'online';
+          myOnlineColor = 'W';
+          closeRoomModal();
+          const rTxt = document.getElementById('roomStatusText');
+          if (rTxt) rTxt.textContent = 'ڕووم: ' + roomCode;
+          alert('یاریزانی بەرامبەر بەستراوەتەوە! تۆ سپیت و یاری دەستپێدەکات.');
+          resetDamaGame(false);
+        });
+      });
+    }
+
+    function joinOnlineRoom() {
+      const input = document.getElementById('inputRoomCode');
+      const code = input ? input.value.trim() : '';
+      if (!code) { alert('تکایە کۆدی ڕووم بنووسە!'); return; }
+
+      initPeer();
+      peer.on('open', () => {
+        const targetPeerId = 'dama-room-' + code;
+        conn = peer.connect(targetPeerId);
+
+        conn.on('open', () => {
+          setupConnectionEvents();
+          gameMode = 'online';
+          myOnlineColor = 'B';
+          closeRoomModal();
+          const rTxt = document.getElementById('roomStatusText');
+          if (rTxt) rTxt.textContent = 'ڕووم: ' + code;
+          alert('بە سەرکەوتوویی چوویتە ژوورەوە! تۆ ڕەشیت.');
+          resetDamaGame(false);
+        });
+      });
+    }
+
+    function setupConnectionEvents() {
+      conn.on('data', (data) => {
+        if (data.type === 'MOVE') {
+          executeMoveAnimated(data.move);
+        } else if (data.type === 'RESET_GAME') {
+          resetDamaGame(false);
+        }
+      });
+
+      conn.on('close', () => {
+        alert('یاریزانی بەرامبەر دابڕا!');
+        changeMode('ai_master');
+      });
+    }
+
+    async function toggleVoiceChat() {
+      const btn = document.getElementById('btnVoiceMic');
+
+      if (!isMicActive) {
+        try {
+          localAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          isMicActive = true;
+          setMicActiveUI(true);
+
+          if (gameMode === 'online' && conn && conn.peer) {
+            const call = peer.call(conn.peer, localAudioStream);
+            call.on('stream', (remoteStream) => {
+              const player = document.getElementById('remoteAudioPlayer');
+              if (player) player.srcObject = remoteStream;
+            });
+            currentCall = call;
+          }
+        } catch (err) {
+          alert('تکایە ڕێگە بە مایکرۆفۆن بدە بۆ قسەکردن!');
+        }
+      } else {
+        if (localAudioStream) {
+          const audioTrack = localAudioStream.getAudioTracks()[0];
+          if (audioTrack) {
+            audioTrack.enabled = !audioTrack.enabled;
+            if (audioTrack.enabled) {
+              if (btn) {
+                btn.className = 'btn-mic active';
+                btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+              }
+            } else {
+              if (btn) {
+                btn.className = 'btn-mic muted';
+                btn.innerHTML = '<i class="fa-solid fa-microphone-slash"></i>';
+              }
+            }
+          }
+        }
+      }
+    }
+
+    function setMicActiveUI(active) {
+      const btn = document.getElementById('btnVoiceMic');
+      if (!btn) return;
+      if (active) {
+        btn.className = 'btn-mic active';
+        btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+      } else {
+        btn.className = 'btn-mic';
+        btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+      }
+    }
 </script>
 
 <script>
