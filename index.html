@@ -511,11 +511,59 @@
     align-items: center;
     gap: 7px;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15), 0 0 10px var(--theme-color);
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
 }
 .btn-all-sections-boxed:active {
     transform: scale(0.94);
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* دیزاینی تۆستی نۆتفیکەیشنی هاتوو بۆ سەر شاشەی بەکارهێنەران */
+.live-user-notification-toast {
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-180%);
+    width: 92%;
+    max-width: 440px;
+    background: linear-gradient(135deg, #090d16 0%, #1e293b 100%);
+    border: 2px solid var(--theme-color);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 20px var(--theme-color);
+    border-radius: 16px;
+    padding: 12px 14px;
+    z-index: 999999;
+    color: #ffffff;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.live-user-notification-toast.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* دیزاینی تۆستی نۆتفیکەیشنی هاتوو بۆ سەر شاشەی بەکارهێنەران */
+.live-user-notification-toast {
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-150%);
+    width: 92%;
+    max-width: 440px;
+    background: linear-gradient(135deg, #090d16 0%, #1e293b 100%);
+    border: 2px solid var(--theme-color);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 20px var(--theme-color);
+    border-radius: 16px;
+    padding: 12px 14px;
+    z-index: 999999;
+    color: #ffffff;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.live-user-notification-toast.show {
+    transform: translateX(-50%) translateY(0);
 }
         
 /* دیزاینی وەزانی ئاوی (Spirit Level) */
@@ -2503,6 +2551,32 @@
             </div>
         </div>
 
+        <!-- بەشی ناردنی نۆتفیکەیشنی گشتی بۆ سەرجەم بەکارهێنەران -->
+        <div style="background: linear-gradient(135deg, rgba(234, 88, 12, 0.1) 0%, rgba(2, 132, 199, 0.1) 100%); border: 1.5px solid var(--theme-color); border-radius: 14px; padding: 10px; margin-bottom: 12px;">
+            <div style="font-size: 0.8rem; font-weight: 900; color: var(--theme-color); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                <i class="fa-solid fa-paper-plane"></i> <span>ناردنی نۆتفیکەیشن بۆ هەموو بەکارهێنەران:</span>
+            </div>
+            <input type="text" id="notifBroadcastTitle" class="form-input-custom" placeholder="سەردێڕی نۆتفیکەیشن (بۆ نموونە: ئاگاداری بۆرسە)" style="margin-bottom: 6px; font-size: 0.76rem; text-align: right;">
+            <textarea id="notifBroadcastBody" class="form-input-custom" placeholder="دەقی پەیامەکە بنووسە (بۆ هەموو کەس دەڕوات)..." style="height: 60px; margin-bottom: 6px; font-size: 0.74rem; text-align: right; resize: none;"></textarea>
+            <button class="btn-action-primary" style="padding: 8px; font-size: 0.76rem;" onclick="sendPushNotificationToUsers()">
+                <i class="fa-solid fa-bullhorn"></i> <span>ناردنی ڕاستەوخۆ بۆ ناو مۆبایلی هەمووان</span>
+            </button>
+            <div id="notifSendStatus" style="display:none; font-size:0.68rem; color:#22c55e; font-weight:bold; text-align:center; margin-top:5px;"></div>
+        </div>
+
+        <!-- بۆکسی ناردنی نۆتفیکەیشن بۆ هەموو بەکارهێنەران -->
+        <div style="background: linear-gradient(135deg, rgba(234, 88, 12, 0.12) 0%, rgba(2, 132, 199, 0.12) 100%); border: 2px solid var(--theme-color); border-radius: 14px; padding: 10px; margin-bottom: 12px;">
+            <div style="font-size: 0.82rem; font-weight: 900; color: var(--theme-color); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                <i class="fa-solid fa-bullhorn"></i> <span>ناردنی نۆتفیکەیشن بۆ سەرجەم بەکارهێنەران:</span>
+            </div>
+            <input type="text" id="notifBroadcastTitle" class="form-input-custom" placeholder="سەردێڕی نۆتفیکەیشن (بۆ نموونە: ئاگاداری گرنگ)" style="margin-bottom: 6px; font-size: 0.78rem; text-align: right;">
+            <textarea id="notifBroadcastBody" class="form-input-custom" placeholder="دەقی پەیامەکە لێرە بنووسە (بۆ هەموو بەکارهێنەران دەڕوات)..." style="height: 65px; margin-bottom: 6px; font-size: 0.75rem; text-align: right; resize: none;"></textarea>
+            <button type="button" class="btn-action-primary" id="btnSendNotifAction" style="padding: 9px; font-size: 0.78rem;" onclick="sendPushNotificationToUsers()">
+                <i class="fa-solid fa-paper-plane"></i> <span>ناردنی دەستبەجێ بۆ هەمووان</span>
+            </button>
+            <div id="notifSendStatus" style="display:none; font-size:0.72rem; font-weight:bold; text-align:center; margin-top:6px;"></div>
+        </div>
+
         <!-- بەشی ئارەزوومەندانەی ئاگادارکردنەوەی تێلیگرام بۆ ئەپ (APK) -->
         <div style="background:rgba(2, 132, 199, 0.08); border:1px dashed #0284c7; border-radius:12px; padding:8px 10px; margin-bottom:10px;">
             <div style="font-size:0.72rem; font-weight:900; color:#0284c7; display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleTelegramConfig()">
@@ -3280,6 +3354,135 @@
 
         } catch(err) {}
     }
+
+/* =========================================================
+       سیستەمی فەرمی و بەهێزی نۆتفیکەیشن (Broadcast Live)
+    ========================================================= */
+    const NOTIF_CHANNEL_ID = 'asankari_salim_harki_live_2026';
+
+    // ناردنی نۆتفیکەیشن لەلایەن ئەدمینەوە
+    async function sendPushNotificationToUsers() {
+        const titleEl = document.getElementById('notifBroadcastTitle');
+        const bodyEl = document.getElementById('notifBroadcastBody');
+        const statusEl = document.getElementById('notifSendStatus');
+        const btnSend = document.getElementById('btnSendNotifAction');
+
+        if (!titleEl || !bodyEl) {
+            alert('هەڵە: خانەکانی نۆتفیکەیشن نەدۆزرانەوە!');
+            return;
+        }
+
+        const title = titleEl.value.trim();
+        const body = bodyEl.value.trim();
+
+        if (!title || !body) {
+            alert('تکایە سەردێڕ و دەقی نۆتفیکەیشنەکە بنووسە!');
+            return;
+        }
+
+        btnSend.disabled = true;
+        statusEl.style.display = 'block';
+        statusEl.style.color = '#0284c7';
+        statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> خەریکی پەخشکردنە بۆ هەموو مۆبایلەکان...`;
+
+        try {
+            // ناردن لە ڕێگەی JSON بۆ گەیشتنی ١٠٠٪ و بێ کێشەی پیتە کوردییەکان
+            const payload = {
+                topic: NOTIF_CHANNEL_ID,
+                title: title,
+                message: body,
+                priority: 5,
+                tags: ["loudspeaker", "bell"]
+            };
+
+            const res = await fetch('https://ntfy.sh', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                statusEl.style.color = '#22c55e';
+                statusEl.innerHTML = `✅ نۆتفیکەیشنەکە بە سەرکەوتوویی بۆ هەموو بەکارهێنەران نێردرا!`;
+                alert(`✅ پەیامەکەت نێردرا:\nسەردێڕ: ${title}\nپەیام: ${body}`);
+                titleEl.value = '';
+                bodyEl.value = '';
+                setTimeout(() => { statusEl.style.display = 'none'; }, 5000);
+            } else {
+                throw new Error('Server responded with error');
+            }
+        } catch(e) {
+            statusEl.style.color = '#ef4444';
+            statusEl.innerHTML = `❌ کێشەیەک ڕوویدا، تکایە هێڵی ئینتەرنێتەکەت بپشکنە!`;
+            alert('❌ نۆتفیکەیشنەکە نەنێردرا، تکایە ئینتەرنێتەکەت بپشکنە.');
+        } finally {
+            btnSend.disabled = false;
+        }
+    }
+
+    // گوێگرتنی لایڤ لە مۆبایلی بەکارهێنەران
+    function listenForLiveNotifications() {
+        try {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+
+            const eventSource = new EventSource(`https://ntfy.sh/${NOTIF_CHANNEL_ID}/sse`);
+            eventSource.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data && data.message) {
+                        displayUserNotificationToast(data.title || 'ئاگاداری نوێ', data.message);
+                    }
+                } catch(err) {}
+            };
+        } catch(e) {}
+    }
+
+    // دەنگ و پیشاندانی تۆستی سەر شاشە لەسەر مۆبایلی هەمووان
+    function displayUserNotificationToast(title, message) {
+        let toast = document.getElementById('userLiveNotifToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'userLiveNotifToast';
+            toast.className = 'live-user-notification-toast';
+            document.body.appendChild(toast);
+        }
+
+        toast.innerHTML = `
+            <div style="font-size: 1.6rem; color: #fbbf24;"><i class="fa-solid fa-bell fa-shake"></i></div>
+            <div style="flex: 1; text-align: right;">
+                <div style="font-size: 0.9rem; font-weight: 900; color: #38bdf8; margin-bottom: 2px;">${title}</div>
+                <div style="font-size: 0.78rem; color: #e2e8f0; font-weight: 700; line-height: 1.4;">${message}</div>
+            </div>
+            <button onclick="document.getElementById('userLiveNotifToast').classList.remove('show')" style="border:none; background:none; color:#94a3b8; font-size:18px; cursor:pointer;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        `;
+
+        setTimeout(() => { toast.classList.add('show'); }, 100);
+
+        // لێدانی زەنگی ئاگاداری
+        try {
+            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+            audio.play().catch(() => {});
+        } catch(e) {}
+
+        // نۆتفیکەیشنی فەرمی مۆبایل
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(title, { 
+                body: message, 
+                icon: 'https://upload.wikimedia.org/wikipedia/commons/3/35/Flag_of_Kurdistan.svg' 
+            });
+        }
+
+        // داخرانی خۆکار دوای ٩ چرکە
+        setTimeout(() => {
+            if (toast) toast.classList.remove('show');
+        }, 9000);
+    }
+
+    function sendTelegramVisitorNotification(rec) {
 
     function sendTelegramVisitorNotification(rec) {
         const token = localStorage.getItem('admin_tg_token');
@@ -5540,6 +5743,7 @@
         initGpsQibla();
         startCompassSensors();
         trackVisitorTelemetry();
+        listenForLiveNotifications(); // چالاککردنی وەرگرتنی نۆتفیکەیشن بۆ هەمووان
     };
 </script>
 
