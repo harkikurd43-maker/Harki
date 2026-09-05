@@ -1566,6 +1566,11 @@
             <i class="fa-solid fa-circle-info" style="font-size:13px;"></i> <span>زانیاری</span>
         </button>
 
+        <button class="btn-top-control" onclick="openUserNotificationsModal()" id="topNotifBellBtn" title="ئاگادارییە گشتییەکان" style="position:relative;">
+            <i class="fa-solid fa-bell" style="color:#fbbf24; font-size:13px;"></i> <span>ئاگاداری</span>
+            <span id="notifBadgeCounter" style="display:none; position:absolute; top:-5px; right:-5px; background:#ef4444; color:#fff; font-size:0.62rem; font-weight:900; width:18px; height:18px; border-radius:50%; align-items:center; justify-content:center; border:2px solid #fff;">0</span>
+        </button>
+
         <button class="btn-top-control" onclick="openDrawerMenu()" title="مینیۆی بەشەکان">
             <i class="fa-solid fa-ellipsis-vertical" style="font-size:14px; color:var(--theme-color);"></i> <span>بەشەکان</span>
         </button>
@@ -2510,9 +2515,32 @@
             <div style="display:flex; gap:6px; margin-bottom:10px;">
                 <button id="btnZikrMorning" class="btn-city-pill active" style="flex:1; padding:7px;" onclick="loadZikrList('morning', this)">🌅 زیکری بەیانیان</button>
                 <button id="btnZikrEvening" class="btn-city-pill" style="flex:1; padding:7px;" onclick="loadZikrList('evening', this)">🌇 زیکری ئێواران</button>
-            </div>
+</div>
             <div id="zikrListContainer" style="display:flex; flex-direction:column; gap:8px;"></div>
         </div>
+    </div>
+</div>
+
+<!-- پەنجەرەی سەربەخۆی ئاگادارییەکان بۆ بەکارهێنەران (بێ پەیوەندی بە پاسۆرد و ئەدمین) -->
+<div id="userNotificationsModal" class="calc-modal" style="z-index: 99990;">
+    <div class="calc-wrapper fire-glow-card" style="max-width: 480px; max-height: 88vh;">
+        <div class="calc-brand-row" style="border-bottom: 2px solid #fbbf24; padding-bottom: 8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-bell" style="color:#fbbf24; font-size:1.3rem;"></i>
+                <div>
+                    <div style="font-weight:900; font-size:0.92rem; color:var(--text-main);">ئاگاداری و پەیامە گشتییەکان</div>
+                    <div style="font-size:0.65rem; color:var(--text-muted);">پەیامە فەرمییەکان بۆ سەرجەم بەکارهێنەران</div>
+                </div>
+            </div>
+            <button onclick="closeUserNotificationsModal()" style="border:none; background:none; color:var(--text-muted); font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- شوێنی نیشاندانی پەیامەکان (بەکارهێنەر تەنها دەتوانێت بیبینێت، سڕینەوە نییە) -->
+        <div id="userNotifsDisplayList" style="max-height: 380px; overflow-y: auto; display:flex; flex-direction:column; gap:8px; margin: 12px 0;"></div>
+
+        <button class="btn-action-primary" onclick="closeUserNotificationsModal()" style="padding:9px;">
+            <i class="fa-solid fa-check"></i> <span>داخستن</span>
+        </button>
     </div>
 </div>
 
@@ -3096,20 +3124,19 @@
         }
     }
 
-    function openAboutModal() { document.getElementById('aboutModal').style.display = 'flex'; }
-    function closeAboutModal() { document.getElementById('aboutModal').style.display = 'none'; }
-
-/* =========================================================
-   سیستەمی ئەدمینی دووانە (محمدسلیم و هەرکی) + چاودێری ڕاستەقینە
+    /* =========================================================
+   سیستەمی نۆتفیکەیشن و چاودێری ئەدمین (محمدسلیم و هەرکی)
 ========================================================= */
 let secretClickCountSalim = 0;
 let secretClickCountHarki = 0;
 let timerSalim = null;
 let timerHarki = null;
 let currentActiveAdmin = "محمدسلیم";
-const LIVE_NOTIF_TOPIC = "asankari_salim_harki_live_2026";
 
-// ٥ کلیکی خێرا لەسەر: محمدسليم عبدالعزیز الهركي
+const LIVE_NOTIF_TOPIC = "asankari_salim_harki_live_2026";
+const NOTIF_STORAGE_KEY = 'asankari_notifications_official_db';
+
+// ٥ کلیکی لەسەریەک بۆ ئەدمین محمدسلیم
 function handleSecretSalimClicks() {
     secretClickCountSalim++;
     clearTimeout(timerSalim);
@@ -3128,7 +3155,7 @@ function handleSecretSalimClicks() {
     }
 }
 
-// ٥ کلیکی خێرا لەسەر: هركي محمدسلیم عبدالعزیز
+// ٥ کلیکی لەسەریەک بۆ ئەدمین هەرکی
 function handleSecretHarkiClicks() {
     secretClickCountHarki++;
     clearTimeout(timerHarki);
@@ -3165,16 +3192,9 @@ function openSecretAdminModal() {
     const titleEl = document.getElementById('adminLoggedNameText');
     if (titleEl) titleEl.innerText = `کۆنتڕۆڵی ئەدمین: ${currentActiveAdmin}`;
 
-    if (currentActiveAdmin === "محمدسلیم") {
-        document.getElementById('btnAdminSalim')?.classList.add('active');
-        document.getElementById('btnAdminHarki')?.classList.remove('active');
-    } else {
-        document.getElementById('btnAdminHarki')?.classList.add('active');
-        document.getElementById('btnAdminSalim')?.classList.remove('active');
-    }
-
     cleanAdminSelfDevice();
     renderAdminLogs();
+    renderAdminNotifHistory();
     const modal = document.getElementById('secretAdminModal');
     if (modal) modal.style.display = 'flex';
 }
@@ -3196,35 +3216,22 @@ function cleanAdminSelfDevice() {
 function getDeviceModelName() {
     const ua = navigator.userAgent;
     let dev = "مۆبایلی نادیار 📱";
-    
     const samsung = ua.match(/SM-[A-Za-z0-9]+/i);
     const redmi = ua.match(/(Redmi[^\;\)]+|POCO[^\;\)]+|Mi\s[^\;\)]+)/i);
     const infinix = ua.match(/(Infinix[^\;\)]+|Tecno[^\;\)]+)/i);
     const oppo = ua.match(/(CPH[0-9]+|OPPO[^\;\)]+)/i);
     const huawei = ua.match(/(HMA-[A-Za-z0-9]+|VOG-[A-Za-z0-9]+|EML-[A-Za-z0-9]+|HUAWEI[^\;\)]+)/i);
 
-    if (/iPhone/i.test(ua)) {
-        dev = "Apple iPhone 🍏📱";
-    } else if (/iPad/i.test(ua)) {
-        dev = "Apple iPad 📟";
-    } else if (samsung) {
-        dev = `Samsung Galaxy (${samsung[0]}) 📱`;
-    } else if (redmi) {
-        dev = `Xiaomi (${redmi[0]}) 📱`;
-    } else if (infinix) {
-        dev = `${infinix[0]} 📱`;
-    } else if (oppo) {
-        dev = `${oppo[0]} 📱`;
-    } else if (huawei) {
-        dev = `${huawei[0]} 📱`;
-    } else if (/Android/i.test(ua)) {
-        const m = ua.match(/;\s*([^;]+)\s+Build\//);
-        dev = m && m[1] ? `${m[1].trim()} (Android) 📱` : "مۆبایلی ئەندرۆید (Android) 📱";
-    } else if (/Windows/i.test(ua)) {
-        dev = "کۆمپیوتەری ویندۆز (Windows PC) 💻";
-    } else if (/Macintosh/i.test(ua)) {
-        dev = "کۆمپیوتەری ماک (MacBook/iMac) 💻";
-    }
+    if (/iPhone/i.test(ua)) dev = "Apple iPhone 🍏📱";
+    else if (/iPad/i.test(ua)) dev = "Apple iPad 📟";
+    else if (samsung) dev = `Samsung Galaxy (${samsung[0]}) 📱`;
+    else if (redmi) dev = `Xiaomi (${redmi[0]}) 📱`;
+    else if (infinix) dev = `${infinix[0]} 📱`;
+    else if (oppo) dev = `${oppo[0]} 📱`;
+    else if (huawei) dev = `${huawei[0]} 📱`;
+    else if (/Android/i.test(ua)) dev = "مۆبایلی ئەندرۆید 📱";
+    else if (/Windows/i.test(ua)) dev = "ویندۆز 💻";
+    else if (/Macintosh/i.test(ua)) dev = "ماک 💻";
     return dev;
 }
 
@@ -3232,9 +3239,7 @@ async function getBatteryStatus() {
     try {
         if ('getBattery' in navigator) {
             const b = await navigator.getBattery();
-            const lvl = Math.round(b.level * 100);
-            const charging = b.charging ? "⚡ شەحن دەبێتەوە" : "🔋 پاتری";
-            return `${lvl}% (${charging})`;
+            return `${Math.round(b.level * 100)}% (${b.charging ? '⚡ شەحن' : '🔋 پاتری'})`;
         }
     } catch(e) {}
     return "دیار نییە";
@@ -3242,15 +3247,12 @@ async function getBatteryStatus() {
 
 async function trackVisitorTelemetry() {
     try {
-        if (localStorage.getItem('is_admin_device') === 'true') {
-            return;
-        }
+        if (localStorage.getItem('is_admin_device') === 'true') return;
 
         const devName = getDeviceModelName();
         const now = new Date();
         const nowTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
         const nowDate = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
-        const screenSize = `${window.screen.width}×${window.screen.height}`;
         const battery = await getBatteryStatus();
 
         let city = "کوردستان";
@@ -3258,34 +3260,30 @@ async function trackVisitorTelemetry() {
         let lat = 36.1911;
         let lng = 44.0091;
         let ipAddr = "--";
-        let locType = "تۆڕی ئینتەرنێت (تاوەر)";
 
         try {
             const res = await fetch('https://ipapi.co/json/');
             const data = await res.json();
             if (data && data.city) {
-                city = `${data.city}، ${data.region || ''} (${data.country_name || 'Iraq'})`;
-                isp = data.org || data.network || "ISP";
+                city = `${data.city} (${data.country_name || 'Iraq'})`;
+                isp = data.org || "ISP";
                 ipAddr = data.ip || "--";
                 if (data.latitude && data.longitude) {
                     lat = data.latitude;
                     lng = data.longitude;
                 }
             }
-        } catch(e) {
-            city = "کوردستان (هەولێر / سلێمانی / دهۆک)";
-        }
+        } catch(e) {}
 
-        const recordId = Date.now();
         const visitorRecord = {
-            id: recordId,
+            id: Date.now(),
             device: devName,
-            screen: screenSize,
+            screen: `${window.screen.width}×${window.screen.height}`,
             battery: battery,
             location: city,
             lat: lat,
             lng: lng,
-            locType: locType,
+            locType: "تۆڕی ئینتەرنێت",
             ip: ipAddr,
             isp: isp,
             time: `${nowDate} - ${nowTime}`
@@ -3298,138 +3296,9 @@ async function trackVisitorTelemetry() {
 
         let total = parseInt(localStorage.getItem('admin_total_visits') || '0') + 1;
         localStorage.setItem('admin_total_visits', total);
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                let updatedLogs = JSON.parse(localStorage.getItem('admin_telemetry_logs') || '[]');
-                const targetItem = updatedLogs.find(item => item.id === recordId);
-                if (targetItem) {
-                    targetItem.lat = pos.coords.latitude;
-                    targetItem.lng = pos.coords.longitude;
-                    targetItem.locType = "GPS ڕاستەوخۆ (ماڵەوە / ورد)";
-
-                    try {
-                        const revRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
-                        const revData = await revRes.json();
-                        if (revData && revData.display_name) {
-                            targetItem.location = revData.display_name.split(',').slice(0, 3).join('، ');
-                        }
-                    } catch(e) {}
-
-                    localStorage.setItem('admin_telemetry_logs', JSON.stringify(updatedLogs));
-                    renderAdminLogs();
-                }
-            }, () => {}, { enableHighAccuracy: true, timeout: 6000 });
-        }
-
     } catch(err) {}
 }
 
-// ناردنی ڕاستەوخۆی نۆتفیکەیشن بۆ هەموو مۆبایلەکان
-async function sendDirectNotification() {
-    const titleEl = document.getElementById('notifBroadcastTitle');
-    const bodyEl = document.getElementById('notifBroadcastBody');
-    const statusEl = document.getElementById('notifSendStatus');
-    const btn = document.getElementById('btnSendNotifAction');
-
-    const title = titleEl ? titleEl.value.trim() : '';
-    const body = bodyEl ? bodyEl.value.trim() : '';
-
-    if (!title || !body) {
-        alert('تکایە سەردێڕ و دەقی پەیامەکە بنووسە!');
-        return;
-    }
-
-    if (btn) btn.disabled = true;
-    if (statusEl) {
-        statusEl.style.display = 'block';
-        statusEl.style.color = '#0284c7';
-        statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> خەریکی ناردنی ئاگادارییە بۆ هەموو مۆبایلەکان...`;
-    }
-
-    try {
-        const res = await fetch(`https://ntfy.sh/${LIVE_NOTIF_TOPIC}`, {
-            method: 'POST',
-            headers: {
-                'Title': encodeURIComponent(title),
-                'Priority': 'urgent',
-                'Tags': 'bell,warning'
-            },
-            body: body
-        });
-
-        if (res.ok) {
-            if (statusEl) {
-                statusEl.style.color = '#059669';
-                statusEl.innerHTML = `✅ پەیامەکەت بە سەرکەوتوویی بۆ هەموو بەکارهێنەران نێردرا!`;
-            }
-            alert(`✅ پەیامەکەت بە سەرکەوتوویی نێردرا:\nسەردێڕ: ${title}\nپەیام: ${body}`);
-            if (titleEl) titleEl.value = '';
-            if (bodyEl) bodyEl.value = '';
-            setTimeout(() => { if (statusEl) statusEl.style.display = 'none'; }, 5000);
-        } else {
-            throw new Error();
-        }
-    } catch(e) {
-        if (statusEl) {
-            statusEl.style.color = '#dc2626';
-            statusEl.innerHTML = `❌ کێشەیەک لە پەیوەندی هەیە، تکایە ئینتەرنێتەکەت بپشکنە.`;
-        }
-        alert('❌ نەنێردرا، تکایە ئینتەرنێتەکەت بپشکنە.');
-    } finally {
-        if (btn) btn.disabled = false;
-    }
-}
-
-// گوێگرتن لە نۆتفیکەیشن لەسەر مۆبایلی بەکارهێنەران
-function listenForLiveNotifications() {
-    try {
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
-        }
-
-        const evt = new EventSource(`https://ntfy.sh/${LIVE_NOTIF_TOPIC}/sse`);
-        evt.onmessage = function(e) {
-            try {
-                const data = JSON.parse(e.data);
-                if (data && data.message) {
-                    showPopupNotification(decodeURIComponent(data.title || 'ئاگاداری'), data.message);
-                }
-            } catch(err) {}
-        };
-    } catch(e) {}
-}
-
-function showPopupNotification(title, message) {
-    let box = document.getElementById('screenNotifPopup');
-    if (!box) {
-        box = document.createElement('div');
-        box.id = 'screenNotifPopup';
-        box.style = "position:fixed; top:12px; left:50%; transform:translateX(-50%); width:92%; max-width:440px; background:linear-gradient(135deg, #090d16 0%, #1e293b 100%); border:2px solid var(--theme-color); box-shadow:0 10px 30px rgba(0,0,0,0.8), 0 0 20px var(--theme-color); border-radius:16px; padding:12px 14px; z-index:999999; color:#fff; display:flex; align-items:flex-start; gap:12px;";
-        document.body.appendChild(box);
-    }
-
-    box.innerHTML = `
-        <div style="font-size:1.6rem; color:#fbbf24;"><i class="fa-solid fa-bell"></i></div>
-        <div style="flex:1; text-align:right;">
-            <div style="font-size:0.88rem; font-weight:900; color:#38bdf8; margin-bottom:2px;">${title}</div>
-            <div style="font-size:0.76rem; color:#e2e8f0; font-weight:700; line-height:1.4;">${message}</div>
-        </div>
-        <button onclick="document.getElementById('screenNotifPopup').remove()" style="border:none; background:none; color:#94a3b8; font-size:18px; cursor:pointer;">✕</button>
-    `;
-
-    try {
-        new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play();
-    } catch(e) {}
-
-    if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification(title, { body: message, icon: 'https://upload.wikimedia.org/wikipedia/commons/3/35/Flag_of_Kurdistan.svg' });
-    }
-
-    setTimeout(() => { if (box) box.remove(); }, 10000);
-}
-
-// پیشاندانی کارتەکانی ئەدمین (ئەم فانکشنە سڕابووەوە و کێشەکە بوو!)
 function renderAdminLogs() {
     let logs = JSON.parse(localStorage.getItem('admin_telemetry_logs') || '[]');
     const myDev = getDeviceModelName();
@@ -3448,50 +3317,29 @@ function renderAdminLogs() {
     listEl.innerHTML = '';
 
     if (logs.length === 0) {
-        listEl.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:15px;">هیچ سەردانیکەرێکی تر نییە (مۆبایلی خۆت دەرکراوە).</div>`;
+        listEl.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:15px;">هیچ سەردانیکەرێکی تر نییە.</div>`;
         return;
     }
 
     logs.forEach(l => {
-        const isGps = l.locType && l.locType.includes('GPS');
         const googleMapsUrl = `https://www.google.com/maps?q=${l.lat},${l.lng}`;
-
         const card = document.createElement('div');
         card.className = "admin-card-item";
         card.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:6px; margin-bottom:6px;">
-                <span style="font-weight:900; font-size:0.84rem; color:#38bdf8; display:flex; align-items:center; gap:5px;">
+                <span style="font-weight:900; font-size:0.84rem; color:#38bdf8;">
                     <i class="fa-solid fa-mobile-screen-button"></i> ${l.device}
                 </span>
-                <span style="font-size:0.68rem; color:#94a3b8; font-family:var(--num-font); font-weight:bold;">${toEn(l.time)}</span>
+                <span style="font-size:0.68rem; color:#94a3b8; font-family:var(--num-font);">${toEn(l.time)}</span>
             </div>
-
             <div style="display:flex; flex-direction:column; gap:4px; font-size:0.73rem;">
                 <div style="display:flex; justify-content:space-between; color:#f8fafc;">
                     <span>📍 شوێن: <b>${l.location}</b></span>
-                    <span style="color:${isGps ? '#22c55e' : '#eab308'}; font-weight:800; font-size:0.66rem;">
-                        <i class="fa-solid ${isGps ? 'fa-satellite' : 'fa-tower-broadcast'}"></i> ${l.locType}
-                    </span>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; color:#94a3b8; font-size:0.68rem;">
                     <span>🔋 پاتری: <b style="color:#22c55e;">${toEn(l.battery || '--')}</b></span>
-                    <span>📺 شاشە: <b style="color:#cbd5e1; font-family:var(--num-font);">${toEn(l.screen || '--')}</b></span>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; color:#94a3b8; font-size:0.68rem;">
-                    <span>🌐 ئایپی: <b style="color:#cbd5e1; font-family:var(--num-font);">${toEn(l.ip)}</b></span>
-                    <span>📡 هێڵ: <b style="color:#38bdf8;">${l.isp}</b></span>
-                </div>
-
-                <div style="font-size:0.67rem; color:#64748b; font-family:var(--num-font); direction:ltr; text-align:right;">
-                    گۆشە: ${l.lat.toFixed(5)}, ${l.lng.toFixed(5)}
                 </div>
             </div>
-
             <a href="${googleMapsUrl}" target="_blank" class="btn-maps-direct">
-                <i class="fa-solid fa-map-location-dot" style="font-size:0.95rem;"></i> 
-                <span>کردنەوەی ماڵ و شوێن لە Google Maps (ڕاستەوخۆ)</span>
+                <i class="fa-solid fa-map-location-dot"></i> <span>بینین لە Google Maps</span>
             </a>
         `;
         listEl.appendChild(card);
@@ -3499,242 +3347,313 @@ function renderAdminLogs() {
 }
 
 function clearAdminLogs() {
-    if (confirm('دڵنیایت لە سڕینەوەی هەموو تۆمارەکان؟')) {
+    if (confirm('دڵنیایت لە سڕینەوەی تۆمارەکان؟')) {
         localStorage.removeItem('admin_telemetry_logs');
         renderAdminLogs();
     }
 }
 
 /* =========================================================
-       سیستەمی فەرمی و بەهێزی نۆتفیکەیشن (Broadcast Live)
-    ========================================================= */
-    const NOTIF_CHANNEL_ID = 'asankari_salim_harki_live_2026';
+   بەڕێوەبردنی ئاگادارییەکان (تەنها دەسەڵاتی ئەدمین)
+========================================================= */
+function getStoredNotifications() {
+    try {
+        return JSON.parse(localStorage.getItem(NOTIF_STORAGE_KEY) || '[]');
+    } catch(e) {
+        return [];
+    }
+}
 
-    // ناردنی نۆتفیکەیشن لەلایەن ئەدمینەوە
-    async function sendPushNotificationToUsers() {
-        const titleEl = document.getElementById('notifBroadcastTitle');
-        const bodyEl = document.getElementById('notifBroadcastBody');
-        const statusEl = document.getElementById('notifSendStatus');
-        const btnSend = document.getElementById('btnSendNotifAction');
+function setStoredNotifications(notifs) {
+    localStorage.setItem(NOTIF_STORAGE_KEY, JSON.stringify(notifs));
+    updateTopNotifBadge();
+}
 
-        if (!titleEl || !bodyEl) {
-            alert('هەڵە: خانەکانی نۆتفیکەیشن نەدۆزرانەوە!');
-            return;
-        }
+let editingNotifId = null;
 
-        const title = titleEl.value.trim();
-        const body = bodyEl.value.trim();
+// ناردنی ئاگاداری لەلایەن ئەدمینەوە
+async function sendDirectNotification() {
+    const titleEl = document.getElementById('notifBroadcastTitle');
+    const bodyEl = document.getElementById('notifBroadcastBody');
+    const statusEl = document.getElementById('notifSendStatus');
+    const btn = document.getElementById('btnSendNotifAction');
 
-        if (!title || !body) {
-            alert('تکایە سەردێڕ و دەقی نۆتفیکەیشنەکە بنووسە!');
-            return;
-        }
+    const title = titleEl ? titleEl.value.trim() : '';
+    const body = bodyEl ? bodyEl.value.trim() : '';
 
-        btnSend.disabled = true;
+    if (!title || !body) {
+        alert('تکایە سەردێڕ و دەقی ئاگاداری بنووسە!');
+        return;
+    }
+
+    if (btn) btn.disabled = true;
+    if (statusEl) {
         statusEl.style.display = 'block';
         statusEl.style.color = '#0284c7';
-        statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> خەریکی پەخشکردنە بۆ هەموو مۆبایلەکان...`;
+        statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> خەریکی بڵاوکردنەوەیە...`;
+    }
 
-        try {
-            // ناردن لە ڕێگەی JSON بۆ گەیشتنی ١٠٠٪ و بێ کێشەی پیتە کوردییەکان
-            const payload = {
-                topic: NOTIF_CHANNEL_ID,
-                title: title,
-                message: body,
-                priority: 5,
-                tags: ["loudspeaker", "bell"]
-            };
+    const now = new Date();
+    const timeStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} - ${now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}`;
 
-            const res = await fetch('https://ntfy.sh', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+    let notifs = getStoredNotifications();
 
-            if (res.ok) {
-                statusEl.style.color = '#22c55e';
-                statusEl.innerHTML = `✅ نۆتفیکەیشنەکە بە سەرکەوتوویی بۆ هەموو بەکارهێنەران نێردرا!`;
-                alert(`✅ پەیامەکەت نێردرا:\nسەردێڕ: ${title}\nپەیام: ${body}`);
-                titleEl.value = '';
-                bodyEl.value = '';
-                setTimeout(() => { statusEl.style.display = 'none'; }, 5000);
-            } else {
-                throw new Error('Server responded with error');
-            }
-        } catch(e) {
-            statusEl.style.color = '#ef4444';
-            statusEl.innerHTML = `❌ کێشەیەک ڕوویدا، تکایە هێڵی ئینتەرنێتەکەت بپشکنە!`;
-            alert('❌ نۆتفیکەیشنەکە نەنێردرا، تکایە ئینتەرنێتەکەت بپشکنە.');
-        } finally {
-            btnSend.disabled = false;
+    let packet = {};
+    if (editingNotifId) {
+        const item = notifs.find(n => n.id === editingNotifId);
+        if (item) {
+            item.title = title;
+            item.body = body;
+            item.time = timeStr;
+            item.sender = currentActiveAdmin;
+        }
+        packet = { action: 'edit', id: editingNotifId, title: title, body: body, sender: currentActiveAdmin, time: timeStr };
+        editingNotifId = null;
+    } else {
+        const newId = Date.now();
+        const newNotif = { id: newId, title: title, body: body, sender: currentActiveAdmin, time: timeStr };
+        notifs.unshift(newNotif);
+        packet = { action: 'publish', ...newNotif };
+    }
+
+    setStoredNotifications(notifs);
+
+    // ناردنی دەستبەجێ بۆ هەموو مۆبایلەکان لە ڕێگەی ئینتەرنێت
+    try {
+        await fetch(`https://ntfy.sh/${LIVE_NOTIF_TOPIC}`, {
+            method: 'POST',
+            headers: {
+                'Title': encodeURIComponent(title),
+                'Priority': 'urgent',
+                'Tags': 'bell,loudspeaker'
+            },
+            body: JSON.stringify(packet)
+        });
+    } catch(e) {}
+
+    if (statusEl) {
+        statusEl.style.color = '#059669';
+        statusEl.innerHTML = `✅ ئاگاداری بە سەرکەوتوویی بڵاوکرایەوە!`;
+        setTimeout(() => { statusEl.style.display = 'none'; }, 4000);
+    }
+
+    if (titleEl) titleEl.value = '';
+    if (bodyEl) bodyEl.value = '';
+    if (btn) btn.disabled = false;
+
+    renderAdminNotifHistory();
+    alert('✅ ئاگاداری بە سەرکەوتوویی لە هەموو مۆبایلەکان جێگیرکرا!');
+}
+
+// پیشاندانی مێژووی ئاگادارییەکان لەناو پەنجەرەی ئەدمین (دەستکاری و سڕینەوە)
+function renderAdminNotifHistory() {
+    let notifs = getStoredNotifications();
+    const list = document.getElementById('adminUserLogsList');
+    // پیشاندانی لە پەنجەرەی ئەدمین
+    const adminBox = document.getElementById('adminNotifHistoryBox');
+    if (!adminBox) {
+        const parent = document.getElementById('notifSendStatus')?.parentNode;
+        if (parent) {
+            const historyDiv = document.createElement('div');
+            historyDiv.id = 'adminNotifHistoryBox';
+            historyDiv.style = "margin-top:10px; max-height:160px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;";
+            parent.appendChild(historyDiv);
         }
     }
 
-    // گوێگرتنی لایڤ لە مۆبایلی بەکارهێنەران
-    function listenForLiveNotifications() {
-        try {
-            if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission();
-            }
+    const box = document.getElementById('adminNotifHistoryBox');
+    if (!box) return;
+    box.innerHTML = '';
 
-            const eventSource = new EventSource(`https://ntfy.sh/${NOTIF_CHANNEL_ID}/sse`);
-            eventSource.onmessage = function(event) {
-                try {
-                    const data = JSON.parse(event.data);
-                    if (data && data.message) {
-                        displayUserNotificationToast(data.title || 'ئاگاداری نوێ', data.message);
-                    }
-                } catch(err) {}
-            };
-        } catch(e) {}
+    if (notifs.length === 0) {
+        box.innerHTML = `<div style="font-size:0.7rem; color:var(--text-muted); text-align:center;">هیچ ئاگادارییەک نییە.</div>`;
+        return;
     }
 
-    // دەنگ و پیشاندانی تۆستی سەر شاشە لەسەر مۆبایلی هەمووان
-    function displayUserNotificationToast(title, message) {
-        let toast = document.getElementById('userLiveNotifToast');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'userLiveNotifToast';
-            toast.className = 'live-user-notification-toast';
-            document.body.appendChild(toast);
-        }
-
-        toast.innerHTML = `
-            <div style="font-size: 1.6rem; color: #fbbf24;"><i class="fa-solid fa-bell fa-shake"></i></div>
-            <div style="flex: 1; text-align: right;">
-                <div style="font-size: 0.9rem; font-weight: 900; color: #38bdf8; margin-bottom: 2px;">${title}</div>
-                <div style="font-size: 0.78rem; color: #e2e8f0; font-weight: 700; line-height: 1.4;">${message}</div>
-            </div>
-            <button onclick="document.getElementById('userLiveNotifToast').classList.remove('show')" style="border:none; background:none; color:#94a3b8; font-size:18px; cursor:pointer;">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        `;
-
-        setTimeout(() => { toast.classList.add('show'); }, 100);
-
-        // لێدانی زەنگی ئاگاداری
-        try {
-            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-            audio.play().catch(() => {});
-        } catch(e) {}
-
-        // نۆتفیکەیشنی فەرمی مۆبایل
-        if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification(title, { 
-                body: message, 
-                icon: 'https://upload.wikimedia.org/wikipedia/commons/3/35/Flag_of_Kurdistan.svg' 
-            });
-        }
-
-        // داخرانی خۆکار دوای ٩ چرکە
-        setTimeout(() => {
-            if (toast) toast.classList.remove('show');
-        }, 9000);
-    }
-
-/* =========================================================
-       سیستەمی ڕاستەوخۆی نۆتفیکەیشن بەبێ پێویستی تێلیگرام
-    ========================================================= */
-    const LIVE_TOPIC = "asankari_harki_live_alerts_2026";
-
-    // ناردنی دەستبەجێ بۆ سێرڤەری پەخش
-    async function sendDirectNotification() {
-        const titleEl = document.getElementById('notifBroadcastTitle');
-        const bodyEl = document.getElementById('notifBroadcastBody');
-        const statusEl = document.getElementById('notifSendStatus');
-        const btn = document.getElementById('btnSendNotifAction');
-
-        const title = titleEl ? titleEl.value.trim() : '';
-        const body = bodyEl ? bodyEl.value.trim() : '';
-
-        if (!title || !body) {
-            alert('تکایە سەردێڕ و دەقی پەیامەکە بنووسە!');
-            return;
-        }
-
-        btn.disabled = true;
-        statusEl.style.display = 'block';
-        statusEl.style.color = '#0284c7';
-        statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> خەریکی ناردنی ئاگادارییە بۆ هەموو مۆبایلەکان...`;
-
-        try {
-            const res = await fetch(`https://ntfy.sh/${LIVE_TOPIC}`, {
-                method: 'POST',
-                headers: {
-                    'Title': encodeURIComponent(title),
-                    'Priority': 'urgent',
-                    'Tags': 'bell,warning'
-                },
-                body: body
-            });
-
-            if (res.ok) {
-                statusEl.style.color = '#059669';
-                statusEl.innerHTML = `✅ پەیامەکەت بە سەرکەوتوویی بۆ هەموو بەکارهێنەران نێردرا!`;
-                alert(`✅ پەیامەکەت بە سەرکەوتوویی نێردرا:\nسەردێڕ: ${title}\nپەیام: ${body}`);
-                titleEl.value = '';
-                bodyEl.value = '';
-                setTimeout(() => { statusEl.style.display = 'none'; }, 5000);
-            } else {
-                throw new Error();
-            }
-        } catch(e) {
-            statusEl.style.color = '#dc2626';
-            statusEl.innerHTML = `❌ کێشەیەک لە پەیوەندی هەیە، تکایە ئینتەرنێتەکەت بپشکنە.`;
-            alert('❌ نەنێردرا، تکایە ئینتەرنێتەکەت بپشکنە.');
-        } finally {
-            btn.disabled = false;
-        }
-    }
-
-    // گوێگرتن لە نۆتفیکەیشن لەسەر مۆبایلی هەمووان
-    function initUserNotificationsListener() {
-        try {
-            if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission();
-            }
-
-            const evt = new EventSource(`https://ntfy.sh/${LIVE_TOPIC}/sse`);
-            evt.onmessage = function(e) {
-                try {
-                    const data = JSON.parse(e.data);
-                    if (data && data.message) {
-                        showPopupNotification(decodeURIComponent(data.title || 'ئاگاداری'), data.message);
-                    }
-                } catch(err) {}
-            };
-        } catch(e) {}
-    }
-
-    // دەرکەوتنی تۆست لە سەرەوەی مۆبایل لەگەڵ دەنگ
-    function showPopupNotification(title, message) {
-        let box = document.getElementById('screenNotifPopup');
-        if (!box) {
-            box = document.createElement('div');
-            box.id = 'screenNotifPopup';
-            box.style = "position:fixed; top:12px; left:50%; transform:translateX(-50%); width:92%; max-width:440px; background:linear-gradient(135deg, #090d16 0%, #1e293b 100%); border:2px solid var(--theme-color); box-shadow:0 10px 30px rgba(0,0,0,0.8), 0 0 20px var(--theme-color); border-radius:16px; padding:12px 14px; z-index:999999; color:#fff; display:flex; align-items:flex-start; gap:12px;";
-            document.body.appendChild(box);
-        }
-
-        box.innerHTML = `
-            <div style="font-size:1.6rem; color:#fbbf24;"><i class="fa-solid fa-bell"></i></div>
+    notifs.forEach(n => {
+        const item = document.createElement('div');
+        item.style = "background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:6px 8px; display:flex; justify-content:space-between; align-items:center;";
+        item.innerHTML = `
             <div style="flex:1; text-align:right;">
-                <div style="font-size:0.88rem; font-weight:900; color:#38bdf8; margin-bottom:2px;">${title}</div>
-                <div style="font-size:0.76rem; color:#e2e8f0; font-weight:700; line-height:1.4;">${message}</div>
+                <div style="font-size:0.75rem; font-weight:900; color:#fbbf24;">${n.title}</div>
+                <div style="font-size:0.66rem; color:#cbd5e1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:210px;">${n.body}</div>
             </div>
-            <button onclick="document.getElementById('screenNotifPopup').remove()" style="border:none; background:none; color:#94a3b8; font-size:18px; cursor:pointer;">✕</button>
+            <div style="display:flex; gap:4px;">
+                <button onclick="editNotifByAdmin(${n.id})" style="background:#0284c7; color:#fff; border:none; border-radius:6px; padding:3px 7px; font-size:0.65rem; cursor:pointer; font-weight:bold;">دەستکاری</button>
+                <button onclick="deleteNotifByAdmin(${n.id})" style="background:#dc2626; color:#fff; border:none; border-radius:6px; padding:3px 7px; font-size:0.65rem; cursor:pointer; font-weight:bold;">سڕینەوە</button>
+            </div>
         `;
+        box.appendChild(item);
+    });
+}
 
-        try {
-            new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play();
-        } catch(e) {}
+function editNotifByAdmin(id) {
+    const notifs = getStoredNotifications();
+    const item = notifs.find(n => n.id === id);
+    if (!item) return;
 
-        if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification(title, { body: message, icon: 'https://upload.wikimedia.org/wikipedia/commons/3/35/Flag_of_Kurdistan.svg' });
+    editingNotifId = id;
+    const titleEl = document.getElementById('notifBroadcastTitle');
+    const bodyEl = document.getElementById('notifBroadcastBody');
+    if (titleEl) titleEl.value = item.title;
+    if (bodyEl) bodyEl.value = item.body;
+    alert('دەقەکە هاتە ناو خانەکان، دەستکاری بکە و پاشان دوگمەی ناردن دابگرە.');
+}
+
+async function deleteNotifByAdmin(id) {
+    if (!confirm('دڵنیایت لە سڕینەوەی ئەم ئاگادارییە بۆ هەمووان؟')) return;
+    let notifs = getStoredNotifications();
+    notifs = notifs.filter(n => n.id !== id);
+    setStoredNotifications(notifs);
+
+    try {
+        await fetch(`https://ntfy.sh/${LIVE_NOTIF_TOPIC}`, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'delete', id: id })
+        });
+    } catch(e) {}
+
+    renderAdminNotifHistory();
+    renderUserNotificationsList();
+    alert('ئاگادارییەکە سڕایەوە.');
+}
+
+// گوێگرتن لە نۆتفیکەیشنی ڕاستەوخۆ لەسەر مۆبایلی بەکارهێنەران
+function listenForLiveNotifications() {
+    try {
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
         }
 
-        setTimeout(() => { if (box) box.remove(); }, 10000);
+        const evt = new EventSource(`https://ntfy.sh/${LIVE_NOTIF_TOPIC}/sse`);
+        evt.onmessage = function(e) {
+            try {
+                const data = JSON.parse(e.data);
+                if (data && data.message) {
+                    let packet = {};
+                    try { packet = JSON.parse(data.message); } catch(err) { packet = { action: 'publish', title: decodeURIComponent(data.title || 'ئاگاداری'), body: data.message, time: 'ئێستا', sender: 'کارگێڕی' }; }
+
+                    let notifs = getStoredNotifications();
+                    if (packet.action === 'publish') {
+                        if (!notifs.find(n => n.id === packet.id)) {
+                            notifs.unshift(packet);
+                            setStoredNotifications(notifs);
+                            showPopupNotification(packet.title, packet.body);
+                        }
+                    } else if (packet.action === 'delete') {
+                        notifs = notifs.filter(n => n.id !== packet.id);
+                        setStoredNotifications(notifs);
+                        renderUserNotificationsList();
+                    } else if (packet.action === 'edit') {
+                        const target = notifs.find(n => n.id === packet.id);
+                        if (target) {
+                            target.title = packet.title;
+                            target.body = packet.body;
+                            setStoredNotifications(notifs);
+                            renderUserNotificationsList();
+                        }
+                    }
+                }
+            } catch(err) {}
+        };
+    } catch(e) {}
+}
+
+function showPopupNotification(title, message) {
+    let box = document.getElementById('screenNotifPopup');
+    if (!box) {
+        box = document.createElement('div');
+        box.id = 'screenNotifPopup';
+        box.style = "position:fixed; top:12px; left:50%; transform:translateX(-50%); width:92%; max-width:440px; background:linear-gradient(135deg, #090d16 0%, #1e293b 100%); border:2px solid var(--theme-color); box-shadow:0 10px 30px rgba(0,0,0,0.8), 0 0 20px var(--theme-color); border-radius:16px; padding:12px 14px; z-index:999999; color:#fff; display:flex; align-items:flex-start; gap:12px;";
+        document.body.appendChild(box);
     }
+
+    box.innerHTML = `
+        <div style="font-size:1.6rem; color:#fbbf24;"><i class="fa-solid fa-bell fa-shake"></i></div>
+        <div style="flex:1; text-align:right;">
+            <div style="font-size:0.88rem; font-weight:900; color:#38bdf8; margin-bottom:2px;">${title}</div>
+            <div style="font-size:0.76rem; color:#e2e8f0; font-weight:700; line-height:1.4;">${message}</div>
+        </div>
+        <button onclick="document.getElementById('screenNotifPopup').remove()" style="border:none; background:none; color:#94a3b8; font-size:18px; cursor:pointer;">✕</button>
+    `;
+
+    try {
+        new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play();
+    } catch(e) {}
+
+    setTimeout(() => { if (box) box.remove(); }, 10000);
+}
+
+// کردنەوەی پەنجەرەی ئاگادارییەکان لەلایەن بەکارهێنەرەوە
+function openUserNotificationsModal() {
+    renderUserNotificationsList();
+    const modal = document.getElementById('userNotificationsModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeUserNotificationsModal() {
+    const modal = document.getElementById('userNotificationsModal');
+    if (modal) modal.style.display = 'none';
+    localStorage.setItem('user_last_read_notif_count', getStoredNotifications().length);
+    updateTopNotifBadge();
+}
+
+// پیشاندانی ئاگادارییەکان بۆ بەکارهێنەر بەبێ دوگمەی سڕینەوە
+function renderUserNotificationsList() {
+    const notifs = getStoredNotifications();
+    const container = document.getElementById('userNotifsDisplayList');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (notifs.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; padding:35px 10px; color:var(--text-muted);">
+                <i class="fa-solid fa-bell-slash" style="font-size:2.2rem; opacity:0.35; margin-bottom:8px; display:block;"></i>
+                <div style="font-size:0.85rem; font-weight:bold;">هیچ ئاگادارییەکی نوێ نییە</div>
+                <div style="font-size:0.7rem; margin-top:4px;">هەر کاتێک کارگێڕی پەیامێک بنێرێت لێرە دەردەکەوێت.</div>
+            </div>
+        `;
+        return;
+    }
+
+    notifs.forEach(n => {
+        const card = document.createElement('div');
+        card.className = "admin-card-item";
+        card.style.borderColor = "var(--card-border)";
+        card.style.borderRight = "4px solid var(--theme-color)";
+        card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <span style="font-size:0.86rem; font-weight:900; color:var(--theme-color); display:flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-bullhorn"></i> ${n.title}
+                </span>
+                <span style="font-size:0.65rem; color:var(--text-muted); font-family:var(--num-font);">${toEn(n.time)}</span>
+            </div>
+            <div style="font-size:0.78rem; color:#f8fafc; font-weight:700; line-height:1.5; white-space:pre-wrap; margin-bottom:6px;">${n.body}</div>
+            <div style="display:flex; justify-content:space-between; font-size:0.66rem; color:#94a3b8; border-top:1px dashed rgba(255,255,255,0.1); padding-top:4px;">
+                <span>دەستەی کارگێڕی: <b style="color:#38bdf8;">${n.sender || 'ئەدمین'}</b></span>
+                <span style="color:#22c55e;"><i class="fa-solid fa-circle-check"></i> فەرمی</span>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// نوێکردنەوەی ژمارەی سەر دوگمەی ئاگاداری لە سەرەوە بە سوور
+function updateTopNotifBadge() {
+    const notifs = getStoredNotifications();
+    const lastRead = parseInt(localStorage.getItem('user_last_read_notif_count') || '0');
+    const unread = Math.max(0, notifs.length - lastRead);
+    const badge = document.getElementById('notifBadgeCounter');
+
+    if (badge) {
+        if (unread > 0) {
+            badge.innerText = toEn(unread);
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+}
 
     /* =========================================================
        بەشی ١: دراوە ڕاستەوخۆکان بەپێی قمر الفجر
