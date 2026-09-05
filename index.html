@@ -1584,7 +1584,7 @@
     <!-- ٥ کلیکی لەسەریەک: ئەدمینی محمدسلیم (پاسۆرد: H075076@) -->
     <div class="colored-name" onclick="handleSecretSalimClicks()" style="cursor:pointer; user-select:none; touch-action:manipulation;">محمدسليم عبدالعزیز الهركي</div>
     <!-- ٥ کلیکی لەسەریەک: ئەدمینی هەرکی (پاسۆرد: H2011m@) -->
-    <div class="colored-name" onclick="handleSecretHarkiClicks()" style="cursor:pointer; user-select:none; touch-action:manipulation;">هركي كردي</div>
+    <div class="colored-name" onclick="handleSecretHarkiClicks()" style="cursor:pointer; user-select:none; touch-action:manipulation;">هركي محمدسلیم عبدالعزیز</div>
 
     <div class="scrolling-container" onclick="openAboutModal()">
         <div class="scrolling-text">
@@ -1704,6 +1704,11 @@
                 <div class="result-item"><span>ڕیاڵی سعوودی</span><span id="res-SAR" class="badge-val">0</span></div>
                 <div class="result-item"><span>درهەمی ئیماراتی</span><span id="res-AED" class="badge-val">0</span></div>
             </div>
+
+            <!-- دوگمەی کردنەوەی حاسیبە -->
+            <button class="btn-calc-launcher fire-glow-card" onclick="document.getElementById('myCalc').style.display='flex'">
+                <i class="fa-solid fa-calculator" style="color:#059669; font-size:18px;"></i> <span>🧮 کردنەوەی حاسیبەی پێشکەوتووی Canon</span>
+            </button>
         </div>
     </div>
 
@@ -1781,14 +1786,12 @@
                     <label style="font-size:0.72rem; font-weight:800;">دەنگی قورئانخوێن:</label>
                     <select id="quranReciterSelect" class="form-input-custom" onchange="changeQuranReciter()">
                     <option value="ar.alafasy">میشاری ئەلعەفاسی (Alafasy)</option>
-                     <option value="EA:Yasser_Ad-Dussary_128kbps">یاسر دۆسەری (Yasser Al-Dossari)</option>
-                       <option value="EA:Nasser_Alqatami_128kbps">ناسر ئەلقەتامی - یاسر ناسر (Nasser Al-Qatami)</option>
-                       <option value="mp3quran:raad_kurdi">ڕەعد محەمەد کوردی (Raad Al-Kurdi)</option>
+                     <option value="EA:Yasser_Ad-Dussary_128kbps">یاسر دۆسەری</option>
+                       <option value="EA:Nasser_Alqatami_128kbps">ناسر ئەلقەتامی - یاسر ناسر </option>
+                       <option value="mp3quran:raad_kurdi">ڕەعد محەمەد کوردی </option>
                        <option value="ar.mahermuaiqly">ماهر ئەلموعەیقلی</option>
-                       <option value="ar.abdulbasitmurattal">عەبدولباست عەبدولسەمەد</option>
                        <option value="ar.minshawi">محەمەد سدیق ئەلمەنشاوی</option>
                         <option value="ar.husary">مەحموود خەلیل ئەلحوسەری</option>
-                        <option value="ar.sudais">عەبدولڕەحمان ئەلسودەیس</option>
                     </select>
                 </div>
             </div>
@@ -2800,6 +2803,43 @@
         <button class="drawer-nav-btn" onclick="closeDrawerMenu(); openSystem();">
             <i class="fa-solid fa-globe" style="color:#059669;"></i> <span>🌐 سیستەمی نرخی دراو</span>
         </button>
+    </div>
+</div>
+
+<!-- حاسیبەی Canon -->
+<div id="myCalc" class="calc-modal">
+    <div class="calc-wrapper fire-glow-card">
+        <div class="calc-brand-row">
+            <span class="calc-brand-name">Canon</span>
+            <button onclick="document.getElementById('myCalc').style.display='none'" style="border:none; background:none; color:var(--text-muted); font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="calc-display-area">
+            <div class="calc-kurdish-text" id="calcKurdText">سفر</div>
+            <input type="text" class="calc-screen" id="calcScreen" value="0" readonly>
+        </div>
+        <div class="calc-grid">
+            <button class="btn-calc btn-canon-orange" onclick="clearScreen()">CA</button>
+            <button class="btn-calc btn-canon-orange" onclick="pressDel()">⌫</button>
+            <button class="btn-calc btn-canon-orange" onclick="press('%')">%</button>
+            <button class="btn-calc btn-canon-orange" onclick="press('/')">÷</button>
+            <button class="btn-calc btn-canon-gray" onclick="press('7')">7</button>
+            <button class="btn-calc btn-canon-gray" onclick="press('8')">8</button>
+            <button class="btn-calc btn-canon-gray" onclick="press('9')">9</button>
+            <button class="btn-calc btn-canon-orange" onclick="press('*')">×</button>
+            <button class="btn-calc btn-canon-gray" onclick="press('4')">4</button>
+            <button class="btn-calc btn-canon-gray" onclick="press('5')">5</button>
+            <button class="btn-calc btn-canon-gray" onclick="press('6')">6</button>
+            <button class="btn-calc btn-canon-orange" onclick="press('-')">−</button>
+            <button class="btn-calc btn-canon-gray" onclick="press('1')">1</button>
+            <button class="btn-calc btn-canon-gray" onclick="press('2')">2</button>
+            <button class="btn-calc btn-canon-gray" onclick="press('3')">3</button>
+            <button class="btn-calc btn-canon-orange" onclick="press('+')">+</button>
+            <button class="btn-calc btn-canon-red" onclick="document.getElementById('myCalc').style.display='none'">✕</button>
+            <button class="btn-calc btn-canon-gray" onclick="press('0')">0</button>
+            <button class="btn-calc btn-canon-gray" onclick="press('00')">00</button>
+            <button class="btn-calc btn-canon-gray" onclick="press('.')">.</button>
+            <button class="btn-calc btn-canon-orange" style="grid-column: span 4; background:#059669; font-size:1.2rem;" onclick="calcResult()">=</button>
+        </div>
     </div>
 </div>
 
@@ -4375,6 +4415,135 @@ function updateTopNotifBadge() {
         document.getElementById('themeIcon').className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon";
     }
 
+    /* کردنەوە و داخستنی بەشی زانیاری (دەربارەی گەشەپێدەر) */
+    function openAboutModal() { 
+        const modal = document.getElementById('aboutModal');
+        if (modal) modal.style.display = 'flex'; 
+    }
+    function closeAboutModal() { 
+        const modal = document.getElementById('aboutModal');
+        if (modal) modal.style.display = 'none'; 
+    }
+
+    /* =========================================================
+       سیستەمی حاسیبەی Canon (دەستبەجێ و بێ هەڵە)
+    ========================================================= */
+    let calcExpression = "0";
+
+    function updateCalcDisplay() {
+        const screen = document.getElementById('calcScreen');
+        const kurdText = document.getElementById('calcKurdText');
+        if (screen) screen.value = toEn(calcExpression);
+        if (kurdText) {
+            try {
+                const cleanExpr = calcExpression.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+                const num = Function('"use strict";return (' + cleanExpr + ')')();
+                kurdText.innerText = isFinite(num) ? numberToKurdishWords(Math.floor(num)) : "ژمارە نادیارە";
+            } catch(e) {
+                kurdText.innerText = "سفر";
+            }
+        }
+    }
+
+    function press(char) {
+        if (calcExpression === "0" && !isNaN(char)) {
+            calcExpression = char;
+        } else {
+            calcExpression += char;
+        }
+        updateCalcDisplay();
+    }
+
+    function clearScreen() {
+        calcExpression = "0";
+        updateCalcDisplay();
+        const kurdText = document.getElementById('calcKurdText');
+        if (kurdText) kurdText.innerText = "سفر";
+    }
+
+    function pressDel() {
+        if (calcExpression.length > 1) {
+            calcExpression = calcExpression.slice(0, -1);
+        } else {
+            calcExpression = "0";
+        }
+        updateCalcDisplay();
+    }
+
+    function calcResult() {
+        try {
+            let expr = calcExpression.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-').replace(/%/g, '/100');
+            let res = Function('"use strict";return (' + expr + ')')();
+            if (res !== undefined && !isNaN(res)) {
+                calcExpression = String(res);
+                updateCalcDisplay();
+            }
+        } catch (e) {
+            const screen = document.getElementById('calcScreen');
+            if (screen) screen.value = "Error";
+            calcExpression = "0";
+        }
+    }
+
+    function numberToKurdishWords(num) {
+        if (num === 0) return "سفر";
+        if (num < 0) return "سالب " + numberToKurdishWords(Math.abs(num));
+
+        const ones = ["", "یەک", "دوو", "سێ", "چوار", "پێنج", "شەش", "حەوت", "هەشت", "نۆ"];
+        const teens = ["دە", "یازدە", "دوازدە", "سێزدە", "چواردە", "پازدە", "شازدە", "حەڤدە", "هەژدە", "نۆزدە"];
+        const tens = ["", "", "بیست", "سی", "چل", "پەنجا", "شەست", "حەفتا", "هەشتا", "نەوەد"];
+        const hundreds = ["", "سەد", "دووسەد", "سێسەد", "چوارسەد", "پێنجسەد", "شەشسەد", "حەوتسەد", "هەشتسەد", "نۆسەد"];
+
+        function convertThreeDigits(n) {
+            let str = "";
+            const h = Math.floor(n / 100);
+            const remainder = n % 100;
+            const t = Math.floor(remainder / 10);
+            const o = remainder % 10;
+
+            if (h > 0) {
+                str += hundreds[h];
+                if (remainder > 0) str += " و ";
+            }
+            if (remainder > 0) {
+                if (remainder < 10) {
+                    str += ones[remainder];
+                } else if (remainder < 20) {
+                    str += teens[remainder - 10];
+                } else {
+                    str += tens[t];
+                    if (o > 0) str += " و " + ones[o];
+                }
+            }
+            return str;
+        }
+
+        let words = "";
+        const billion = Math.floor(num / 1000000000);
+        let rem = num % 1000000000;
+        const million = Math.floor(rem / 1000000);
+        rem = rem % 1000000;
+        const thousand = Math.floor(rem / 1000);
+        const rest = rem % 1000;
+
+        if (billion > 0) {
+            words += (billion === 1 ? "یەک ملیار" : convertThreeDigits(billion) + " ملیار");
+            if (rem > 0) words += " و ";
+        }
+        if (million > 0) {
+            words += (million === 1 ? "یەک ملیۆن" : convertThreeDigits(million) + " ملیۆن");
+            if (thousand > 0 || rest > 0) words += " و ";
+        }
+        if (thousand > 0) {
+            words += (thousand === 1 ? "هەزار" : convertThreeDigits(thousand) + " هەزار");
+            if (rest > 0) words += " و ";
+        }
+        if (rest > 0) {
+            words += convertThreeDigits(rest);
+        }
+        return words;
+    }
+
     /* ڕێکخستنەکان */
     function openSettingsModal() { document.getElementById('settingsModal').style.display = 'flex'; }
     function closeSettingsModal() { document.getElementById('settingsModal').style.display = 'none'; }
@@ -5123,6 +5292,74 @@ function updateTopNotifBadge() {
         if (!q) { res.style.display = 'none'; return; }
         res.style.display = 'block';
         res.innerHTML = obdMap[q] ? `<span style="color:#0284c7;">[${q}]:</span> ${obdMap[q]}` : `کۆدی [${q}]: لە گووگڵ بگەڕێ`;
+    }
+
+    /* =========================================================
+       حاسیبەی شەرعیی زەکاتی ماڵ (٢.٥٪)
+    ========================================================= */
+    function calculateZakatTotal() {
+        const cashIQD = parseNum(document.getElementById('zakatCashIQD').value);
+        const cashUSD = parseNum(document.getElementById('zakatCashUSD').value);
+        const goodsIQD = parseNum(document.getElementById('zakatGoodsIQD').value);
+        const debtsIQD = parseNum(document.getElementById('zakatDebtsIQD').value);
+
+        // وەرگرتنی نرخی لایڤی دۆلار بۆ دینار
+        const currIQD = qamarCurrencies.find(c => c.code === 'IQD');
+        const ratePer100 = currIQD ? currIQD.sell : 154600;
+        const ratePerUSD = ratePer100 / 100;
+
+        // کۆکردنەوەی کۆی سامان (دینار + گۆڕینی دۆلار بۆ دینار + کاڵا - قەرز)
+        const cashUSDtoIQD = cashUSD * ratePerUSD;
+        const totalNetWealth = (cashIQD + cashUSDtoIQD + goodsIQD) - debtsIQD;
+
+        const resBox = document.getElementById('zakatResultBox');
+        if (!resBox) return;
+        resBox.style.display = 'block';
+
+        if (totalNetWealth <= 0) {
+            resBox.innerHTML = `
+                <div style="color:#dc2626; font-weight:bold; font-size:0.78rem;">
+                    ⚠️ کۆی سامانی ماوە سفرە یان قەرزەکانت لە پارەکەت زیاترن، زەکاتت ناکەوێتە سەر.
+                </div>
+            `;
+            return;
+        }
+
+        // حیسابکردنی نیساب (بەهای ٨٥ گرام زێڕ - نزیکەی ٧,٠٠٠ دۆلار)
+        const nisabUSD = 7000;
+        const nisabIQD = nisabUSD * ratePerUSD;
+
+        const zakatIQD = Math.round(totalNetWealth * 0.025);
+        const zakatUSD = Math.round(zakatIQD / ratePerUSD);
+
+        if (totalNetWealth < nisabIQD) {
+            resBox.innerHTML = `
+                <div style="color:#d97706; font-weight:bold; font-size:0.78rem; margin-bottom:4px;">
+                    ⚠️ سامانی پوختەت نەگەیشتووەتە حەدی نیساب (کە نزیکەی ${formatEn(Math.round(nisabIQD))} دینارە).
+                </div>
+                <div style="font-size:0.72rem; color:var(--text-muted);">
+                    ئەگەر بۆ خێر دەری دەکەیت (٢.٥٪): <b>${formatEn(zakatIQD)} دینار</b> ($${formatEn(zakatUSD)})
+                </div>
+            `;
+        } else {
+            resBox.innerHTML = `
+                <div style="border-bottom:1px dashed var(--card-border); padding-bottom:6px; margin-bottom:6px;">
+                    <div style="color:#059669; font-weight:900; font-size:0.84rem;">
+                        ✅ گەیشتووەتە نیساب و زەکاتی واجبە (بەمەرجی ساڵ بەسەرچوون)
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--text-main); margin-top:4px;">
+                        کۆی سامانی پوختە: <b>${formatEn(Math.round(totalNetWealth))} دینار</b>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(5, 150, 105, 0.12); padding:8px; border-radius:8px;">
+                    <span style="font-weight:900; color:#059669; font-size:0.8rem;">بڕی زەکاتی واجب (٢.٥٪):</span>
+                    <span style="font-weight:900; color:#059669; font-size:0.95rem; font-family:var(--num-font);">${formatEn(zakatIQD)} دینار</span>
+                </div>
+                <div style="text-align:center; font-size:0.74rem; color:#0284c7; margin-top:5px; font-weight:bold;">
+                    یان بە دۆلار یەکسانە بە: <b>$${formatEn(zakatUSD)} دۆلار</b>
+                </div>
+            `;
+        }
     }
 
 /* =========================================================
