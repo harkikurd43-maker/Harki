@@ -5128,5 +5128,27 @@
     };
 </script>
 
+<script>
+    // چالاککردنی دۆخی ئۆفلاین تا بەبێ خەتیش بەرنامەکە بکرێتەوە
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
+                const CACHE_NAME = 'asankari-v1';
+                self.addEventListener('install', e => {
+                    self.skipWaiting();
+                });
+                self.addEventListener('activate', e => {
+                    e.waitUntil(clients.claim());
+                });
+                self.addEventListener('fetch', e => {
+                    e.respondWith(
+                        fetch(e.request).catch(() => caches.match(e.request))
+                    );
+                });
+            `)).catch(() => {});
+        });
+    }
+</script>
+
 </body>
 </html>
