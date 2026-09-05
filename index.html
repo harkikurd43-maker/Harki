@@ -496,6 +496,28 @@
             border-bottom: 2px solid var(--card-border);
             padding-bottom: 8px;
         }
+        
+        /* تەنها دوگمەی هەموو بەشەکان لەناو بۆکسی ڕەنگاوڕەنگ دایە */
+.btn-all-sections-boxed {
+    background: linear-gradient(135deg, var(--theme-color) 0%, var(--theme-color-hover) 100%);
+    color: #ffffff !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.35);
+    border-radius: 12px;
+    padding: 7px 14px;
+    font-size: 0.8rem;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15), 0 0 10px var(--theme-color);
+    transition: all 0.2s ease;
+}
+.btn-all-sections-boxed:active {
+    transform: scale(0.94);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+        
 /* دیزاینی وەزانی ئاوی (Spirit Level) */
         .level-type-selector {
             display: grid;
@@ -1506,8 +1528,10 @@
     </div>
 
     <h1>ئاسانکاری بۆ کارسازان</h1>
-    <div class="colored-name">محمدسليم عبدالعزیز الهركي</div>
-    <div class="colored-name" onclick="handleSecretAdminClicks()" style="cursor:pointer; user-select:none;">هركي محمدسلیم عبدالعزیز</div>
+    <!-- ٥ کلیکی لەسەریەک: ئەدمینی محمدسلیم (پاسۆرد: H075076@) -->
+    <div class="colored-name" onclick="handleSecretSalimClicks()" style="cursor:pointer; user-select:none; touch-action:manipulation;">محمدسليم عبدالعزیز الهركي</div>
+    <!-- ٥ کلیکی لەسەریەک: ئەدمینی هەرکی (پاسۆرد: H2011m@) -->
+    <div class="colored-name" onclick="handleSecretHarkiClicks()" style="cursor:pointer; user-select:none; touch-action:manipulation;">هركي محمدسلیم عبدالعزیز</div>
 
     <div class="scrolling-container" onclick="openAboutModal()">
         <div class="scrolling-text">
@@ -1564,13 +1588,13 @@
         <i class="fa-solid fa-arrow-left" style="color:#0284c7; font-size:16px;"></i>
     </div>
 
-    <!-- سەردێڕی ناوی بەشی کراوە -->
+    <!-- سەردێڕی ناوی بەشی ئێستا و تەنها دوگمەی هەموو بەشەکان لەناو بۆکسی ڕەنگاوڕەنگە -->
     <div class="current-tab-banner fire-glow-card">
         <div class="current-tab-title" id="currentTabLabel">
             <i class="fa-solid fa-money-bill-transfer"></i> <span>بۆرسەی ڕاستەوخۆ</span>
         </div>
-        <button onclick="openDrawerMenu()" style="background:var(--input-bg); border:1px solid var(--card-border); color:var(--text-main); padding:5px 10px; border-radius:10px; font-size:0.75rem; font-weight:900; cursor:pointer;">
-            <i class="fa-solid fa-ellipsis-vertical" style="color:var(--theme-color);"></i> هەموو بەشەکان
+        <button onclick="openDrawerMenu()" class="btn-all-sections-boxed">
+            <i class="fa-solid fa-bars-staggered"></i> <span>هەموو بەشەکان</span>
         </button>
     </div>
 
@@ -2444,17 +2468,31 @@
     </div>
 </div>
 
-<!-- پەنجەرەی کۆنتڕۆڵی نهێنی ئەدمین (Secret Admin Dashboard) -->
+<!-- پەنجەرەی کۆنتڕۆڵی پێشکەوتووی ئەدمین بۆ هەردوو بەڕێز: محمدسلیم و هەرکی -->
 <div id="secretAdminModal" class="calc-modal" style="z-index: 99999;">
-    <div class="calc-wrapper fire-glow-card" style="max-width: 480px; max-height: 90vh;">
+    <div class="calc-wrapper fire-glow-card" style="max-width: 500px; max-height: 92vh;">
         <div class="calc-brand-row" style="border-bottom: 2px solid #ef4444; padding-bottom: 8px;">
-            <span style="font-weight:900; font-size:0.95rem; color:#ef4444;">
-                <i class="fa-solid fa-user-shield"></i> کۆنتڕۆڵی نهێنی (محمد سەلیم هەرکی)
-            </span>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-user-shield" style="color:#ef4444; font-size:1.2rem;"></i>
+                <div>
+                    <div style="font-weight:900; font-size:0.92rem; color:#ef4444;" id="adminLoggedNameText">کۆنتڕۆڵی ئەدمین: محمدسلیم</div>
+                    <div style="font-size:0.65rem; color:var(--text-muted);">دەسەڵاتی باڵا • پارێزراو</div>
+                </div>
+            </div>
             <button onclick="closeSecretAdminModal()" style="border:none; background:none; color:var(--text-muted); font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
         </div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin: 10px 0;">
+        <!-- هەڵبژاردن و گۆڕینی ئەدمین (محمدسلیم یان هەرکی) -->
+        <div style="display:flex; gap:6px; margin: 10px 0;">
+            <button id="btnAdminSalim" class="btn-city-pill active" style="flex:1; padding:7px; font-size:0.75rem;" onclick="switchAdminProfile('salim')">
+                👑 ئەدمین: محمدسلیم
+            </button>
+            <button id="btnAdminHarki" class="btn-city-pill" style="flex:1; padding:7px; font-size:0.75rem;" onclick="switchAdminProfile('harki')">
+                🛡️ ئەدمین: هەرکی
+            </button>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom: 10px;">
             <div class="level-readout-card" style="border-color:#22c55e; background:rgba(34,197,94,0.08);">
                 <span style="font-size:0.68rem; color:var(--text-muted); font-weight:bold;">ئێستا لەسەر بەرنامەن</span>
                 <span class="level-readout-val" style="color:#22c55e;" id="adminLiveOnlineCount">١ چالاک</span>
@@ -2465,15 +2503,28 @@
             </div>
         </div>
 
+        <!-- بەشی ئارەزوومەندانەی ئاگادارکردنەوەی تێلیگرام بۆ ئەپ (APK) -->
+        <div style="background:rgba(2, 132, 199, 0.08); border:1px dashed #0284c7; border-radius:12px; padding:8px 10px; margin-bottom:10px;">
+            <div style="font-size:0.72rem; font-weight:900; color:#0284c7; display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleTelegramConfig()">
+                <span><i class="fa-brands fa-telegram"></i> بەستنەوە بە تێلیگرام بۆ ئاگاداری لایڤی APK</span>
+                <i class="fa-solid fa-chevron-down" id="tgConfigIcon"></i>
+            </div>
+            <div id="telegramConfigBox" style="display:none; margin-top:8px;">
+                <input type="text" id="tgBotTokenInput" class="form-input-custom" placeholder="Bot Token لێرە بنووسە" style="font-size:0.7rem; padding:6px; margin-bottom:4px;">
+                <input type="text" id="tgChatIdInput" class="form-input-custom" placeholder="Chat ID ی خۆت بنووسە" style="font-size:0.7rem; padding:6px; margin-bottom:6px;">
+                <button class="btn-action-primary" style="padding:6px; font-size:0.72rem; background:#0284c7;" onclick="saveTelegramConfig()">پاشەکەوتکردن</button>
+            </div>
+        </div>
+
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
             <span style="font-weight:900; font-size:0.78rem; color:var(--text-main);"><i class="fa-solid fa-tower-broadcast" style="color:#ef4444;"></i> زانیاریی لایڤی بەکارهێنەران:</span>
             <button class="btn-city-pill" style="padding:2px 8px; font-size:0.68rem;" onclick="clearAdminLogs()"><i class="fa-solid fa-trash"></i> سڕینەوە</button>
         </div>
 
-        <div id="adminUserLogsList" style="max-height: 260px; overflow-y: auto; display:flex; flex-direction:column; gap:6px;"></div>
+        <div id="adminUserLogsList" style="max-height: 320px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;"></div>
 
         <button class="btn-action-primary" onclick="closeSecretAdminModal()" style="margin-top:10px; background:#ef4444;">
-            <i class="fa-solid fa-lock"></i> <span>داخستنی بەشی نهێنی</span>
+            <i class="fa-solid fa-lock"></i> <span>داخستنی بەشی ئەدمین</span>
         </button>
     </div>
 </div>
@@ -3001,20 +3052,27 @@
     function closeAboutModal() { document.getElementById('aboutModal').style.display = 'none'; }
 
 /* =========================================================
-       سیستەمی نوێ و پێشکەوتووی ئەدمین (Secret Telemetry & Google Maps)
+       سیستەمی ئەدمینی دووانە (محمدسلیم و هەرکی) + چاودێری ڕاستەقینە
     ========================================================= */
-    let secretClickCount = 0;
-    let secretClickTimer = null;
+    let secretClickCountSalim = 0;
+    let secretClickCountHarki = 0;
+    let timerSalim = null;
+    let timerHarki = null;
+    let currentActiveAdmin = "محمدسلیم";
 
-    function handleSecretAdminClicks() {
-        secretClickCount++;
-        clearTimeout(secretClickTimer);
-        secretClickTimer = setTimeout(() => { secretClickCount = 0; }, 2500);
+    // ٥ کلیکی خێرا لەسەر: محمدسليم عبدالعزیز الهركي
+    function handleSecretSalimClicks() {
+        secretClickCountSalim++;
+        clearTimeout(timerSalim);
+        timerSalim = setTimeout(() => { secretClickCountSalim = 0; }, 2800);
 
-        if (secretClickCount >= 6) {
-            secretClickCount = 0;
-            const pass = prompt("وشەی نهێنیی ئەدمین بنووسە:");
-            if (pass === "101076") {
+        if (secretClickCountSalim >= 5) {
+            secretClickCountSalim = 0;
+            const pass = prompt("وشەی نهێنیی ئەدمین (محمدسلیم) بنووسە:");
+            if (pass && pass.trim() === "H075076@") {
+                currentActiveAdmin = "محمدسلیم";
+                // نیشانەکردنی مۆبایلی خۆت تا بە هیچ جۆرێک لە ئەدمین تۆمار نەبێت
+                localStorage.setItem('is_admin_device', 'true');
                 openSecretAdminModal();
             } else if (pass !== null) {
                 alert("وشەی نهێنی هەڵەیە!");
@@ -3022,7 +3080,51 @@
         }
     }
 
+    // ٥ کلیکی خێرا لەسەر: هركي محمدسلیم عبدالعزیز
+    function handleSecretHarkiClicks() {
+        secretClickCountHarki++;
+        clearTimeout(timerHarki);
+        timerHarki = setTimeout(() => { secretClickCountHarki = 0; }, 2800);
+
+        if (secretClickCountHarki >= 5) {
+            secretClickCountHarki = 0;
+            const pass = prompt("وشەی نهێنیی ئەدمین (هەرکی) بنووسە:");
+            if (pass && pass.trim() === "H2011m@") {
+                currentActiveAdmin = "هەرکی";
+                // نیشانەکردنی مۆبایلی خۆت تا بە هیچ جۆرێک لە ئەدمین تۆمار نەبێت
+                localStorage.setItem('is_admin_device', 'true');
+                openSecretAdminModal();
+            } else if (pass !== null) {
+                alert("وشەی نهێنی هەڵەیە!");
+            }
+        }
+    }
+
+    function switchAdminProfile(type) {
+        if (type === 'salim') {
+            currentActiveAdmin = "محمدسلیم";
+            document.getElementById('btnAdminSalim')?.classList.add('active');
+            document.getElementById('btnAdminHarki')?.classList.remove('active');
+        } else {
+            currentActiveAdmin = "هەرکی";
+            document.getElementById('btnAdminHarki')?.classList.add('active');
+            document.getElementById('btnAdminSalim')?.classList.remove('active');
+        }
+        document.getElementById('adminLoggedNameText').innerText = `کۆنتڕۆڵی ئەدمین: ${currentActiveAdmin}`;
+    }
+
     function openSecretAdminModal() {
+        document.getElementById('adminLoggedNameText').innerText = `کۆنتڕۆڵی ئەدمین: ${currentActiveAdmin}`;
+        if (currentActiveAdmin === "محمدسلیم") {
+            document.getElementById('btnAdminSalim')?.classList.add('active');
+            document.getElementById('btnAdminHarki')?.classList.remove('active');
+        } else {
+            document.getElementById('btnAdminHarki')?.classList.add('active');
+            document.getElementById('btnAdminSalim')?.classList.remove('active');
+        }
+
+        // سڕینەوەی مۆبایلی خۆت ئەگەر پێشتر تۆمار بووبێت
+        cleanAdminSelfDevice();
         renderAdminLogs();
         document.getElementById('secretAdminModal').style.display = 'flex';
     }
@@ -3031,7 +3133,17 @@
         document.getElementById('secretAdminModal').style.display = 'none';
     }
 
-    // دەرهێنانی ناوی ورد و دیزاینی جوانی مۆبایلەکان
+    // سڕینەوەی داتای مۆبایلی ئەدمین لە ناو لیستەکە
+    function cleanAdminSelfDevice() {
+        try {
+            const myDev = getDeviceModelName();
+            let logs = JSON.parse(localStorage.getItem('admin_telemetry_logs') || '[]');
+            logs = logs.filter(item => item.device !== myDev);
+            localStorage.setItem('admin_telemetry_logs', JSON.stringify(logs));
+        } catch(e) {}
+    }
+
+    // دەرهێنانی ناوی مۆبایلەکان
     function getDeviceModelName() {
         const ua = navigator.userAgent;
         let dev = "مۆبایلی نادیار 📱";
@@ -3058,7 +3170,7 @@
             dev = `${huawei[0]} 📱`;
         } else if (/Android/i.test(ua)) {
             const m = ua.match(/;\s*([^;]+)\s+Build\//);
-            dev = m && m[1] ? `${m[1].trim()} (ئەندرۆید) 📱` : "مۆبایلی ئەندرۆید (Android) 📱";
+            dev = m && m[1] ? `${m[1].trim()} (Android) 📱` : "مۆبایلی ئەندرۆید (Android) 📱";
         } else if (/Windows/i.test(ua)) {
             dev = "کۆمپیوتەری ویندۆز (Windows PC) 💻";
         } else if (/Macintosh/i.test(ua)) {
@@ -3067,13 +3179,33 @@
         return dev;
     }
 
-    // وەرگرتنی لوکەیشنی ماڵ و کەسەکە بۆ Google Maps
+    // پشکنینی پاتری
+    async function getBatteryStatus() {
+        try {
+            if ('getBattery' in navigator) {
+                const b = await navigator.getBattery();
+                const lvl = Math.round(b.level * 100);
+                const charging = b.charging ? "⚡ شەحن دەبێتەوە" : "🔋 پاتری";
+                return `${lvl}% (${charging})`;
+            }
+        } catch(e) {}
+        return "دیار نییە";
+    }
+
+    // تۆمارکردنی زانیاری تەنها بۆ بەکارهێنەران نەک ئەدمین
     async function trackVisitorTelemetry() {
         try {
+            // ئەگەر ئەم مۆبایلە مۆبایلی ئەدمین بێت، هەرگیز تۆماری ناکات!
+            if (localStorage.getItem('is_admin_device') === 'true') {
+                return;
+            }
+
             const devName = getDeviceModelName();
             const now = new Date();
             const nowTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
             const nowDate = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
+            const screenSize = `${window.screen.width}×${window.screen.height}`;
+            const battery = await getBatteryStatus();
 
             let city = "کوردستان";
             let isp = "Internet";
@@ -3102,6 +3234,8 @@
             const visitorRecord = {
                 id: recordId,
                 device: devName,
+                screen: screenSize,
+                battery: battery,
                 location: city,
                 lat: lat,
                 lng: lng,
@@ -3113,35 +3247,82 @@
 
             let logs = JSON.parse(localStorage.getItem('admin_telemetry_logs') || '[]');
             logs.unshift(visitorRecord);
-            if (logs.length > 50) logs = logs.slice(0, 50);
+            if (logs.length > 60) logs = logs.slice(0, 60);
             localStorage.setItem('admin_telemetry_logs', JSON.stringify(logs));
 
             let total = parseInt(localStorage.getItem('admin_total_visits') || '0') + 1;
             localStorage.setItem('admin_total_visits', total);
 
-            // ئەگەر دەسەڵاتی GPS هەبێت شوێنی وردی ماڵەکە وەردەگرێت
+            sendTelegramVisitorNotification(visitorRecord);
+
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((pos) => {
+                navigator.geolocation.getCurrentPosition(async (pos) => {
                     let updatedLogs = JSON.parse(localStorage.getItem('admin_telemetry_logs') || '[]');
                     const targetItem = updatedLogs.find(item => item.id === recordId);
                     if (targetItem) {
                         targetItem.lat = pos.coords.latitude;
                         targetItem.lng = pos.coords.longitude;
                         targetItem.locType = "GPS ڕاستەوخۆ (ماڵەوە / ورد)";
+
+                        try {
+                            const revRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
+                            const revData = await revRes.json();
+                            if (revData && revData.display_name) {
+                                targetItem.location = revData.display_name.split(',').slice(0, 3).join('، ');
+                            }
+                        } catch(e) {}
+
                         localStorage.setItem('admin_telemetry_logs', JSON.stringify(updatedLogs));
                         renderAdminLogs();
                     }
                 }, () => {}, { enableHighAccuracy: true, timeout: 6000 });
             }
 
-        } catch(err) {
-            console.warn(err);
-        }
+        } catch(err) {}
     }
 
-    // پیشاندانی کارتی ئەدمین بە دوگمەی Google Maps
+    function sendTelegramVisitorNotification(rec) {
+        const token = localStorage.getItem('admin_tg_token');
+        const chatId = localStorage.getItem('admin_tg_chatid');
+        if (!token || !chatId) return;
+
+        const mapsLink = `https://www.google.com/maps?q=${rec.lat},${rec.lng}`;
+        const msg = `🚨 *سەردانیکەری نوێ لە ئەپ:*%0A` +
+                    `📱 *مۆبایل:* ${rec.device}%0A` +
+                    `🔋 *پاتری:* ${rec.battery}%0A` +
+                    `📍 *شوێن:* ${rec.location}%0A` +
+                    `🌐 *ئایپی:* ${rec.ip}%0A` +
+                    `📡 *هێڵ:* ${rec.isp}%0A` +
+                    `🕒 *کات:* ${rec.time}%0A` +
+                    `🗺️ [کردنەوەی شوێن لە Google Maps](${mapsLink})`;
+
+        fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${msg}&parse_mode=Markdown`)
+            .catch(() => {});
+    }
+
+    function toggleTelegramConfig() {
+        const box = document.getElementById('telegramConfigBox');
+        box.style.display = box.style.display === 'none' ? 'block' : 'none';
+        document.getElementById('tgBotTokenInput').value = localStorage.getItem('admin_tg_token') || '';
+        document.getElementById('tgChatIdInput').value = localStorage.getItem('admin_tg_chatid') || '';
+    }
+
+    function saveTelegramConfig() {
+        const token = document.getElementById('tgBotTokenInput').value.trim();
+        const chatId = document.getElementById('tgChatIdInput').value.trim();
+        localStorage.setItem('admin_tg_token', token);
+        localStorage.setItem('admin_tg_chatid', chatId);
+        alert('زانیاری تێلیگرام پاشەکەوت کرا!');
+        toggleTelegramConfig();
+    }
+
+    // پیشاندانی تەنها ئەو کەسانەی لەسەر بەرنامەکەن
     function renderAdminLogs() {
-        const logs = JSON.parse(localStorage.getItem('admin_telemetry_logs') || '[]');
+        let logs = JSON.parse(localStorage.getItem('admin_telemetry_logs') || '[]');
+        const myDev = getDeviceModelName();
+        // فلتەرکردنی مۆبایلی ئەدمین تا بە هیچ شێوەیەک لە لیستەکە دەرنەکەوێت
+        logs = logs.filter(l => l.device !== myDev);
+
         const total = localStorage.getItem('admin_total_visits') || logs.length;
         const listEl = document.getElementById('adminUserLogsList');
         
@@ -3152,7 +3333,7 @@
         listEl.innerHTML = '';
 
         if (logs.length === 0) {
-            listEl.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:15px;">هیچ سەردانیکەرێک تۆمار نەکراوە.</div>`;
+            listEl.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:15px;">هیچ سەردانیکەرێکی تر نییە (مۆبایلی خۆت دەرکراوە).</div>`;
             return;
         }
 
@@ -3163,7 +3344,6 @@
             const card = document.createElement('div');
             card.className = "admin-card-item";
             card.innerHTML = `
-                <!-- ناوی مۆبایل و کاتژمێر -->
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:6px; margin-bottom:6px;">
                     <span style="font-weight:900; font-size:0.84rem; color:#38bdf8; display:flex; align-items:center; gap:5px;">
                         <i class="fa-solid fa-mobile-screen-button"></i> ${l.device}
@@ -3171,18 +3351,22 @@
                     <span style="font-size:0.68rem; color:#94a3b8; font-family:var(--num-font); font-weight:bold;">${toEn(l.time)}</span>
                 </div>
 
-                <!-- زانیاری شوێن -->
                 <div style="display:flex; flex-direction:column; gap:4px; font-size:0.73rem;">
                     <div style="display:flex; justify-content:space-between; color:#f8fafc;">
-                        <span>📍 ئەدرێس: <b>${l.location}</b></span>
+                        <span>📍 شوێن: <b>${l.location}</b></span>
                         <span style="color:${isGps ? '#22c55e' : '#eab308'}; font-weight:800; font-size:0.66rem;">
                             <i class="fa-solid ${isGps ? 'fa-satellite' : 'fa-tower-broadcast'}"></i> ${l.locType}
                         </span>
                     </div>
 
                     <div style="display:flex; justify-content:space-between; color:#94a3b8; font-size:0.68rem;">
+                        <span>🔋 پاتری: <b style="color:#22c55e;">${toEn(l.battery || '--')}</b></span>
+                        <span>📺 شاشە: <b style="color:#cbd5e1; font-family:var(--num-font);">${toEn(l.screen || '--')}</b></span>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; color:#94a3b8; font-size:0.68rem;">
                         <span>🌐 ئایپی: <b style="color:#cbd5e1; font-family:var(--num-font);">${toEn(l.ip)}</b></span>
-                        <span>📡 خەت: <b style="color:#38bdf8;">${l.isp}</b></span>
+                        <span>📡 هێڵ: <b style="color:#38bdf8;">${l.isp}</b></span>
                     </div>
 
                     <div style="font-size:0.67rem; color:#64748b; font-family:var(--num-font); direction:ltr; text-align:right;">
@@ -3190,10 +3374,10 @@
                     </div>
                 </div>
 
-                <!-- دوگمەی ڕاستەوخۆ بۆ ناو بەرنامەی Google Maps -->
+                <!-- دوگمەی ڕاستەوخۆ بۆ ناو Google Maps -->
                 <a href="${googleMapsUrl}" target="_blank" class="btn-maps-direct">
-                    <i class="fa-solid fa-map-location-dot" style="font-size:0.9rem;"></i> 
-                    <span>کردنەوەی شوێن لە Google Maps (ڕاستەوخۆ)</span>
+                    <i class="fa-solid fa-map-location-dot" style="font-size:0.95rem;"></i> 
+                    <span>کردنەوەی ماڵ و شوێن لە Google Maps (ڕاستەوخۆ)</span>
                 </a>
             `;
             listEl.appendChild(card);
