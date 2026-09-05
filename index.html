@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="ku" dir="rtl">
-<!-- ڕێکخستنی ئەپ بۆ ئەندرۆید و ئایفۆن -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ئاسانکاری بۆ کارسازان | محەمەد سەلیم ئەلهەرکی</title>
+
+    <!-- ڕێکخستنی ئەپ بۆ ئەندرۆید و ئایفۆن -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -254,7 +259,20 @@
             100% { transform: translateX(-100%); } 
         }
         
-        .container { max-width: 640px; margin: -10px auto 0 auto; padding: 0 12px; position: relative; z-index: 10; }
+        .container { 
+            width: 100% !important; 
+            max-width: 100% !important; 
+            margin: -10px 0 0 0 !important; 
+            padding: 0 8px !important; 
+            position: relative; 
+            z-index: 10; 
+        }
+
+        html, body {
+            width: 100% !important;
+            max-width: 100vw !important;
+            overflow-x: hidden !important;
+        }
 
         /* کاتژمێری دیواری */
         .digital-wall-clock-card {
