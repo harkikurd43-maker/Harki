@@ -4790,69 +4790,6 @@
     }
     
     /* =========================================================
-       ٢. حاسیبەی زەکاتی ماڵ (چاککراو بە تەواوی بەبێ هەڵە)
-    ========================================================= */
-    function calculateZakatTotal() {
-        const cashIQD = parseNum(document.getElementById('zakatCashIQD')?.value);
-        const cashUSD = parseNum(document.getElementById('zakatCashUSD')?.value);
-        const goodsIQD = parseNum(document.getElementById('zakatGoodsIQD')?.value);
-        const debtsIQD = parseNum(document.getElementById('zakatDebtsIQD')?.value);
-
-        // وەرگرتنی نرخی ١٠٠ دۆلار بە دینار لە بۆرسەی قمر الفجر
-        const rateIQD = qamarCurrencies.find(c => c.code === 'IQD')?.sell || 154600;
-
-        // گۆڕینی دۆلار بۆ دینار
-        const usdInIQD = (cashUSD / 100) * rateIQD;
-
-        // کۆی سەرمایەی نەختینە و کاڵا دوای دەرکردنی قەرز
-        const totalWealth = (cashIQD + usdInIQD + goodsIQD) - debtsIQD;
-
-        // نیسابی شەرعی بەپێی ٨٥ گرام زێڕی خاو (نزیکەی ١٠ ملیۆن دیناری عێراقی)
-        const nisabValueIQD = 10000000; 
-
-        const box = document.getElementById('zakatResultBox');
-        if (!box) return;
-        box.style.display = 'block';
-
-        if (totalWealth <= 0) {
-            box.innerHTML = `
-                <div style="color:#dc2626; font-weight:900;">قەرزەکانت لە سەرمایەکەت زیاترە، زەکاتت لەسەر نییە.</div>
-            `;
-            return;
-        }
-
-        if (totalWealth >= nisabValueIQD) {
-            const zakatPayable = totalWealth * 0.025; // ٢.٥٪
-            box.innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <span>کۆی سەرمایەی پوخت:</span>
-                    <b>${formatEn(Math.round(totalWealth))} د.ع</b>
-                </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <span>دۆخی نیساب:</span>
-                    <b style="color:#059669;">گەیشتووەتە نیساب ✅</b>
-                </div>
-                <div style="border-top:1px dashed var(--card-border); padding-top:6px; margin-top:4px; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-weight:900; color:#059669;">زەکاتی واجب (٢.٥٪):</span>
-                    <span class="badge-val" style="background:#059669; color:#fff; font-size:0.9rem;">${formatEn(Math.round(zakatPayable))} دینار</span>
-                </div>
-            `;
-        } else {
-            box.innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <span>کۆی سەرمایەی پوخت:</span>
-                    <b>${formatEn(Math.round(totalWealth))} د.ع</b>
-                </div>
-                <div style="display:flex; justify-content:space-between;">
-                    <span>دۆخی نیساب:</span>
-                    <b style="color:#dc2626;">نەگەیشتووەتە نیساب ❌ (کەمترە لە ١٠ ملیۆن)</b>
-                </div>
-                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:4px; text-align:center;">زەکاتی فەرز نەکەوتووەتە سەر ئەم ماڵە.</div>
-            `;
-        }
-    }
-
-    /* =========================================================
        ٣. سکانەری بارکۆد و QR بە کامێرا
     ========================================================= */
     let html5QrScanner = null;
