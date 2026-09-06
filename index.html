@@ -255,11 +255,11 @@
             font-weight: 800; 
             color: #38bdf8;
             font-family: var(--num-font);
-            animation: scrollLeft 11s linear infinite;
+            animation: scrollLeft 20s linear infinite;
         }
 
         @keyframes scrollLeft { 
-            0% { transform: translateX(100vw); } 
+            0% { transform: translateX(100%); } 
             100% { transform: translateX(-100%); } 
         }
         
@@ -2940,7 +2940,10 @@
             <div style="font-size:0.8rem; font-weight:900; color:#f59e0b; margin-bottom:6px;"><i class="fa-solid fa-gift"></i> ٦. پۆپ-ئەپی پیرۆزبایی و جەژنەکان:</div>
             <input type="text" id="adminGreetingTitle" class="form-input-custom" placeholder="سەردێڕ: جەژنتان پیرۆز بێت..." style="font-size:0.75rem; margin-bottom:4px;">
             <textarea id="adminGreetingBody" class="form-input-custom" placeholder="دەقی پیرۆزبایی یان ڕێنماییەکە..." style="height:50px; font-size:0.72rem; margin-bottom:6px; resize:none;"></textarea>
-            <button class="btn-action-primary" style="padding:7px; font-size:0.75rem; background:#d97706;" onclick="adminSendGreetingPopup()"><i class="fa-solid fa-paper-plane"></i> ناردنی پۆپ-ئەپ بۆ هەمووان</button>
+            <div style="display:flex; gap:6px;">
+                <button class="btn-action-primary" style="flex:1; padding:7px; font-size:0.75rem; background:#d97706;" onclick="adminSendGreetingPopup(true)"><i class="fa-solid fa-paper-plane"></i> ناردن و چالاککردن</button>
+                <button class="btn-action-primary" style="flex:1; padding:7px; font-size:0.75rem; background:#dc2626;" onclick="adminSendGreetingPopup(false)"><i class="fa-solid fa-trash"></i> سڕینەوە و ڕاگرتن</button>
+            </div>
         </div>
 
         <!-- بۆکسی ناردنی ڕاستەوخۆی نۆتفیکەیشن -->
@@ -2954,6 +2957,22 @@
                 <i class="fa-solid fa-paper-plane"></i> <span>ناردنی دەستبەجێ بۆ هەمووان</span>
             </button>
             <div id="notifSendStatus" style="display:none; font-size:0.75rem; font-weight:bold; text-align:center; margin-top:6px;"></div>
+        </div>
+
+        <!-- بەشی نوێی کێشە هاتووەکانی بەکارهێنەران بۆ ئەدمین -->
+        <div style="background:rgba(239,68,68,0.08); border:1.5px solid #ef4444; border-radius:12px; padding:10px; margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="font-size:0.8rem; font-weight:900; color:#ef4444;">
+                    <i class="fa-solid fa-inbox"></i> 📨 کێشەکانی بەکارهێنەران:
+                </span>
+                <div style="display:flex; gap:4px;">
+                    <button class="btn-city-pill" style="padding:2px 6px; font-size:0.65rem;" onclick="fetchAdminReportedIssues()"><i class="fa-solid fa-rotate"></i> نوێکردنەوە</button>
+                    <button class="btn-city-pill" style="padding:2px 6px; font-size:0.65rem; background:#dc2626; color:#fff;" onclick="clearAdminIssues()"><i class="fa-solid fa-trash"></i> سڕینەوە</button>
+                </div>
+            </div>
+            <div id="adminIssuesContainer" style="max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;">
+                <div style="text-align:center; font-size:0.7rem; color:var(--text-muted); padding:10px;">خەریکی هێنانی کێشەکانە...</div>
+            </div>
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
@@ -2994,9 +3013,38 @@
         <i class="fa-solid fa-gift" style="font-size:2.8rem; color:#f59e0b; margin-bottom:8px;"></i>
         <h3 id="userGreetingTitleText" style="font-size:1.1rem; color:#f59e0b; margin-bottom:6px;">جەژنتان پیرۆز بێت</h3>
         <p id="userGreetingBodyText" style="font-size:0.82rem; color:var(--text-main); line-height:1.6; margin-bottom:12px;"></p>
-        <button class="btn-action-primary" onclick="document.getElementById('userGreetingModal').style.display='none';">
+        <button class="btn-action-primary" onclick="dismissUserGreetingModal();">
             <i class="fa-solid fa-check"></i> <span>سوپاس</span>
         </button>
+    </div>
+</div>
+
+<!-- مۆداڵی ناردنی کێشە لەلایەن بەکارهێنەرەوە -->
+<div id="reportIssueModal" class="calc-modal" style="z-index:999995;">
+    <div class="calc-wrapper fire-glow-card" style="max-width:400px;">
+        <div class="calc-brand-row" style="border-bottom:2px solid #ef4444; padding-bottom:6px; margin-bottom:10px;">
+            <span style="font-weight:900; font-size:0.9rem; color:#ef4444;">
+                <i class="fa-solid fa-circle-exclamation"></i> ڕاپۆرتکردنی کێشە بۆ کارگێڕی
+            </span>
+            <button onclick="closeReportIssueModal()" style="border:none; background:none; color:var(--text-muted); font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <input type="text" id="issueUserName" class="form-input-custom" placeholder="ناوی تۆ (یان نازناو)..." style="font-size:0.78rem; margin-bottom:6px; text-align:right;">
+        <input type="text" inputmode="tel" id="issueUserPhone" class="form-input-custom num-font-target" placeholder="ژمارەی مۆبایل (ئارەزوومەندانە)..." style="font-size:0.78rem; margin-bottom:6px;">
+        <select id="issueCategory" class="form-input-custom" style="font-size:0.75rem; margin-bottom:6px;">
+            <option value="گشتی">کێشەی گشتی لە بەرنامە</option>
+            <option value="بۆرسە">کێشە لە نرخی دراوەکان</option>
+            <option value="شاسی">کێشە لە پشکنینی شاسی</option>
+            <option value="پێوانی زەوی">کێشە لە نەخشە و پێوانی زەوی</option>
+            <option value="کتێبی بوخاری">کێشە لە کتێبی بوخاری</option>
+            <option value="پێشنیار">پێشنیارێکی نوێ بۆ ئەپ</option>
+        </select>
+        <textarea id="issueUserText" class="form-input-custom" placeholder="دەقی کێشەکەت بە کورتی لێرە بنووسە..." style="height:75px; font-size:0.75rem; margin-bottom:8px; text-align:right; resize:none;"></textarea>
+
+        <button class="btn-action-primary" style="background:#ef4444;" id="btnSubmitIssue" onclick="submitUserIssue()">
+            <i class="fa-solid fa-paper-plane"></i> <span>ناردنی کێشەکە بۆ ئەدمین</span>
+        </button>
+        <div id="issueSendStatus" style="display:none; font-size:0.72rem; font-weight:bold; text-align:center; margin-top:6px;"></div>
     </div>
 </div>
 
@@ -3211,6 +3259,10 @@
 
         <button class="drawer-nav-btn" onclick="openSettingsModal();">
             <i class="fa-solid fa-sliders" style="color:#38bdf8;"></i> <span>⚙️ ڕێکخستنەکان (فۆنت، ڕەنگ و قەبارە)</span>
+        </button>
+
+        <button class="drawer-nav-btn" onclick="openReportIssueModal();">
+            <i class="fa-solid fa-circle-exclamation" style="color:#ef4444;"></i> <span>⚠️ ڕاپۆرتکردنی کێشە / پێشنیار</span>
         </button>
 
         <button class="drawer-nav-btn" onclick="closeDrawerMenu(); openSystem();">
@@ -3462,18 +3514,46 @@
         }
     }, true);
 
-    // ڕێگری لە نیشاندانی لینکی هەڵە کاتێک بەشێک کارناکات
+    // نیشاندانی ئاگادارییەکی زۆر شیک لە ناو خودی ئەپدا لە جیاتی هەموو Alert و لینکەکان
+    function showAppToast(text, color = '#0284c7') {
+        let toast = document.getElementById('globalAppCustomToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'globalAppCustomToast';
+            toast.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#0f172a; border:2px solid " + color + "; color:#ffffff; padding:10px 18px; border-radius:16px; font-size:0.78rem; font-weight:800; z-index:9999999; box-shadow:0 10px 25px rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; gap:8px; text-align:center; max-width:90%; transition:all 0.3s ease; animation: slideDownToast 0.3s ease;";
+            document.body.appendChild(toast);
+        }
+        toast.style.borderColor = color;
+        toast.innerHTML = text;
+        toast.style.display = 'flex';
+        clearTimeout(window._toastTimeout);
+        window._toastTimeout = setTimeout(() => {
+            if (toast) toast.style.display = 'none';
+        }, 3200);
+    }
+
+    // گۆڕینی هەموو Alertـەکانی سەرجەم بەشەکانی بەرنامە بۆ ئەم دیزاینە جوانە
+    window.alert = function(msg) {
+        if (!msg) return;
+        let c = '#0284c7';
+        if (msg.includes('✅') || msg.includes('پیرۆزە') || msg.includes('سەرکەوتوو') || msg.includes('کۆپی')) c = '#22c55e';
+        else if (msg.includes('❌') || msg.includes('هەڵە') || msg.includes('پچڕاوە') || msg.includes('نەدۆزرایەوە')) c = '#ef4444';
+        else if (msg.includes('⚠️') || msg.includes('تکایە') || msg.includes('نییە')) c = '#d97706';
+        showAppToast(msg, c);
+    };
+
+    // ئاگادارکردنەوەی هێمن کاتێک ئینتەرنێت دەپچڕێت (بەبێ دەرکەوتنی هیچ پۆپ-ئەپێکی localhost)
     window.addEventListener('offline', function() {
-        alert('📡 هێڵی ئینتەرنێتەکەت پچڕاوە، تکایە ئینتەرنێت داگیرسێنە تاوەکو هەموو بەشەکان کاربکەن.');
+        showAppToast('📡 هێڵی ئینتەرنێت پچڕاوە، هەندێک بەش پێویستیان بە ئینتەرنێتە.', '#ef4444');
     });
 
-    // ڕێگری لە فڕێدانی بەکارهێنەر بۆ دەرەوەی ئەپ لە کاتی هەڵەی لینکەکان
+    // ڕێگری لە فڕێدانی بەکارهێنەر بۆ دەرەوەی ئەپ لە کاتی نەبوونی ئینتەرنێت
     document.addEventListener('click', function(e) {
         const link = e.target.closest('a');
         if (link && link.getAttribute('href') && link.getAttribute('href').startsWith('http')) {
             if (!navigator.onLine) {
                 e.preventDefault();
-                alert('⚠️ هێڵی ئینتەرنێت بەردەست نییە بۆ کردنەوەی ئەم بەشە.');
+                showAppToast('⚠️ هێڵی ئینتەرنێت بەردەست نییە بۆ کردنەوەی ئەم بەشە.', '#d97706');
             }
         }
     }, true);
@@ -3642,6 +3722,184 @@ function switchAdminProfile(type) {
     if (titleEl) titleEl.innerText = `کۆنتڕۆڵی ئەدمین: ${currentActiveAdmin}`;
 }
 
+const ISSUES_TOPIC = "asankari_issues_salim_harki_2026";
+
+function openReportIssueModal() {
+    closeDrawerMenu();
+    const modal = document.getElementById('reportIssueModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeReportIssueModal() {
+    const modal = document.getElementById('reportIssueModal');
+    if (modal) modal.style.display = 'none';
+}
+
+// ناردنی کێشە لەلایەن بەکارهێنەرەوە بۆ ئەدمین (بەبێ دەرکەوتنی Alertی سیستەم)
+async function submitUserIssue() {
+    const name = document.getElementById('issueUserName')?.value.trim() || 'نادیار';
+    const phone = toEn(document.getElementById('issueUserPhone')?.value.trim() || 'نییە');
+    const category = document.getElementById('issueCategory')?.value || 'گشتی';
+    const text = document.getElementById('issueUserText')?.value.trim();
+    const btn = document.getElementById('btnSubmitIssue');
+    const status = document.getElementById('issueSendStatus');
+
+    if (!text) {
+        if (status) {
+            status.style.display = 'block';
+            status.style.color = '#ef4444';
+            status.innerHTML = `⚠️ تکایە دەقی کێشەکەت لە خوارەوە بنووسە!`;
+        }
+        return;
+    }
+
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>خەریکی ناردنە...</span>`;
+    }
+
+    if (status) {
+        status.style.display = 'block';
+        status.style.color = '#0284c7';
+        status.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> پەیوەندی دەبەسترێت بە ئەدمینەوە...`;
+    }
+
+    const now = new Date();
+    const timeStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} - ${now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}`;
+
+    const issuePacket = {
+        id: Date.now(),
+        name: name,
+        phone: phone,
+        category: category,
+        text: text,
+        time: timeStr
+    };
+
+    try {
+        await fetch(`https://ntfy.sh/${ISSUES_TOPIC}`, {
+            method: 'POST',
+            headers: { 'Priority': 'urgent', 'Tags': 'warning' },
+            body: JSON.stringify(issuePacket)
+        });
+
+        if (status) {
+            status.style.display = 'block';
+            status.style.color = '#22c55e';
+            status.innerHTML = `✅ کێشەکەت بە سەرکەوتوویی گەیشتە دەست ئەدمین، زۆر سوپاس.`;
+        }
+        if (btn) {
+            btn.style.background = '#22c55e';
+            btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>نێردرا!</span>`;
+        }
+
+        // پاش ١.٥ چرکە خۆی لەخۆی دادەخرێت بەبێ هیچ پۆپ-ئەپێک
+        setTimeout(() => {
+            closeReportIssueModal();
+            if (status) status.style.display = 'none';
+            if (btn) {
+                btn.disabled = false;
+                btn.style.background = '#ef4444';
+                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>ناردنی کێشەکە بۆ ئەدمین</span>`;
+            }
+            if (document.getElementById('issueUserText')) document.getElementById('issueUserText').value = '';
+        }, 1500);
+
+    } catch(e) {
+        if (status) {
+            status.style.display = 'block';
+            status.style.color = '#ef4444';
+            status.innerHTML = `❌ کێشە لە ناردندا هەیە، تکایە ئینتەرنێتەکەت بپشکنە.`;
+        }
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>دووبارە هەوڵبدەرەوە</span>`;
+        }
+    }
+}
+
+// هێنانی کێشەکانی بەکارهێنەران بۆ ناو پەنجەرەی ئەدمین
+async function fetchAdminReportedIssues() {
+    const container = document.getElementById('adminIssuesContainer');
+    if (!container) return;
+    container.innerHTML = `<div style="text-align:center; font-size:0.7rem; color:var(--text-muted); padding:10px;"><i class="fa-solid fa-spinner fa-spin"></i> خەریکی هێنانی کێشەکانە...</div>`;
+
+    try {
+        const res = await fetch(`https://ntfy.sh/${ISSUES_TOPIC}/json?poll=1&since=all`);
+        if (!res.ok) throw new Error();
+        const raw = await res.text();
+        const lines = raw.trim().split('\n');
+        let issues = [];
+
+        lines.forEach(line => {
+            if (!line) return;
+            try {
+                const data = JSON.parse(line);
+                if (data.event === 'message' && data.message) {
+                    const item = JSON.parse(data.message);
+                    if (item && item.text) issues.unshift(item);
+                }
+            } catch(err) {}
+        });
+
+        const deletedIds = JSON.parse(localStorage.getItem('admin_deleted_issues') || '[]');
+        issues = issues.filter(it => !deletedIds.includes(it.id));
+
+        renderAdminIssuesList(issues);
+    } catch(e) {
+        container.innerHTML = `<div style="text-align:center; font-size:0.7rem; color:#ef4444; padding:10px;">هیچ کێشەیەک نییە یان پەیوەندی بەستن سەرکەوتوو نەبوو.</div>`;
+    }
+}
+
+function renderAdminIssuesList(issues) {
+    const container = document.getElementById('adminIssuesContainer');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (!issues || issues.length === 0) {
+        container.innerHTML = `<div style="text-align:center; font-size:0.7rem; color:#22c55e; padding:10px;">✅ هیچ کێشەیەکی نوێ نەنێردراوە!</div>`;
+        return;
+    }
+
+    issues.forEach(iss => {
+        const card = document.createElement('div');
+        card.style = "background:rgba(255,255,255,0.06); border:1px solid rgba(239,68,68,0.3); border-right:3px solid #ef4444; border-radius:8px; padding:6px 8px; text-align:right;";
+        card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <span style="font-size:0.75rem; font-weight:900; color:#fbbf24;">👤 ${iss.name}</span>
+                <span style="font-size:0.62rem; color:var(--text-muted); font-family:var(--num-font);">${toEn(iss.time)}</span>
+            </div>
+            <div style="font-size:0.66rem; color:#38bdf8; margin-bottom:3px;">بەش: <b>${iss.category}</b></div>
+            <div style="font-size:0.72rem; color:#f8fafc; font-weight:700; line-height:1.4; margin-bottom:6px; background:rgba(0,0,0,0.25); padding:4px 6px; border-radius:6px;">${iss.text}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.65rem; color:#a1a1aa;">📞 ${toEn(iss.phone)}</span>
+                <div style="display:flex; gap:4px;">
+                    ${iss.phone && iss.phone !== 'نییە' ? `
+                        <a href="tel:${iss.phone}" class="btn-city-pill" style="padding:2px 6px; font-size:0.62rem; background:#0284c7; color:#fff; text-decoration:none;"><i class="fa-solid fa-phone"></i> تەلەفۆن</a>
+                        <a href="https://wa.me/${iss.phone.replace(/[^0-9]/g, '')}" target="_blank" class="btn-city-pill" style="padding:2px 6px; font-size:0.62rem; background:#22c55e; color:#fff; text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> واتسئەپ</a>
+                    ` : ''}
+                    <button onclick="deleteSingleIssue(${iss.id})" style="background:#dc2626; color:#fff; border:none; border-radius:6px; padding:2px 6px; font-size:0.62rem; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function deleteSingleIssue(id) {
+    let deletedIds = JSON.parse(localStorage.getItem('admin_deleted_issues') || '[]');
+    deletedIds.push(id);
+    localStorage.setItem('admin_deleted_issues', JSON.stringify(deletedIds));
+    fetchAdminReportedIssues();
+}
+
+function clearAdminIssues() {
+    if (confirm('دڵنیایت لە سڕینەوەی هەموو کێشەکان؟')) {
+        localStorage.setItem('admin_deleted_issues', JSON.stringify([]));
+        document.getElementById('adminIssuesContainer').innerHTML = `<div style="text-align:center; font-size:0.7rem; color:#22c55e; padding:10px;">✅ هەموو کێشەکان سڕانەوە!</div>`;
+    }
+}
+
 function openSecretAdminModal() {
     const titleEl = document.getElementById('adminLoggedNameText');
     if (titleEl) titleEl.innerText = `کۆنتڕۆڵی ئەدمین: ${currentActiveAdmin}`;
@@ -3650,6 +3908,7 @@ function openSecretAdminModal() {
     renderAdminLogs();
     renderAdminNotifHistory();
     renderAdminSectionToggles();
+    fetchAdminReportedIssues(); // هێنانی دەستبەجێی کێشەکان
     const modal = document.getElementById('secretAdminModal');
     if (modal) modal.style.display = 'flex';
 }
@@ -4085,12 +4344,28 @@ function applySectionsVisibility(hiddenList) {
     }
 }
 
-// ٦. پۆپ-ئەپی پێشوازی
-function adminSendGreetingPopup() {
+// ٦. پۆپ-ئەپی پێشوازی (دەستکاریکردن، سڕینەوە و ڕاگرتن)
+function adminSendGreetingPopup(enabled) {
+    if (!enabled) {
+        // ڕاگرتن و سڕینەوە
+        broadcastAdminControl({ action: 'greeting_popup', enabled: false });
+        return;
+    }
     const title = document.getElementById('adminGreetingTitle')?.value.trim();
     const body = document.getElementById('adminGreetingBody')?.value.trim();
     if (!title) { alert('تکایە سەردێڕ بنووسە!'); return; }
-    broadcastAdminControl({ action: 'greeting_popup', title: title, body: body });
+    const newId = Date.now(); // ناسنامەی نوێ بۆ ئەوەی بەکارهێنەران یەکجار بیبینن
+    broadcastAdminControl({ action: 'greeting_popup', enabled: true, id: newId, title: title, body: body });
+}
+
+// داخستن لەلایەن بەکارهێنەرەوە و ڕێگری لە دووبارەبوونەوە لەسەر ڕیفرێش
+function dismissUserGreetingModal() {
+    const modal = document.getElementById('userGreetingModal');
+    if (modal) modal.style.display = 'none';
+    const curId = localStorage.getItem('remote_greeting_id');
+    if (curId) {
+        localStorage.setItem('user_dismissed_greeting_id', curId);
+    }
 }
 
 // ٧ کلیک لەسەر لۆگۆی ئەپدەیت بۆ لابردنی ڕاستەوخۆ (تایبەت بە ئەدمین)
@@ -4187,6 +4462,24 @@ function executeRemoteAdminAction(p) {
         }
     } else if (p.action === 'greeting_popup') {
         const modal = document.getElementById('userGreetingModal');
+        if (!p.enabled) {
+            // سڕینەوە و داخستن لەسەر هەموو مۆبایلەکان
+            localStorage.setItem('remote_greeting_active', 'false');
+            if (modal) modal.style.display = 'none';
+            return;
+        }
+
+        localStorage.setItem('remote_greeting_active', 'true');
+        localStorage.setItem('remote_greeting_id', String(p.id || '1'));
+        localStorage.setItem('remote_greeting_title', p.title || '');
+        localStorage.setItem('remote_greeting_body', p.body || '');
+
+        // ئەگەر بەکارهێنەر پێشتر کلیکی لە سوپاس کردبێت، نایداتەوە لەسەر ڕیفرێش
+        const dismissedId = localStorage.getItem('user_dismissed_greeting_id');
+        if (dismissedId && String(dismissedId) === String(p.id)) {
+            return;
+        }
+
         if (modal) {
             const tEl = document.getElementById('userGreetingTitleText');
             const bEl = document.getElementById('userGreetingBodyText');
@@ -4240,6 +4533,23 @@ function applyAllSavedRemoteStates() {
             if (curr) { curr.sell = r; curr.buy = r - 100; }
             renderQamarRateCards();
             processConversion();
+        }
+    }
+
+    // ٦. پۆپ-ئەپی پێشوازی (پشکنین لە کاتی داگیرساندنی ئەپ)
+    if (localStorage.getItem('remote_greeting_active') === 'true') {
+        const gId = localStorage.getItem('remote_greeting_id');
+        const dismissedId = localStorage.getItem('user_dismissed_greeting_id');
+        // تەنها کاتێک دەیکاتەوە کە بەکارهێنەر پێشتر کلیكی لە سوپاس نەکردبێت
+        if (!dismissedId || String(dismissedId) !== String(gId)) {
+            const modal = document.getElementById('userGreetingModal');
+            if (modal) {
+                const tEl = document.getElementById('userGreetingTitleText');
+                const bEl = document.getElementById('userGreetingBodyText');
+                if (tEl) tEl.innerText = localStorage.getItem('remote_greeting_title') || 'پەیامی کارگێڕی';
+                if (bEl) bEl.innerText = localStorage.getItem('remote_greeting_body') || '';
+                modal.style.display = 'flex';
+            }
         }
     }
 }
@@ -6108,7 +6418,7 @@ function updateTopNotifBadge() {
         const res = document.getElementById('obdQuickResult');
         if (!q) { res.style.display = 'none'; return; }
         res.style.display = 'block';
-        res.innerHTML = obdMap[q] ? `<span style="color:#0284c7;">[${q}]:</span> ${obdMap[q]}` : `کۆدی [${q}]: لە گووگڵ بگەڕێ`;
+        res.innerHTML = obdMap[q] ? `<span style="color:#0284c7;">[${q}]:</span> ${obdMap[q]}` : `<span style="color:#d97706;">کۆدی [${q}]:</span> عەتەلێکی گشتییە، پێویستی بە پشکنینی ئامێری کۆمپیوتەر هەیە.`;
     }
 
     /* =========================================================
