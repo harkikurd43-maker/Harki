@@ -1835,6 +1835,120 @@
     </div>
 
     <!-- ========================================================= -->
+    <!-- بەشی نوێ: دەفتەری قەرز و حسابات لەگەڵ ئاگاداریی واتسئەپ   -->
+    <!-- ========================================================= -->
+    <div id="debtsTab" class="app-tab-content" style="display:none;">
+        <!-- کورتەی کۆی قەرزەکان -->
+        <div class="section-card fire-glow-card" style="border-right:4px solid #f59e0b;">
+            <div class="card-header-title">
+                <i class="fa-solid fa-chart-pie" style="color:#f59e0b;"></i> <span>کۆی گشتی قەرزەکان (باڵانس):</span>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; text-align:center;">
+                <div class="level-readout-card" style="border-color:#ef4444; background:rgba(239,68,68,0.06);">
+                    <span style="font-size:0.65rem; color:var(--text-muted); font-weight:bold;">قەرز بە دینار</span>
+                    <span class="level-readout-val" style="color:#ef4444; font-size:0.95rem;" id="debtTotalIQD">0 د.ع</span>
+                </div>
+                <div class="level-readout-card" style="border-color:#0284c7; background:rgba(2,132,199,0.06);">
+                    <span style="font-size:0.65rem; color:var(--text-muted); font-weight:bold;">قەرز بە دۆلار</span>
+                    <span class="level-readout-val" style="color:#0284c7; font-size:0.95rem;" id="debtTotalUSD">$0</span>
+                </div>
+                <div class="level-readout-card" style="border-color:#059669; background:rgba(5,150,105,0.06);">
+                    <span style="font-size:0.65rem; color:var(--text-muted); font-weight:bold;">کۆی کەسەکان</span>
+                    <span class="level-readout-val" style="color:#059669; font-size:0.95rem;" id="debtTotalCount">0 کەس</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- فۆڕمی تۆمارکردنی قەرزی نوێ -->
+        <div class="section-card fire-glow-card">
+            <div class="card-header-title">
+                <i class="fa-solid fa-user-plus" style="color:#0284c7;"></i> <span>تۆمارکردنی قەرزی نوێ:</span>
+            </div>
+            <div class="tool-row-inputs">
+                <input type="text" id="debtClientName" class="form-input-custom" placeholder="ناوی کڕیار بنووسە..." style="text-align:right;">
+                <input type="text" inputmode="tel" id="debtClientPhone" class="form-input-custom num-font-target" placeholder="ژمارەی مۆبایل (0750...)">
+            </div>
+            <div class="tool-row-inputs">
+                <input type="text" inputmode="decimal" id="debtAmountInput" class="form-input-custom num-font-target" placeholder="بڕی قەرز بنووسە...">
+                <select id="debtCurrencySelect" class="form-input-custom">
+                    <option value="IQD" selected>دیناری عێراقی (IQD)</option>
+                    <option value="USD">دۆلاری ئەمریکی ($)</option>
+                </select>
+            </div>
+            <input type="text" id="debtNoteInput" class="form-input-custom" placeholder="تێبینی (بۆ نموونە: قەرزی کەلوپەل، بەشە پارە...)" style="text-align:right; margin-bottom:8px;">
+            <button class="btn-action-primary" style="background:#f59e0b;" onclick="addNewDebtRecord()">
+                <i class="fa-solid fa-plus-circle"></i> <span>تۆمارکردنی ئەم قەرزە</span>
+            </button>
+        </div>
+
+        <!-- گەڕان و لیستی قەرزەکان -->
+        <div class="section-card fire-glow-card">
+            <div class="card-header-title" style="justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-list-check" style="color:#f59e0b;"></i> <span>لیستی قەرزەکان:</span>
+                </div>
+            </div>
+            <input type="text" id="debtSearchInput" class="form-input-custom" placeholder="گەڕان بەدوای ناوی کڕیار یان مۆبایل..." oninput="renderDebtList()" style="text-align:right; margin-bottom:10px;">
+            <div id="debtCardsContainer" style="display:flex; flex-direction:column; gap:8px;">
+                <!-- کارتەکانی قەرز بە شێوەی ئۆتۆماتیکی لێرە دروست دەبن -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- بەشی نوێ: ئاسایش و فریاکەوتنی شار و قەزاکان              -->
+    <!-- ========================================================= -->
+    <div id="securityTab" class="app-tab-content" style="display:none;">
+        <div class="section-card fire-glow-card" style="border-right:4px solid #ef4444;">
+            <div class="card-header-title">
+                <i class="fa-solid fa-shield-halved" style="color:#ef4444;"></i> <span>ئاسایش، پۆلیس و فریاکەوتنی شار و قەزاکان</span>
+            </div>
+
+            <!-- هێڵە گەرمە فریاگوزارییە سەرەکییەکان -->
+            <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; margin-bottom:12px;">
+                <a href="tel:106" class="btn-city-pill active" style="text-align:center; padding:8px 2px; text-decoration:none; background:#ef4444; border-color:#ef4444; color:#fff; display:flex; flex-direction:column; align-items:center; gap:2px;">
+                    <span style="font-size:0.68rem; font-weight:900;">ئاسایش</span>
+                    <span style="font-size:0.95rem; font-family:var(--num-font); font-weight:900;">106</span>
+                </a>
+                <a href="tel:104" class="btn-city-pill active" style="text-align:center; padding:8px 2px; text-decoration:none; background:#0284c7; border-color:#0284c7; color:#fff; display:flex; flex-direction:column; align-items:center; gap:2px;">
+                    <span style="font-size:0.68rem; font-weight:900;">پۆلیس</span>
+                    <span style="font-size:0.95rem; font-family:var(--num-font); font-weight:900;">104</span>
+                </a>
+                <a href="tel:115" class="btn-city-pill active" style="text-align:center; padding:8px 2px; text-decoration:none; background:#ea580c; border-color:#ea580c; color:#fff; display:flex; flex-direction:column; align-items:center; gap:2px;">
+                    <span style="font-size:0.68rem; font-weight:900;">ئاگرکوژێنەوە</span>
+                    <span style="font-size:0.95rem; font-family:var(--num-font); font-weight:900;">115</span>
+                </a>
+                <a href="tel:122" class="btn-city-pill active" style="text-align:center; padding:8px 2px; text-decoration:none; background:#059669; border-color:#059669; color:#fff; display:flex; flex-direction:column; align-items:center; gap:2px;">
+                    <span style="font-size:0.68rem; font-weight:900;">فریاکەوتن</span>
+                    <span style="font-size:0.95rem; font-family:var(--num-font); font-weight:900;">122</span>
+                </a>
+            </div>
+
+            <!-- گەڕان بەدوای شار یان بنکە -->
+            <input type="text" id="securitySearchInput" class="form-input-custom" placeholder="گەڕان بەدوای شار، قەزا یان ناوی بنکە..." oninput="renderSecurityDirectory()" style="text-align:right; margin-bottom:8px;">
+
+            <!-- فلتەری شارەکان -->
+            <div class="map-quick-cities" style="margin-bottom:10px;">
+                <button class="btn-city-pill active" onclick="filterSecurityCity('all', this)">هەمووی</button>
+                <button class="btn-city-pill" onclick="filterSecurityCity('هەولێر', this)">هەولێر</button>
+                <button class="btn-city-pill" onclick="filterSecurityCity('سلێمانی', this)">سلێمانی</button>
+                <button class="btn-city-pill" onclick="filterSecurityCity('دهۆک', this)">دهۆک</button>
+                <button class="btn-city-pill" onclick="filterSecurityCity('هەڵەبجە', this)">هەڵەبجە</button>
+                <button class="btn-city-pill" onclick="filterSecurityCity('گەرمیان', this)">گەرمیان</button>
+                <button class="btn-city-pill" onclick="filterSecurityCity('ڕاپەڕین', this)">ڕاپەڕین</button>
+                <button class="btn-city-pill" onclick="filterSecurityCity('سۆران', this)">سۆران</button>
+                <button class="btn-city-pill" onclick="filterSecurityCity('زاخۆ', this)">زاخۆ</button>
+                <button class="btn-city-pill" onclick="filterSecurityCity('کەرکووک', this)">کەرکووک</button>
+            </div>
+
+            <!-- شوێنی دەرکەوتنی بنکەکان -->
+            <div id="securityCardsContainer" style="display:flex; flex-direction:column; gap:6px;">
+                <!-- کارتەکان لێرە دادەنرێن -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
     <!-- بەشی نوێ و یەکگرتووی ئاینی (قورئان، بانگ، بوخاری، زیکر و زەکات) -->
     <!-- ========================================================= -->
     <div id="islamicTab" class="app-tab-content" style="display:none;">
@@ -3301,8 +3415,18 @@
             <i class="fa-solid fa-money-bill-transfer" style="color:var(--theme-color);"></i> <span>بۆرسە و دراوەکان</span>
         </button>
 
+        <!-- دوگمەی نوێی دەفتەری قەرز و واتسئەپ -->
+        <button class="drawer-nav-btn" onclick="selectDrawerTab('debtsTab', 'دەفتەری قەرز و حسابات', 'fa-book-bookmark')">
+            <i class="fa-solid fa-book-bookmark" style="color:#f59e0b;"></i> <span>📒 دەفتەری قەرز و واتسئەپ</span>
+        </button>
+
         <button class="drawer-nav-btn" onclick="selectDrawerTab('islamicTab', 'بەشی ئاینی', 'fa-mosque')">
             <i class="fa-solid fa-mosque" style="color:#059669;"></i> <span>🕌 بەشی ئاینی (قورئان، بانگ، بوخاری، زیکر)</span>
+        </button>
+
+        <!-- دوگمەی نوێی ئاسایش و فریاکەوتن -->
+        <button class="drawer-nav-btn" onclick="selectDrawerTab('securityTab', 'ئاسایش و فریاکەوتن', 'fa-shield-halved')">
+            <i class="fa-solid fa-shield-halved" style="color:#ef4444;"></i> <span>🚨 ئاسایش و فریاکەوتنی شارەکان</span>
         </button>
 
         <button class="drawer-nav-btn" onclick="selectDrawerTab('vinTab', 'شاسی و لۆدی مەزاد', 'fa-car-rear')">
@@ -7429,8 +7553,365 @@ function updateTopNotifBadge() {
         }
     }
 
+    /* =========================================================
+       سیستەمی دەفتەری قەرز و ناردنی ئاگاداری بۆ واتسئەپ
+    ========================================================= */
+    const DEBT_STORAGE_KEY = 'asankari_debts_db';
+
+    function getStoredDebts() {
+        try {
+            return JSON.parse(localStorage.getItem(DEBT_STORAGE_KEY) || '[]');
+        } catch(e) {
+            return [];
+        }
+    }
+
+    function setStoredDebts(debts) {
+        localStorage.setItem(DEBT_STORAGE_KEY, JSON.stringify(debts));
+        renderDebtList();
+    }
+
+    function addNewDebtRecord() {
+        const name = document.getElementById('debtClientName')?.value.trim();
+        let phone = toEn(document.getElementById('debtClientPhone')?.value.trim() || '');
+        const amount = parseNum(document.getElementById('debtAmountInput')?.value);
+        const currency = document.getElementById('debtCurrencySelect')?.value || 'IQD';
+        const note = document.getElementById('debtNoteInput')?.value.trim() || 'قەرزی مامەڵە';
+
+        if (!name) {
+            alert('⚠️ تکایە ناوی کڕیار بنووسە!');
+            return;
+        }
+        if (amount <= 0) {
+            alert('⚠️ تکایە بڕی قەرز بە دروستی بنووسە!');
+            return;
+        }
+
+        phone = phone.replace(/[^0-9]/g, '');
+        if (phone.startsWith('07')) {
+            phone = '964' + phone.substring(1);
+        } else if (phone.startsWith('7')) {
+            phone = '964' + phone;
+        }
+
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+
+        const newDebt = {
+            id: Date.now(),
+            name: name,
+            phone: phone,
+            amount: amount,
+            currency: currency,
+            note: note,
+            date: dateStr
+        };
+
+        const debts = getStoredDebts();
+        debts.unshift(newDebt);
+        setStoredDebts(debts);
+
+        document.getElementById('debtClientName').value = '';
+        document.getElementById('debtClientPhone').value = '';
+        document.getElementById('debtAmountInput').value = '';
+        document.getElementById('debtNoteInput').value = '';
+
+        alert('✅ قەرزەکە بە سەرکەوتوویی تۆمارکرا');
+    }
+
+    function renderDebtList() {
+        const debts = getStoredDebts();
+        const container = document.getElementById('debtCardsContainer');
+        const searchInput = document.getElementById('debtSearchInput');
+        const filter = searchInput ? toEn(searchInput.value.toLowerCase().trim()) : '';
+
+        if (!container) return;
+        container.innerHTML = '';
+
+        let totalIQD = 0;
+        let totalUSD = 0;
+
+        debts.forEach(d => {
+            if (d.currency === 'USD') totalUSD += d.amount;
+            else totalIQD += d.amount;
+        });
+
+        const statIQD = document.getElementById('debtTotalIQD');
+        const statUSD = document.getElementById('debtTotalUSD');
+        const statCount = document.getElementById('debtTotalCount');
+        if (statIQD) statIQD.innerText = formatEn(totalIQD) + " د.ع";
+        if (statUSD) statUSD.innerText = "$" + formatEn(totalUSD);
+        if (statCount) statCount.innerText = toEn(debts.length) + " کەس";
+
+        const filteredDebts = debts.filter(d => 
+            d.name.toLowerCase().includes(filter) || 
+            (d.phone && d.phone.includes(filter)) ||
+            (d.note && d.note.toLowerCase().includes(filter))
+        );
+
+        if (filteredDebts.length === 0) {
+            container.innerHTML = `
+                <div style="text-align:center; padding:30px 10px; color:var(--text-muted);">
+                    <i class="fa-solid fa-clipboard-check" style="font-size:2.4rem; opacity:0.3; margin-bottom:8px; display:block;"></i>
+                    <div style="font-size:0.85rem; font-weight:bold;">هیچ قەرزێک تۆمار نەکراوە</div>
+                    <div style="font-size:0.7rem; margin-top:4px;">لە سەرەوە ناوی کڕیار و بڕی قەرز بنووسە بۆ تۆمارکردن.</div>
+                </div>
+            `;
+            return;
+        }
+
+        filteredDebts.forEach(d => {
+            const card = document.createElement('div');
+            card.className = "section-card fire-glow-card";
+            card.style.borderRight = "4px solid #f59e0b";
+            card.style.padding = "12px";
+            card.style.marginBottom = "8px";
+
+            const currText = d.currency === 'USD' ? '$' + formatEn(d.amount) + ' دۆلار' : formatEn(d.amount) + ' دینار';
+            const displayPhone = d.phone ? '0' + d.phone.replace(/^964/, '') : 'بێ ژمارە';
+
+            card.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+                    <div>
+                        <div style="font-size:0.92rem; font-weight:900; color:var(--text-main); display:flex; align-items:center; gap:6px;">
+                            <i class="fa-solid fa-user-tag" style="color:#f59e0b;"></i> ${d.name}
+                        </div>
+                        <div style="font-size:0.7rem; color:var(--text-muted); font-family:var(--num-font); margin-top:2px;">
+                            📞 ${toEn(displayPhone)} • 📅 ${toEn(d.date)}
+                        </div>
+                    </div>
+                    <span class="badge-val" style="font-size:0.92rem; font-weight:900; color:#ef4444; background:rgba(239,68,68,0.12); border-color:#ef4444;">
+                        ${currText}
+                    </span>
+                </div>
+
+                <div style="font-size:0.74rem; color:var(--text-main); background:var(--input-bg); padding:6px 10px; border-radius:8px; margin-bottom:8px; border:1px solid var(--card-border);">
+                    <i class="fa-solid fa-note-sticky" style="color:var(--text-muted);"></i> تێبینی: ${d.note}
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1.5fr 1.1fr 0.8fr; gap:6px;">
+                    <button class="btn-action-primary" style="background:#22c55e; padding:7px; font-size:0.72rem;" onclick="sendWhatsAppReminder(${d.id})">
+                        <i class="fa-brands fa-whatsapp" style="font-size:0.9rem;"></i> <span>واتسئەپ</span>
+                    </button>
+                    <button class="btn-action-primary" style="background:#0284c7; padding:7px; font-size:0.72rem;" onclick="payDebtAmount(${d.id})">
+                        <i class="fa-solid fa-hand-holding-dollar"></i> <span>دانەوە</span>
+                    </button>
+                    <button class="btn-action-primary" style="background:#dc2626; padding:7px; font-size:0.72rem;" onclick="deleteDebtRecord(${d.id})">
+                        <i class="fa-solid fa-trash-can"></i> <span>سڕینەوە</span>
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function payDebtAmount(id) {
+        const debts = getStoredDebts();
+        const item = debts.find(d => d.id === id);
+        if (!item) return;
+
+        const currName = item.currency === 'USD' ? 'دۆلار' : 'دینار';
+        const raw = prompt(`بڕی ئەو پارەیەی دراوەتەوە بنووسە (${currName}):\n(بڕی قەرزی ئێستا: ${formatEn(item.amount)})`);
+        if (raw === null) return;
+
+        const pay = parseNum(raw);
+        if (pay <= 0) {
+            alert('⚠️ تکایە بڕی دروست بنووسە!');
+            return;
+        }
+
+        if (pay >= item.amount) {
+            const confirmClear = confirm(`ئەم بڕە یەکسانە یان زیاترە لە قەرزەکە، ئایا بە تەواوی پاکتاو بکرێت؟`);
+            if (confirmClear) {
+                const newDebts = debts.filter(d => d.id !== id);
+                setStoredDebts(newDebts);
+                alert('🎉 پیرۆزە، قەرزەکە بە تەواوی پاکتاو کرا');
+            }
+        } else {
+            item.amount -= pay;
+            setStoredDebts(debts);
+            alert(`✅ بڕی ${formatEn(pay)} کەمکرایەوە، قەرزی ماوە: ${formatEn(item.amount)}`);
+        }
+    }
+
+    function deleteDebtRecord(id) {
+        if (!confirm('دڵنیایت لە سڕینەوەی ئەم تۆمارە؟')) return;
+        const debts = getStoredDebts().filter(d => d.id !== id);
+        setStoredDebts(debts);
+    }
+
+    function sendWhatsAppReminder(id) {
+        const debts = getStoredDebts();
+        const item = debts.find(d => d.id === id);
+        if (!item) return;
+
+        if (!item.phone || item.phone.length < 8) {
+            alert('⚠️ ئەم کڕیارە ژمارەی مۆبایلی نییە یان ناتەواوە!');
+            return;
+        }
+
+        const currText = item.currency === 'USD' ? `$${formatEn(item.amount)} دۆلار` : `${formatEn(item.amount)} دینار`;
+
+        const message = `سڵاو کاک ${item.name}ی بەڕێز 🌸\nهیوادارم کاتێکی شاد و باش بەسەربەریت.\n\nئەم پەیامە وەک بیرخستنەوەیەکی دۆستانەیە کە بڕی (${currText}) قەرز لای بەڕێزتان ماوەتەوە.\nتکایە کاتێک بۆتان گونجاو بوو سەردانمان بکەن بۆ پاکتاوکردنی حسابەکەتان.\n\nسوپاس بۆ هاوکاری و متمانەتان 🌷`;
+
+        const waUrl = `https://wa.me/${item.phone}?text=${encodeURIComponent(message)}`;
+        window.open(waUrl, '_blank');
+    }
+
+    /* =========================================================
+       داتابەیسی ناوی بنکەکان و ژمارەی تەلەفۆنی ئاسایش و فریاکەوتن
+    ========================================================= */
+    const securityDirectoryDB = [
+        // هەولێر و قەزاکانی
+        { city: "هەولێر", district: "ناوەندی هەولێر", name: "ئاسایشی هەولێر (کۆنتڕۆڵ)", phone: "106", type: "asayish" },
+        { city: "هەولێر", district: "ناوەندی هەولێر", name: "پۆلیسی فریاکەوتنی هەولێر", phone: "104", type: "police" },
+        { city: "هەولێر", district: "ناوەندی هەولێر", name: "بەرگری شارستانی هەولێر (ئاگرکوژێنەوە)", phone: "115", type: "fire" },
+        { city: "هەولێر", district: "ناوەندی هەولێر", name: "فریاکەوتنی تەندروستی هەولێر (ئامبوڵانس)", phone: "122", type: "health" },
+        { city: "هەولێر", district: "ناوەندی هەولێر", name: "بەڕێوەبەرایەتی پۆلیسی پارێزگای هەولێر", phone: "0662222222", type: "police" },
+        { city: "هەولێر", district: "ناوەندی هەولێر", name: "هاتوچۆی هەولێر (کۆنتڕۆڵ)", phone: "444", type: "traffic" },
+        { city: "هەولێر", district: "قەزای کۆیە", name: "ئاسایشی کۆیە", phone: "106", type: "asayish" },
+        { city: "هەولێر", district: "قەزای کۆیە", name: "پۆلیسی کۆیە", phone: "0663242222", type: "police" },
+        { city: "هەولێر", district: "قەزای شەقڵاوە", name: "ئاسایشی شەقڵاوە", phone: "106", type: "asayish" },
+        { city: "هەولێر", district: "قەزای شەقڵاوە", name: "پۆلیسی شەقڵاوە", phone: "0662652222", type: "police" },
+        { city: "هەولێر", district: "قەزای خەبات", name: "پۆلیس و ئاسایشی خەبات", phone: "104", type: "police" },
+        { city: "هەولێر", district: "قەزای مەخموور", name: "پۆلیسی مەخموور", phone: "104", type: "police" },
+
+        // سۆران (ئیدارەی سەربەخۆ)
+        { city: "سۆران", district: "سۆران", name: "ئاسایشی سۆران", phone: "106", type: "asayish" },
+        { city: "سۆران", district: "سۆران", name: "پۆلیسی سۆران", phone: "0663522222", type: "police" },
+        { city: "سۆران", district: "سۆران", name: "بەرگری شارستانی سۆران", phone: "115", type: "fire" },
+        { city: "سۆران", district: "قەزای چۆمان", name: "پۆلیسی چۆمان و باڵەکایەتی", phone: "104", type: "police" },
+        { city: "سۆران", district: "قەزای ڕواندز", name: "پۆلیسی ڕواندز", phone: "104", type: "police" },
+        { city: "سۆران", district: "قەزای مێرگەسۆر", name: "پۆلیسی مێرگەسۆر", phone: "104", type: "police" },
+
+        // سلێمانی و قەزاکانی
+        { city: "سلێمانی", district: "ناوەندی سلێمانی", name: "ئاسایشی سلێمانی (کۆنتڕۆڵ)", phone: "106", type: "asayish" },
+        { city: "سلێمانی", district: "ناوەندی سلێمانی", name: "پۆلیسی فریاکەوتنی سلێمانی", phone: "104", type: "police" },
+        { city: "سلێمانی", district: "ناوەندی سلێمانی", name: "پۆلیسی سلێمانی (ئێشکگری)", phone: "0533193148", type: "police" },
+        { city: "سلێمانی", district: "ناوەندی سلێمانی", name: "بەرگری شارستانی سلێمانی (ئاگرکوژێنەوە)", phone: "115", type: "fire" },
+        { city: "سلێمانی", district: "ناوەندی سلێمانی", name: "فریاکەوتنی تەندروستی سلێمانی (ئامبوڵانس)", phone: "122", type: "health" },
+        { city: "سلێمانی", district: "ناوەندی سلێمانی", name: "پۆلیسی نەهێشتنی تاوانی سلێمانی", phone: "105", type: "police" },
+        { city: "سلێمانی", district: "ناوەندی سلێمانی", name: "سەنتەری ڕێکخەری پەیوەندییەکان (JCC)", phone: "100", type: "police" },
+        { city: "سلێمانی", district: "ناوەندی سلێمانی", name: "هاتوچۆی سلێمانی", phone: "188", type: "traffic" },
+        { city: "سلێمانی", district: "قەزای چەمچەماڵ", name: "ئاسایشی چەمچەماڵ", phone: "106", type: "asayish" },
+        { city: "سلێمانی", district: "قەزای چەمچەماڵ", name: "پۆلیسی چەمچەماڵ", phone: "0535122222", type: "police" },
+        { city: "سلێمانی", district: "قەزای دووکان", name: "پۆلیس و ئاسایشی دووکان", phone: "104", type: "police" },
+        { city: "سلێمانی", district: "قەزای دەربەندیخان", name: "پۆلیسی دەربەندیخان", phone: "0535322222", type: "police" },
+        { city: "سلێمانی", district: "قەزای سەیدسادق", name: "پۆلیسی سەیدسادق", phone: "104", type: "police" },
+        { city: "سلێمانی", district: "قەزای پێنجوێن", name: "پۆلیسی پێنجوێن", phone: "104", type: "police" },
+
+        // ڕاپەڕین (ڕانیە و قەڵادزێ)
+        { city: "ڕاپەڕین", district: "ئیدارەی ڕاپەڕین", name: "ئاسایشی ڕاپەڕین", phone: "106", type: "asayish" },
+        { city: "ڕاپەڕین", district: "قەزای ڕانیە", name: "پۆلیسی ڕانیە", phone: "0536222222", type: "police" },
+        { city: "ڕاپەڕین", district: "قەزای پشدەر", name: "پۆلیسی قەڵادزێ (پشدەر)", phone: "104", type: "police" },
+        { city: "ڕاپەڕین", district: "ڕاپەڕین", name: "بەرگری شارستانی ڕاپەڕین", phone: "115", type: "fire" },
+
+        // گەرمیان (کەلار و کفری)
+        { city: "گەرمیان", district: "ئیدارەی گەرمیان", name: "ئاسایشی گەرمیان", phone: "106", type: "asayish" },
+        { city: "گەرمیان", district: "قەزای کەلار", name: "پۆلیسی گەرمیان (کەلار)", phone: "0534222222", type: "police" },
+        { city: "گەرمیان", district: "قەزای کفری", name: "پۆلیسی کفری", phone: "104", type: "police" },
+        { city: "گەرمیان", district: "گەرمیان", name: "بەرگری شارستانی گەرمیان", phone: "115", type: "fire" },
+
+        // دهۆک و قەزاکانی
+        { city: "دهۆک", district: "ناوەندی دهۆک", name: "ئاسایشی دهۆک", phone: "106", type: "asayish" },
+        { city: "دهۆک", district: "ناوەندی دهۆک", name: "پۆلیسی فریاکەوتنی دهۆک", phone: "104", type: "police" },
+        { city: "دهۆک", district: "ناوەندی دهۆک", name: "بەڕێوەبەرایەتی پۆلیسی دهۆک", phone: "0627222222", type: "police" },
+        { city: "دهۆک", district: "ناوەندی دهۆک", name: "بەرگری شارستانی دهۆک (ئاگرکوژێنەوە)", phone: "115", type: "fire" },
+        { city: "دهۆک", district: "ناوەندی دهۆک", name: "فریاکەوتنی تەندروستی دهۆک (ئامبوڵانس)", phone: "122", type: "health" },
+        { city: "دهۆک", district: "قەزای ئاکرێ", name: "ئاسایشی ئاکرێ", phone: "106", type: "asayish" },
+        { city: "دهۆک", district: "قەزای ئاکرێ", name: "پۆلیسی ئاکرێ", phone: "0627822222", type: "police" },
+        { city: "دهۆک", district: "قەزای سێمێل", name: "پۆلیسی سێمێل", phone: "104", type: "police" },
+        { city: "دهۆک", district: "قەزای شێخان", name: "پۆلیسی شێخان", phone: "104", type: "police" },
+        { city: "دهۆک", district: "قەزای ئامێدی", name: "پۆلیسی ئامێدی", phone: "104", type: "police" },
+        { city: "دهۆک", district: "قەزای بەردەڕەش", name: "پۆلیسی بەردەڕەش", phone: "104", type: "police" },
+
+        // زاخۆ (ئیدارەی سەربەخۆ)
+        { city: "زاخۆ", district: "ئیدارەی زاخۆ", name: "ئاسایشی زاخۆ", phone: "106", type: "asayish" },
+        { city: "زاخۆ", district: "ئیدارەی زاخۆ", name: "پۆلیسی زاخۆ", phone: "0627622222", type: "police" },
+        { city: "زاخۆ", district: "ئیدارەی زاخۆ", name: "بەرگری شارستانی زاخۆ", phone: "115", type: "fire" },
+
+        // هەڵەبجە
+        { city: "هەڵەبجە", district: "ناوەندی هەڵەبجە", name: "ئاسایشی هەڵەبجە", phone: "106", type: "asayish" },
+        { city: "هەڵەبجە", district: "ناوەندی هەڵەبجە", name: "پۆلیسی هەڵەبجە", phone: "104", type: "police" },
+        { city: "هەڵەبجە", district: "ناوەندی هەڵەبجە", name: "بەرگری شارستانی هەڵەبجە", phone: "115", type: "fire" },
+        { city: "هەڵەبجە", district: "ناوەندی هەڵەبجە", name: "فریاکەوتنی تەندروستی هەڵەبجە", phone: "122", type: "health" },
+        { city: "هەڵەبجە", district: "ناحیەی خورماڵ و بیارە", name: "پۆلیسی خورماڵ و بیارە", phone: "104", type: "police" },
+
+        // کەرکووک
+        { city: "کەرکووک", district: "ناوەندی کەرکووک", name: "پۆلیسی فریاکەوتنی کەرکووک", phone: "104", type: "police" },
+        { city: "کەرکووک", district: "ناوەندی کەرکووک", name: "بەرگری شارستانی کەرکووک", phone: "115", type: "fire" },
+        { city: "کەرکووک", district: "ناوەندی کەرکووک", name: "فریاکەوتنی تەندروستی کەرکووک", phone: "122", type: "health" },
+        { city: "کەرکووک", district: "قەزای داقووق و دووبز", name: "پۆلیسی داقووق و دووبز", phone: "104", type: "police" }
+    ];
+
+    let currentSecurityCityFilter = 'all';
+
+    function filterSecurityCity(city, btn) {
+        currentSecurityCityFilter = city;
+        document.querySelectorAll('#securityTab .btn-city-pill').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        renderSecurityDirectory();
+    }
+
+    function renderSecurityDirectory() {
+        const container = document.getElementById('securityCardsContainer');
+        const searchInput = document.getElementById('securitySearchInput');
+        const query = searchInput ? toEn(searchInput.value.toLowerCase().trim()) : '';
+
+        if (!container) return;
+        container.innerHTML = '';
+
+        const filtered = securityDirectoryDB.filter(item => {
+            const matchCity = (currentSecurityCityFilter === 'all') || (item.city === currentSecurityCityFilter);
+            const matchQuery = item.name.toLowerCase().includes(query) || 
+                               item.district.toLowerCase().includes(query) || 
+                               item.city.toLowerCase().includes(query) ||
+                               item.phone.includes(query);
+            return matchCity && matchQuery;
+        });
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:25px; color:var(--text-muted); font-size:0.8rem;">هیچ بنکەیەک نەدۆزرایەوە!</div>`;
+            return;
+        }
+
+        filtered.forEach(item => {
+            const card = document.createElement('div');
+            card.style = "background:var(--card-bg); border:1.5px solid var(--card-border); border-radius:12px; padding:10px 12px; display:flex; justify-content:space-between; align-items:center; box-shadow:var(--box-shadow);";
+
+            let badgeColor = "#ef4444";
+            let badgeIcon = "fa-shield";
+            if (item.type === 'police') { badgeColor = "#0284c7"; badgeIcon = "fa-person-military-rifle"; }
+            else if (item.type === 'fire') { badgeColor = "#ea580c"; badgeIcon = "fa-fire-extinguisher"; }
+            else if (item.type === 'health') { badgeColor = "#059669"; badgeIcon = "fa-truck-medical"; }
+            else if (item.type === 'traffic') { badgeColor = "#eab308"; badgeIcon = "fa-traffic-light"; }
+
+            card.innerHTML = `
+                <div style="text-align:right;">
+                    <div style="font-size:0.85rem; font-weight:900; color:var(--text-main); display:flex; align-items:center; gap:6px;">
+                        <i class="fa-solid ${badgeIcon}" style="color:${badgeColor};"></i> ${item.name}
+                    </div>
+                    <div style="font-size:0.68rem; color:var(--text-muted); font-weight:700; margin-top:2px;">
+                        📍 ${item.city} • ${item.district}
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="badge-val" style="font-size:0.88rem; font-weight:900; color:${badgeColor}; background:rgba(0,0,0,0.05); border-color:${badgeColor}; font-family:var(--num-font);">
+                        ${toEn(item.phone)}
+                    </span>
+                    <a href="tel:${item.phone}" class="btn-action-primary" style="padding:6px 10px; font-size:0.75rem; width:auto; text-decoration:none; background:${badgeColor}; border-radius:8px;">
+                        <i class="fa-solid fa-phone"></i> <span>پەیوەندی</span>
+                    </a>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
     window.onload = function() {
         try {
+            renderDebtList();
+            renderSecurityDirectory();
             const savedFont = localStorage.getItem('userSelectedFont') || 'IBM Plex Sans Arabic';
             document.documentElement.style.setProperty('--app-main-font', `'${savedFont}', sans-serif`);
             document.body.style.fontFamily = `'${savedFont}', sans-serif`;
