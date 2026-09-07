@@ -1829,15 +1829,16 @@
     <!-- ========================================================= -->
     <div id="islamicTab" class="app-tab-content" style="display:none;">
         
-        <!-- چوار تابی خێرا بۆ گۆڕینی خزمەتگوزارییەکان -->
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 12px; background: var(--card-bg); padding: 6px; border-radius: 14px; border: 1.5px solid var(--card-border);">
-            <button class="btn-city-pill active" id="btnSubQuran" style="padding: 8px 2px; font-size: 0.72rem; font-weight: 900;" onclick="switchIslamicSubTab('quran', this)">📖 قورئان</button>
-            <button class="btn-city-pill" id="btnSubPrayer" style="padding: 8px 2px; font-size: 0.72rem; font-weight: 900;" onclick="switchIslamicSubTab('prayer', this)">🕌 بانگ</button>
-            <button class="btn-city-pill" id="btnSubBukhari" style="padding: 8px 2px; font-size: 0.72rem; font-weight: 900;" onclick="switchIslamicSubTab('bukhari', this)">📚 بوخاری</button>
-            <button class="btn-city-pill" id="btnSubTasbih" style="padding: 8px 2px; font-size: 0.72rem; font-weight: 900;" onclick="switchIslamicSubTab('tasbih', this)">📿 زیکر</button>
+        <!-- پێنج تابی خێرا بۆ گۆڕینی خزمەتگوزارییەکان -->
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 12px; background: var(--card-bg); padding: 6px; border-radius: 14px; border: 1.5px solid var(--card-border);">
+            <button class="btn-city-pill active" id="btnSubQuran" style="padding: 8px 2px; font-size: 0.70rem; font-weight: 900;" onclick="switchIslamicSubTab('quran', this)">📖 قورئان</button>
+            <button class="btn-city-pill" id="btnSubPrayer" style="padding: 8px 2px; font-size: 0.70rem; font-weight: 900;" onclick="switchIslamicSubTab('prayer', this)">🕌 بانگ</button>
+            <button class="btn-city-pill" id="btnSubBukhari" style="padding: 8px 2px; font-size: 0.70rem; font-weight: 900;" onclick="switchIslamicSubTab('bukhari', this)">📚 بوخاری</button>
+            <button class="btn-city-pill" id="btnSubTasbih" style="padding: 8px 2px; font-size: 0.70rem; font-weight: 900;" onclick="switchIslamicSubTab('tasbih', this)">📿 زیکر</button>
+            <button class="btn-city-pill" id="btnSubZakat" style="padding: 8px 2px; font-size: 0.70rem; font-weight: 900;" onclick="switchIslamicSubTab('zakat', this)">💰 زەکات</button>
         </div>
 
-        <!-- ١. قورئانی پیرۆز و قیبلەنما و زەکات -->
+        <!-- ١. قورئانی پیرۆز و قیبلەنما -->
         <div id="subIslamicQuran" class="islamic-sub-content">
             <div class="section-card fire-glow-card">
                 <div class="card-header-title">
@@ -1925,21 +1926,25 @@
                     <div style="text-align:center; padding:20px; font-size:0.85rem; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> خەریکی هێنانی ئایەتەکانە...</div>
                 </div>
             </div>
+        </div>
 
-            <!-- زەکات -->
-            <div class="section-card fire-glow-card" style="margin-top:10px; border-right:4px solid #059669;">
+        <!-- ٥. بەشی تایبەت بە زەکاتی ماڵ -->
+        <div id="subIslamicZakat" class="islamic-sub-content" style="display:none;">
+            <div class="section-card fire-glow-card" style="border-right:4px solid #059669;">
                 <div class="card-header-title"><i class="fa-solid fa-scale-balanced" style="color:#059669;"></i> <span>حاسیبەی شەرعیی زەکاتی ماڵ (٢.٥٪)</span></div>
-                <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:8px;">نیساب = بەهای ٨٥ گرام زێڕی خاو (ساڵ بەسەرچوو):</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px; line-height:1.5;">
+                    نیساب = بەهای ٨٥ گرام زێڕی خاو (پێویستە ساڵ بەسەر پارە یان کاڵاکەتدا تێپەڕیبێت).
+                </div>
                 <div class="tool-row-inputs">
-                    <input type="text" inputmode="decimal" id="zakatCashIQD" class="form-input-custom num-font-target" placeholder="پارەی نەختینە بنووسە (دینار)..." value="">
-                    <input type="text" inputmode="decimal" id="zakatCashUSD" class="form-input-custom num-font-target" placeholder="پارە بە دۆلار بنووسە ($)..." value="">
+                    <input type="text" inputmode="decimal" id="zakatCashIQD" class="form-input-custom num-font-target" placeholder="پارەی نەختینە (دینار)..." value="">
+                    <input type="text" inputmode="decimal" id="zakatCashUSD" class="form-input-custom num-font-target" placeholder="پارە بە دۆلار ($)..." value="">
                 </div>
                 <div class="tool-row-inputs">
                     <input type="text" inputmode="decimal" id="zakatGoodsIQD" class="form-input-custom num-font-target" placeholder="بەهای کاڵای بازرگانی (دینار)..." value="">
-                    <input type="text" inputmode="decimal" id="zakatDebtsIQD" class="form-input-custom num-font-target" placeholder="قەرزی لەسەرت بنووسە (دینار)..." value="">
+                    <input type="text" inputmode="decimal" id="zakatDebtsIQD" class="form-input-custom num-font-target" placeholder="قەرزی لەسەرت (دینار)..." value="">
                 </div>
-                <button class="btn-action-primary" style="background:#059669;" onclick="calculateZakatTotal()"><i class="fa-solid fa-hand-holding-dollar"></i> <span>حیسابکردنی زەکات</span></button>
-                <div id="zakatResultBox" class="tool-result-badge" style="display:none; margin-top:8px;"></div>
+                <button class="btn-action-primary" style="background:#059669; padding:12px;" onclick="calculateZakatTotal()"><i class="fa-solid fa-hand-holding-dollar"></i> <span>حیسابکردنی زەکات</span></button>
+                <div id="zakatResultBox" class="tool-result-badge" style="display:none; margin-top:10px;"></div>
             </div>
         </div>
 
@@ -7376,6 +7381,8 @@ function updateTopNotifBadge() {
             document.getElementById('subIslamicBukhari').style.display = 'block';
         } else if (tabKey === 'tasbih') {
             document.getElementById('subIslamicTasbih').style.display = 'block';
+        } else if (tabKey === 'zakat') {
+            document.getElementById('subIslamicZakat').style.display = 'block';
         }
     }
 
