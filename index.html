@@ -320,9 +320,19 @@
             animation: scrollLeft 20s linear infinite;
         }
 
+        /* تایبەت بە نووسینەکەی سەرووی ئاڵای کوردستان: جوڵان بەرەو لای ڕاست */
+        .top-marquee-bar .scrolling-text {
+            animation: scrollRight 20s linear infinite !important;
+        }
+
         @keyframes scrollLeft { 
             0% { transform: translateX(100%); } 
             100% { transform: translateX(-100%); } 
+        }
+
+        @keyframes scrollRight { 
+            0% { transform: translateX(-100%); } 
+            100% { transform: translateX(100%); } 
         }
         
         .container { 
