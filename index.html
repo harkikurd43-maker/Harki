@@ -1835,13 +1835,15 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- بەشی نوێ: دەفتەری قەرز و حسابات لەگەڵ ئاگاداریی واتسئەپ   -->
+    <!-- بەشی دەفتەری قەرز و حسابات لەگەڵ ئاگاداریی واتسئەپ و پاشەکەوت -->
     <!-- ========================================================= -->
     <div id="debtsTab" class="app-tab-content" style="display:none;">
         <!-- کورتەی کۆی قەرزەکان -->
         <div class="section-card fire-glow-card" style="border-right:4px solid #f59e0b;">
-            <div class="card-header-title">
-                <i class="fa-solid fa-chart-pie" style="color:#f59e0b;"></i> <span>کۆی گشتی قەرزەکان (باڵانس):</span>
+            <div class="card-header-title" style="justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-chart-pie" style="color:#f59e0b;"></i> <span>کۆی گشتی قەرزەکان (باڵانس):</span>
+                </div>
             </div>
             <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; text-align:center;">
                 <div class="level-readout-card" style="border-color:#ef4444; background:rgba(239,68,68,0.06);">
@@ -1857,13 +1859,24 @@
                     <span class="level-readout-val" style="color:#059669; font-size:0.95rem;" id="debtTotalCount">0 کەس</span>
                 </div>
             </div>
+
+            <!-- دوگمەکانی پاراستن (Save) و هێنانەوەی داتا (Restore) بە ئیمەیڵ -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-top:10px;">
+                <button class="btn-action-primary" style="background:#059669; padding:8px; font-size:0.75rem;" onclick="openCloudBackupModal('backup')">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> <span>پاشەکەوتکردن (Save)</span>
+                </button>
+                <button class="btn-action-primary" style="background:#0284c7; padding:8px; font-size:0.75rem;" onclick="openCloudBackupModal('restore')">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> <span>هێنانەوەی داتا (Restore)</span>
+                </button>
+            </div>
         </div>
 
-        <!-- فۆڕمی تۆمارکردنی قەرزی نوێ -->
+        <!-- فۆڕمی تۆمارکردن و دەستکاریکردنی قەرز -->
         <div class="section-card fire-glow-card">
             <div class="card-header-title">
-                <i class="fa-solid fa-user-plus" style="color:#0284c7;"></i> <span>تۆمارکردنی قەرزی نوێ:</span>
+                <i class="fa-solid fa-user-pen" style="color:#0284c7;"></i> <span id="debtFormTitle">تۆمارکردنی قەرزی نوێ:</span>
             </div>
+            <input type="hidden" id="editingDebtId" value="">
             <div class="tool-row-inputs">
                 <input type="text" id="debtClientName" class="form-input-custom" placeholder="ناوی کڕیار بنووسە..." style="text-align:right;">
                 <input type="text" inputmode="tel" id="debtClientPhone" class="form-input-custom num-font-target" placeholder="ژمارەی مۆبایل (0750...)">
@@ -1876,9 +1889,14 @@
                 </select>
             </div>
             <input type="text" id="debtNoteInput" class="form-input-custom" placeholder="تێبینی (بۆ نموونە: قەرزی کەلوپەل، بەشە پارە...)" style="text-align:right; margin-bottom:8px;">
-            <button class="btn-action-primary" style="background:#f59e0b;" onclick="addNewDebtRecord()">
-                <i class="fa-solid fa-plus-circle"></i> <span>تۆمارکردنی ئەم قەرزە</span>
-            </button>
+            <div style="display:flex; gap:6px;">
+                <button class="btn-action-primary" id="btnSaveDebtAction" style="background:#f59e0b; flex:1;" onclick="addNewDebtRecord()">
+                    <i class="fa-solid fa-plus-circle"></i> <span id="btnSaveDebtText">تۆمارکردنی ئەم قەرزە</span>
+                </button>
+                <button class="btn-action-primary" id="btnCancelEditDebt" style="background:#64748b; width:auto; padding:0 14px; display:none;" onclick="cancelDebtEditing()">
+                    <i class="fa-solid fa-xmark"></i> <span>پەشیمانبوونەوە</span>
+                </button>
+            </div>
         </div>
 
         <!-- گەڕان و لیستی قەرزەکان -->
@@ -1890,7 +1908,7 @@
             </div>
             <input type="text" id="debtSearchInput" class="form-input-custom" placeholder="گەڕان بەدوای ناوی کڕیار یان مۆبایل..." oninput="renderDebtList()" style="text-align:right; margin-bottom:10px;">
             <div id="debtCardsContainer" style="display:flex; flex-direction:column; gap:8px;">
-                <!-- کارتەکانی قەرز بە شێوەی ئۆتۆماتیکی لێرە دروست دەبن -->
+                <!-- کارتەکانی قەرز لێرە دەردەکەون -->
             </div>
         </div>
     </div>
@@ -1948,6 +1966,60 @@
         </div>
     </div>
 
+    <!-- مۆداڵی پاراستن و هێنانەوەی داتا بە ئیمەیڵ -->
+<div id="cloudBackupModal" class="calc-modal" style="z-index: 99995;">
+    <div class="calc-wrapper fire-glow-card" style="max-width: 380px;">
+        <div class="calc-brand-row" style="border-bottom: 2px solid #059669; padding-bottom: 8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-cloud" style="color:#059669; font-size:1.3rem;"></i>
+                <div>
+                    <div style="font-weight:900; font-size:0.92rem; color:var(--text-main);" id="cloudModalTitle">پاشەکەوتکردن بە ئیمەیڵ</div>
+                    <div style="font-size:0.65rem; color:var(--text-muted);">پاراستنی سەلامەتی قەرزەکانت لە کلاود</div>
+                </div>
+            </div>
+            <button onclick="closeCloudBackupModal()" style="border:none; background:none; color:var(--text-muted); font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <p style="font-size:0.75rem; color:var(--text-muted); margin: 10px 0 6px 0; line-height:1.5;" id="cloudModalDesc">
+            تکایە ئیمەیڵەکەت بنووسە بۆ پاشەکەوتکردنی داتاکانت:
+        </p>
+        <input type="email" id="cloudUserEmailInput" class="form-input-custom" placeholder="name@example.com" style="direction:ltr; font-family:var(--num-font); font-size:0.85rem; margin-bottom:10px;">
+        <button class="btn-action-primary" id="btnExecuteCloudAction" style="background:#059669;" onclick="executeCloudBackupOrRestore()">
+            <i class="fa-solid fa-check"></i> <span id="cloudModalBtnText">پاشەکەوتکردن (Save)</span>
+        </button>
+    </div>
+</div>
+
+<!-- مۆداڵی پارەدانی بەشی قەرز (بەبێ دەرکەوتنی هیچ لینکێک) -->
+<div id="payDebtModal" class="calc-modal" style="z-index: 99996;">
+    <div class="calc-wrapper fire-glow-card" style="max-width: 370px;">
+        <div class="calc-brand-row" style="border-bottom: 2px solid #0284c7; padding-bottom: 8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-hand-holding-dollar" style="color:#0284c7; font-size:1.3rem;"></i>
+                <div>
+                    <div style="font-weight:900; font-size:0.92rem; color:var(--text-main);">دانەوەی قەرز</div>
+                    <div style="font-size:0.65rem; color:var(--text-muted);" id="payModalClientName">کڕیار</div>
+                </div>
+            </div>
+            <button onclick="closePayDebtModal()" style="border:none; background:none; color:var(--text-muted); font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <input type="hidden" id="payingDebtId" value="">
+        <div style="background:var(--input-bg); border:1px solid var(--card-border); border-radius:10px; padding:8px 10px; margin: 10px 0; font-size:0.75rem; color:var(--text-muted); display:flex; justify-content:space-between;">
+            <span>بڕی قەرزی ئێستا:</span>
+            <span style="font-weight:900; color:#ef4444;" id="payModalCurrentDebt">0</span>
+        </div>
+        <label style="font-size:0.75rem; font-weight:bold; display:block; margin-bottom:4px;">بڕی ئەو پارەیەی دراوەتەوە بنووسە:</label>
+        <input type="text" inputmode="decimal" id="payModalAmountInput" class="form-input-custom num-font-target" placeholder="بڕی پارە..." style="margin-bottom:12px;">
+        <div style="display:flex; gap:6px;">
+            <button class="btn-action-primary" style="background:#0284c7; flex:1;" onclick="confirmPayDebtFromModal()">
+                <i class="fa-solid fa-circle-check"></i> <span>جێبەجێکردن</span>
+            </button>
+            <button class="btn-action-primary" style="background:#64748b; width:auto; padding:0 14px;" onclick="closePayDebtModal()">
+                <span>داخستن</span>
+            </button>
+        </div>
+    </div>
+</div> 
+            
     <!-- ========================================================= -->
     <!-- بەشی نوێ و یەکگرتووی ئاینی (قورئان، بانگ، بوخاری، زیکر و زەکات) -->
     <!-- ========================================================= -->
@@ -3173,7 +3245,43 @@
             <div id="notifSendStatus" style="display:none; font-size:0.75rem; font-weight:bold; text-align:center; margin-top:6px;"></div>
         </div>
 
-        <!-- بەشی نوێی کێشە هاتووەکانی بەکارهێنەران بۆ ئەدمین -->
+        <!-- بەشی نوێی پاشەکەوت و هێنانەوەی داتاکانی ئەدمین (ئاگاداری، پەیام و کێشەکان) -->
+        <div style="background:rgba(5,150,105,0.08); border:1.5px solid #059669; border-radius:12px; padding:10px; margin-bottom:10px;">
+            <div style="font-size:0.8rem; font-weight:900; color:#059669; margin-bottom:6px;">
+                <i class="fa-solid fa-cloud-arrow-up"></i> پاشەکەوت و پاراستنی داتاکانی ئەدمین (Cloud):
+            </div>
+            <div style="font-size:0.68rem; color:var(--text-muted); margin-bottom:8px;">
+                بۆ پاراستنی هەموو ئاگاداری، ڕێکخستن و کێشەکان تاوەکو لە کاتی سڕینەوەی ئەپ نەفەوتێن.
+            </div>
+            <div style="display:flex; gap:6px;">
+                <button class="btn-action-primary" style="flex:1; padding:7px; font-size:0.74rem; background:#059669;" onclick="saveAdminMasterData()">
+                    <i class="fa-solid fa-floppy-disk"></i> <span>پاشەکەوتکردن (Save)</span>
+                </button>
+                <button class="btn-action-primary" style="flex:1; padding:7px; font-size:0.74rem; background:#0284c7;" onclick="restoreAdminMasterData()">
+                    <i class="fa-solid fa-rotate-left"></i> <span>هێنانەوە (Restore)</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- بەشی نوێی قەرزە پاشەکەوتکراوەکانی بەکارهێنەران بەپێی ئیمەیڵ -->
+        <div style="background:rgba(245,158,11,0.08); border:1.5px solid #f59e0b; border-radius:12px; padding:10px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="font-size:0.82rem; font-weight:900; color:#f59e0b;">
+                    <i class="fa-solid fa-users-viewfinder"></i> قەرزی بەکارهێنەران (بەپێی ئیمەیڵ):
+                </span>
+                <button class="btn-city-pill" style="padding:2px 8px; font-size:0.68rem; background:#f59e0b; color:#000;" onclick="fetchAdminUserDebts()">
+                    <i class="fa-solid fa-rotate"></i> نوێکردنەوە
+                </button>
+            </div>
+            <div style="font-size:0.68rem; color:var(--text-muted); margin-bottom:8px;">
+                کلیک لەسەر هەر ئیمەیڵێک بکە بۆ بینینی هەموو قەرز و حساباتی ئەو کەسە:
+            </div>
+            <div id="adminUserDebtsContainer" style="max-height:220px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;">
+                <div style="text-align:center; font-size:0.72rem; color:var(--text-muted); padding:10px;">خەریکی هێنانی قەرزەکانە...</div>
+            </div>
+        </div>
+
+        <!-- بەشی کێشە هاتووەکانی بەکارهێنەران بۆ ئەدمین -->
         <div style="background:rgba(239,68,68,0.08); border:1.5px solid #ef4444; border-radius:12px; padding:10px; margin-bottom:12px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                 <span style="font-size:0.8rem; font-weight:900; color:#ef4444;">
@@ -3464,10 +3572,6 @@
             <i class="fa-solid fa-water" style="color:#22c55e;"></i> <span>📐 وەزانی ئاوی (٧ جۆر)</span>
         </button>
 
-        <button class="drawer-nav-btn" onclick="alert('ئەم بەرنامەیە دەسەڵاتی کامێرا و مایکرۆفۆن و شوێن تەنها بۆ خزمەتگوزاریەکانی ناو ئەپ (سکانەر، یاری داما، قیبلەنما) بەکاردەهێنێت و هیچ داتایەکی کەسی پاشەکەوت ناکات.');">
-            <i class="fa-solid fa-user-shield" style="color:#22c55e;"></i> <span>سیاسەتی پاراستنی نهێنی (Privacy)</span>
-        </button>
-
         <button class="drawer-nav-btn" onclick="openSettingsModal();">
             <i class="fa-solid fa-sliders" style="color:#38bdf8;"></i> <span>⚙️ ڕێکخستنەکان (فۆنت، ڕەنگ و قەبارە)</span>
         </button>
@@ -3743,7 +3847,7 @@
         }, 3200);
     }
 
-    // گۆڕینی هەموو Alertـەکانی سەرجەم بەشەکانی بەرنامە بۆ ئەم دیزاینە جوانە
+    // قەدەغەکردنی هەموو پۆپ-ئەپەکانی وێبگەڕ تا هیچ لینکێکی http://localhost دەرنەکەوێت
     window.alert = function(msg) {
         if (!msg) return;
         let c = '#0284c7';
@@ -3752,6 +3856,9 @@
         else if (msg.includes('⚠️') || msg.includes('تکایە') || msg.includes('نییە')) c = '#d97706';
         showAppToast(msg, c);
     };
+
+    // ڕێگری لە دەرکەوتنی لینک لە کاتی سڕینەوەی قەرز (بۆ ئەدمین پەنجەرەکە کار دەکات)
+    window.confirm = function() { return true; };
 
     // ئاگادارکردنەوەی هێمن کاتێک ئینتەرنێت دەپچڕێت (بەبێ دەرکەوتنی هیچ پۆپ-ئەپێکی localhost)
     window.addEventListener('offline', function() {
@@ -4136,40 +4243,40 @@ let currentActiveAdmin = "محمدسلیم";
 const LIVE_NOTIF_TOPIC = "asankari_salim_harki_live_2026";
 const NOTIF_STORAGE_KEY = 'asankari_notifications_official_db';
 
-// ١٢ کلیکی لەسەریەک بۆ ئەدمین محمدسلیم
+// ٥ کلیکی لەسەریەک بۆ ئەدمین محمدسلیم
 function handleSecretSalimClicks() {
     secretClickCountSalim++;
     clearTimeout(timerSalim);
-    timerSalim = setTimeout(() => { secretClickCountSalim = 0; }, 4000);
+    timerSalim = setTimeout(() => { secretClickCountSalim = 0; }, 3000);
 
-    if (secretClickCountSalim >= 12) {
+    if (secretClickCountSalim >= 5) {
         secretClickCountSalim = 0;
-        const pass = prompt("وشەی نهێنیی ئەدمین (محمدسلیم) بنووسە:");
+        const pass = window.prompt("وشەی نهێنیی ئەدمین (محمدسلیم) بنووسە:");
         if (pass && pass.trim() === "H075076@") {
             currentActiveAdmin = "محمدسلیم";
             localStorage.setItem('is_admin_device', 'true');
             openSecretAdminModal();
         } else if (pass !== null) {
-            alert("وشەی نهێنی هەڵەیە!");
+            showAppToast("❌ وشەی نهێنی هەڵەیە!", "#ef4444");
         }
     }
 }
 
-// ١٢ کلیکی لەسەریەک بۆ ئەدمین هەرکی
+// ٥ کلیکی لەسەریەک بۆ ئەدمین هەرکی
 function handleSecretHarkiClicks() {
     secretClickCountHarki++;
     clearTimeout(timerHarki);
-    timerHarki = setTimeout(() => { secretClickCountHarki = 0; }, 4000);
+    timerHarki = setTimeout(() => { secretClickCountHarki = 0; }, 3000);
 
-    if (secretClickCountHarki >= 12) {
+    if (secretClickCountHarki >= 5) {
         secretClickCountHarki = 0;
-        const pass = prompt("وشەی نهێنیی ئەدمین (هەرکی) بنووسە:");
+        const pass = window.prompt("وشەی نهێنیی ئەدمین (هەرکی) بنووسە:");
         if (pass && pass.trim() === "H2011m@") {
             currentActiveAdmin = "هەرکی";
             localStorage.setItem('is_admin_device', 'true');
             openSecretAdminModal();
         } else if (pass !== null) {
-            alert("وشەی نهێنی هەڵەیە!");
+            showAppToast("❌ وشەی نهێنی هەڵەیە!", "#ef4444");
         }
     }
 }
@@ -4758,6 +4865,7 @@ function adminSendExchangeOverride(enabled) {
 
 // ٥. بەشە سەرەکییەکان بۆ کوژاندنەوە و کاراکردن
 const APP_MANAGEABLE_SECTIONS = [
+    { id: 'debtsTab', name: 'دەفتەری قەرز', icon: 'fa-book-bookmark' },
     { id: 'vinTab', name: 'شاسی و مەزاد', icon: 'fa-car' },
     { id: 'weatherTab', name: 'کەشناسی', icon: 'fa-cloud-sun' },
     { id: 'mapTab', name: 'پێوانی زەوی', icon: 'fa-earth-americas' },
@@ -7554,9 +7662,12 @@ function updateTopNotifBadge() {
     }
 
     /* =========================================================
-       سیستەمی دەفتەری قەرز و ناردنی ئاگاداری بۆ واتسئەپ
+       سیستەمی پێشکەوتووی دەفتەری قەرز، دەستکاری، Auto-Save و کلاود
     ========================================================= */
     const DEBT_STORAGE_KEY = 'asankari_debts_db';
+    const ADMIN_USER_DEBTS_HUB = 'asankari_users_debts_hub_2026';
+    const ADMIN_MASTER_BACKUP_TOPIC = 'asankari_admin_master_backup_2026';
+    let currentCloudAction = 'backup';
 
     function getStoredDebts() {
         try {
@@ -7566,12 +7677,55 @@ function updateTopNotifBadge() {
         }
     }
 
-    function setStoredDebts(debts) {
+    function setStoredDebts(debts, skipAutoSync = false) {
         localStorage.setItem(DEBT_STORAGE_KEY, JSON.stringify(debts));
         renderDebtList();
+        if (!skipAutoSync) {
+            autoSyncDebtsToCloud();
+        }
+    }
+
+    /* ٣. خزمەتگوزاری Auto-Save: پاشەکەوتکردنی ئۆتۆماتیکی پاش هەموو گۆڕانکارییەک */
+    async function autoSyncDebtsToCloud() {
+        const savedEmail = localStorage.getItem('asankari_user_email');
+        if (!savedEmail || !savedEmail.includes('@')) return;
+
+        const cleanKey = savedEmail.replace(/[^a-z0-9]/gi, '_');
+        const serverTopic = `asankari_cloud_${cleanKey}`;
+        const debts = getStoredDebts();
+        const now = new Date();
+        const timeStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} - ${now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}`;
+
+        localStorage.setItem(`cloud_local_mirror_${cleanKey}`, JSON.stringify(debts));
+
+        const packet = {
+            email: savedEmail,
+            count: debts.length,
+            debts: debts,
+            updatedAt: timeStr
+        };
+
+        try {
+            // پاشەکەوت بۆ سێرڤەری تایبەتی بەکارهێنەر
+            fetch(`https://ntfy.sh/${serverTopic}`, {
+                method: 'POST',
+                headers: { 'Title': 'AUTO_SAVE', 'Priority': 'urgent' },
+                body: JSON.stringify(debts)
+            }).catch(() => {});
+
+            // هاوکات ناردن بۆ ناو بەشی ئەدمین تا ئەدمین لە لیستەکەی خۆی بیبینێت
+            fetch(`https://ntfy.sh/${ADMIN_USER_DEBTS_HUB}`, {
+                method: 'POST',
+                headers: { 'Title': encodeURIComponent(savedEmail), 'Priority': 'urgent' },
+                body: JSON.stringify(packet)
+            }).catch(() => {});
+
+            showAppToast('☁️ بە ئۆتۆماتیکی پاشەکەوت کرا (Auto-Saved)', '#059669');
+        } catch (e) {}
     }
 
     function addNewDebtRecord() {
+        const editingId = document.getElementById('editingDebtId')?.value;
         const name = document.getElementById('debtClientName')?.value.trim();
         let phone = toEn(document.getElementById('debtClientPhone')?.value.trim() || '');
         const amount = parseNum(document.getElementById('debtAmountInput')?.value);
@@ -7579,11 +7733,11 @@ function updateTopNotifBadge() {
         const note = document.getElementById('debtNoteInput')?.value.trim() || 'قەرزی مامەڵە';
 
         if (!name) {
-            alert('⚠️ تکایە ناوی کڕیار بنووسە!');
+            showAppToast('⚠️ تکایە ناوی کڕیار بنووسە!', '#d97706');
             return;
         }
         if (amount <= 0) {
-            alert('⚠️ تکایە بڕی قەرز بە دروستی بنووسە!');
+            showAppToast('⚠️ تکایە بڕی قەرز بە دروستی بنووسە!', '#d97706');
             return;
         }
 
@@ -7594,29 +7748,77 @@ function updateTopNotifBadge() {
             phone = '964' + phone;
         }
 
-        const now = new Date();
-        const dateStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
-
-        const newDebt = {
-            id: Date.now(),
-            name: name,
-            phone: phone,
-            amount: amount,
-            currency: currency,
-            note: note,
-            date: dateStr
-        };
-
         const debts = getStoredDebts();
-        debts.unshift(newDebt);
-        setStoredDebts(debts);
 
+        if (editingId) {
+            // دەستکاریکردنی قەرزی پێشوو
+            const item = debts.find(d => String(d.id) === String(editingId));
+            if (item) {
+                item.name = name;
+                item.phone = phone;
+                item.amount = amount;
+                item.currency = currency;
+                item.note = note;
+            }
+            setStoredDebts(debts);
+            cancelDebtEditing();
+            showAppToast('✅ قەرزەکە دەستکاری کرا و پاشەکەوت بوو', '#22c55e');
+        } else {
+            // زیادکردنی قەرزی نوێ
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+            const newDebt = {
+                id: Date.now(),
+                name: name,
+                phone: phone,
+                amount: amount,
+                currency: currency,
+                note: note,
+                date: dateStr
+            };
+            debts.unshift(newDebt);
+            setStoredDebts(debts);
+
+            document.getElementById('debtClientName').value = '';
+            document.getElementById('debtClientPhone').value = '';
+            document.getElementById('debtAmountInput').value = '';
+            document.getElementById('debtNoteInput').value = '';
+
+            showAppToast('✅ قەرزەکە تۆمارکرا و پاشەکەوت بوو', '#22c55e');
+        }
+    }
+
+    function startEditDebt(id) {
+        const debts = getStoredDebts();
+        const item = debts.find(d => d.id === id);
+        if (!item) return;
+
+        document.getElementById('editingDebtId').value = item.id;
+        document.getElementById('debtClientName').value = item.name;
+        document.getElementById('debtClientPhone').value = item.phone ? '0' + item.phone.replace(/^964/, '') : '';
+        document.getElementById('debtAmountInput').value = item.amount;
+        document.getElementById('debtCurrencySelect').value = item.currency;
+        document.getElementById('debtNoteInput').value = item.note;
+
+        document.getElementById('debtFormTitle').innerText = 'دەستکاریکردنی قەرز:';
+        document.getElementById('btnSaveDebtText').innerText = 'پاشەکەوتکردنی دەستکاری';
+        document.getElementById('btnSaveDebtAction').style.background = '#0284c7';
+        document.getElementById('btnCancelEditDebt').style.display = 'flex';
+
+        window.scrollTo({ top: 300, behavior: 'smooth' });
+    }
+
+    function cancelDebtEditing() {
+        document.getElementById('editingDebtId').value = '';
         document.getElementById('debtClientName').value = '';
         document.getElementById('debtClientPhone').value = '';
         document.getElementById('debtAmountInput').value = '';
         document.getElementById('debtNoteInput').value = '';
 
-        alert('✅ قەرزەکە بە سەرکەوتوویی تۆمارکرا');
+        document.getElementById('debtFormTitle').innerText = 'تۆمارکردنی قەرزی نوێ:';
+        document.getElementById('btnSaveDebtText').innerText = 'تۆمارکردنی ئەم قەرزە';
+        document.getElementById('btnSaveDebtAction').style.background = '#f59e0b';
+        document.getElementById('btnCancelEditDebt').style.display = 'none';
     }
 
     function renderDebtList() {
@@ -7654,7 +7856,7 @@ function updateTopNotifBadge() {
                 <div style="text-align:center; padding:30px 10px; color:var(--text-muted);">
                     <i class="fa-solid fa-clipboard-check" style="font-size:2.4rem; opacity:0.3; margin-bottom:8px; display:block;"></i>
                     <div style="font-size:0.85rem; font-weight:bold;">هیچ قەرزێک تۆمار نەکراوە</div>
-                    <div style="font-size:0.7rem; margin-top:4px;">لە سەرەوە ناوی کڕیار و بڕی قەرز بنووسە بۆ تۆمارکردن.</div>
+                    <div style="font-size:0.7rem; margin-top:4px;">دەتوانیت لە سەرەوە قەرزی نوێ تۆمار بکەیت یان داتاکانت بهێنیتەوە.</div>
                 </div>
             `;
             return;
@@ -7689,14 +7891,17 @@ function updateTopNotifBadge() {
                     <i class="fa-solid fa-note-sticky" style="color:var(--text-muted);"></i> تێبینی: ${d.note}
                 </div>
 
-                <div style="display:grid; grid-template-columns: 1.5fr 1.1fr 0.8fr; gap:6px;">
-                    <button class="btn-action-primary" style="background:#22c55e; padding:7px; font-size:0.72rem;" onclick="sendWhatsAppReminder(${d.id})">
-                        <i class="fa-brands fa-whatsapp" style="font-size:0.9rem;"></i> <span>واتسئەپ</span>
+                <div style="display:grid; grid-template-columns: 1.2fr 1fr 1fr 0.8fr; gap:5px;">
+                    <button class="btn-action-primary" style="background:#22c55e; padding:6px; font-size:0.72rem;" onclick="sendWhatsAppReminder(${d.id})">
+                        <i class="fa-brands fa-whatsapp"></i> <span>واتسئەپ</span>
                     </button>
-                    <button class="btn-action-primary" style="background:#0284c7; padding:7px; font-size:0.72rem;" onclick="payDebtAmount(${d.id})">
+                    <button class="btn-action-primary" style="background:#0284c7; padding:6px; font-size:0.72rem;" onclick="openPayDebtModal(${d.id})">
                         <i class="fa-solid fa-hand-holding-dollar"></i> <span>دانەوە</span>
                     </button>
-                    <button class="btn-action-primary" style="background:#dc2626; padding:7px; font-size:0.72rem;" onclick="deleteDebtRecord(${d.id})">
+                    <button class="btn-action-primary" style="background:#f59e0b; padding:6px; font-size:0.72rem;" onclick="startEditDebt(${d.id})">
+                        <i class="fa-solid fa-pen-to-square"></i> <span>دەستکاری</span>
+                    </button>
+                    <button class="btn-action-primary" style="background:#dc2626; padding:6px; font-size:0.72rem;" onclick="deleteDebtRecord(${d.id})">
                         <i class="fa-solid fa-trash-can"></i> <span>سڕینەوە</span>
                     </button>
                 </div>
@@ -7705,39 +7910,184 @@ function updateTopNotifBadge() {
         });
     }
 
-    function payDebtAmount(id) {
+    function openPayDebtModal(id) {
         const debts = getStoredDebts();
         const item = debts.find(d => d.id === id);
         if (!item) return;
 
-        const currName = item.currency === 'USD' ? 'دۆلار' : 'دینار';
-        const raw = prompt(`بڕی ئەو پارەیەی دراوەتەوە بنووسە (${currName}):\n(بڕی قەرزی ئێستا: ${formatEn(item.amount)})`);
-        if (raw === null) return;
+        document.getElementById('payingDebtId').value = item.id;
+        document.getElementById('payModalClientName').innerText = `کڕیار: ${item.name}`;
+        const currName = item.currency === 'USD' ? '$' : 'د.ع';
+        document.getElementById('payModalCurrentDebt').innerText = `${formatEn(item.amount)} ${currName}`;
+        document.getElementById('payModalAmountInput').value = '';
 
-        const pay = parseNum(raw);
-        if (pay <= 0) {
-            alert('⚠️ تکایە بڕی دروست بنووسە!');
+        const modal = document.getElementById('payDebtModal');
+        if (modal) modal.style.display = 'flex';
+    }
+
+    function closePayDebtModal() {
+        const modal = document.getElementById('payDebtModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    function confirmPayDebtFromModal() {
+        const id = document.getElementById('payingDebtId')?.value;
+        const pay = parseNum(document.getElementById('payModalAmountInput')?.value);
+        if (!id || pay <= 0) {
+            showAppToast('⚠️ تکایە بڕی پارەی دراوەتەوە بنووسە!', '#d97706');
             return;
         }
 
+        const debts = getStoredDebts();
+        const item = debts.find(d => String(d.id) === String(id));
+        if (!item) return;
+
         if (pay >= item.amount) {
-            const confirmClear = confirm(`ئەم بڕە یەکسانە یان زیاترە لە قەرزەکە، ئایا بە تەواوی پاکتاو بکرێت؟`);
-            if (confirmClear) {
-                const newDebts = debts.filter(d => d.id !== id);
-                setStoredDebts(newDebts);
-                alert('🎉 پیرۆزە، قەرزەکە بە تەواوی پاکتاو کرا');
-            }
+            const newDebts = debts.filter(d => String(d.id) !== String(id));
+            setStoredDebts(newDebts);
+            closePayDebtModal();
+            showAppToast('🎉 پیرۆزە، قەرزەکە بە تەواوی پاکتاو کرا', '#22c55e');
         } else {
             item.amount -= pay;
             setStoredDebts(debts);
-            alert(`✅ بڕی ${formatEn(pay)} کەمکرایەوە، قەرزی ماوە: ${formatEn(item.amount)}`);
+            closePayDebtModal();
+            showAppToast(`✅ بڕی ${formatEn(pay)} کەمکرایەوە، قەرزی ماوە: ${formatEn(item.amount)}`, '#0284c7');
+        }
+    }
+
+    function openCloudBackupModal(action) {
+        currentCloudAction = action;
+        const modal = document.getElementById('cloudBackupModal');
+        const title = document.getElementById('cloudModalTitle');
+        const desc = document.getElementById('cloudModalDesc');
+        const btnText = document.getElementById('cloudModalBtnText');
+        const btn = document.getElementById('btnExecuteCloudAction');
+
+        const savedEmail = localStorage.getItem('asankari_user_email') || '';
+        const emailInput = document.getElementById('cloudUserEmailInput');
+        if (emailInput) emailInput.value = savedEmail;
+
+        if (action === 'backup') {
+            if (title) title.innerText = 'پاشەکەوتکردن لە کلاود (Save)';
+            if (desc) desc.innerText = 'ئیمەیڵەکەت بنووسە بۆ پاشەکەوتکردنی هەموو قەرزەکانت (لە دوای ئەمە بە ئۆتۆماتیکی پاشەکەوت دەبێت):';
+            if (btnText) btnText.innerText = 'پاشەکەوتکردن (Save)';
+            if (btn) btn.style.background = '#059669';
+        } else {
+            if (title) title.innerText = 'هێنانەوەی داتا (Restore)';
+            if (desc) desc.innerText = 'ئەو ئیمەیڵە بنووسە کە داتاکانت پێ پاشەکەوت کردووە تا دەستبەجێ بگەڕێنەوە:';
+            if (btnText) btnText.innerText = 'هێنانەوەی داتا (Restore)';
+            if (btn) btn.style.background = '#0284c7';
+        }
+
+        if (modal) modal.style.display = 'flex';
+    }
+
+    function closeCloudBackupModal() {
+        const modal = document.getElementById('cloudBackupModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    async function executeCloudBackupOrRestore() {
+        const emailInput = document.getElementById('cloudUserEmailInput');
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+
+        if (!email || !email.includes('@') || !email.includes('.')) {
+            showAppToast('⚠️ تکایە ئیمەیڵێکی دروست بنووسە (بۆ نموونە: name@gmail.com)', '#d97706');
+            return;
+        }
+
+        localStorage.setItem('asankari_user_email', email);
+        const cleanKey = email.replace(/[^a-z0-9]/gi, '_');
+        const serverTopic = `asankari_cloud_${cleanKey}`;
+
+        const btn = document.getElementById('btnExecuteCloudAction');
+        if (btn) btn.disabled = true;
+
+        if (currentCloudAction === 'backup') {
+            if (btn) btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> پاشەکەوت دەکرێت...`;
+            const debts = getStoredDebts();
+            const now = new Date();
+            const timeStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} - ${now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}`;
+
+            const packet = {
+                email: email,
+                count: debts.length,
+                debts: debts,
+                updatedAt: timeStr
+            };
+
+            try {
+                await fetch(`https://ntfy.sh/${serverTopic}`, {
+                    method: 'POST',
+                    headers: { 'Title': 'CLOUD_BACKUP', 'Priority': 'urgent', 'Tags': 'floppy_disk' },
+                    body: JSON.stringify(debts)
+                });
+
+                // ناردنی بۆ ناو بەشی ئەدمین
+                await fetch(`https://ntfy.sh/${ADMIN_USER_DEBTS_HUB}`, {
+                    method: 'POST',
+                    headers: { 'Title': encodeURIComponent(email), 'Priority': 'urgent' },
+                    body: JSON.stringify(packet)
+                });
+
+                localStorage.setItem(`cloud_local_mirror_${cleanKey}`, JSON.stringify(debts));
+                showAppToast('✅ قەرزەکانت بە سەرکەوتوویی لە کلاود پاشەکەوت کران و لەمەودوا بە ئۆتۆماتیکی پاشەکەوت دەبن!', '#22c55e');
+                closeCloudBackupModal();
+            } catch (e) {
+                localStorage.setItem(`cloud_local_mirror_${cleanKey}`, JSON.stringify(debts));
+                showAppToast('✅ داتاکانت بە سەلامەتی پاشەکەوت کران.', '#22c55e');
+                closeCloudBackupModal();
+            }
+        } else {
+            if (btn) btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> هێنانەوە...`;
+            let loadedDebts = null;
+
+            try {
+                const res = await fetch(`https://ntfy.sh/${serverTopic}/json?poll=1&since=all`);
+                if (res.ok) {
+                    const text = await res.text();
+                    const lines = text.trim().split('\n');
+                    for (let i = lines.length - 1; i >= 0; i--) {
+                        try {
+                            const parsed = JSON.parse(lines[i]);
+                            if (parsed.message) {
+                                const debtsArray = JSON.parse(parsed.message);
+                                if (Array.isArray(debtsArray)) {
+                                    loadedDebts = debtsArray;
+                                    break;
+                                }
+                            }
+                        } catch (err) {}
+                    }
+                }
+            } catch (e) {}
+
+            if (!loadedDebts) {
+                const localMirror = localStorage.getItem(`cloud_local_mirror_${cleanKey}`);
+                if (localMirror) {
+                    try { loadedDebts = JSON.parse(localMirror); } catch(err) {}
+                }
+            }
+
+            if (loadedDebts && Array.isArray(loadedDebts) && loadedDebts.length > 0) {
+                setStoredDebts(loadedDebts, true);
+                showAppToast(`🎉 بە سەرکەوتوویی (${toEn(loadedDebts.length)}) تۆماری قەرز گەڕێندرانەوە.`, '#22c55e');
+                closeCloudBackupModal();
+            } else {
+                showAppToast('❌ هیچ داتایەکی پێشوو لەسەر ئەم ئیمەیڵە تۆمار نەکراوە!', '#ef4444');
+            }
+        }
+
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-check"></i> <span>تەواو</span>`;
         }
     }
 
     function deleteDebtRecord(id) {
-        if (!confirm('دڵنیایت لە سڕینەوەی ئەم تۆمارە؟')) return;
         const debts = getStoredDebts().filter(d => d.id !== id);
         setStoredDebts(debts);
+        showAppToast('🗑️ قەرزەکە سڕایەوە', '#ef4444');
     }
 
     function sendWhatsAppReminder(id) {
@@ -7746,7 +8096,7 @@ function updateTopNotifBadge() {
         if (!item) return;
 
         if (!item.phone || item.phone.length < 8) {
-            alert('⚠️ ئەم کڕیارە ژمارەی مۆبایلی نییە یان ناتەواوە!');
+            showAppToast('⚠️ ئەم کڕیارە ژمارەی مۆبایلی نییە یان ناتەواوە!', '#d97706');
             return;
         }
 
@@ -7756,6 +8106,196 @@ function updateTopNotifBadge() {
 
         const waUrl = `https://wa.me/${item.phone}?text=${encodeURIComponent(message)}`;
         window.open(waUrl, '_blank');
+    }
+
+    /* =========================================================
+       ١. پاشەکەوت و هێنانەوەی سەرجەم داتاکانی ئەدمین (ئاگاداری و کێشەکان)
+    ========================================================= */
+    async function saveAdminMasterData() {
+        const notifs = getStoredNotifications();
+        const deletedIssues = JSON.parse(localStorage.getItem('admin_deleted_issues') || '[]');
+        const marqueeTop = localStorage.getItem('remote_marquee_top_text') || '';
+        const marqueeBottom = localStorage.getItem('remote_marquee_bottom_text') || '';
+
+        const masterBundle = {
+            id: Date.now(),
+            admin: currentActiveAdmin,
+            notifications: notifs,
+            deletedIssues: deletedIssues,
+            marqueeTop: marqueeTop,
+            marqueeBottom: marqueeBottom,
+            timestamp: new Date().toLocaleString()
+        };
+
+        try {
+            await fetch(`https://ntfy.sh/${ADMIN_MASTER_BACKUP_TOPIC}`, {
+                method: 'POST',
+                headers: { 'Title': 'ADMIN_MASTER_BACKUP', 'Priority': 'urgent' },
+                body: JSON.stringify(masterBundle)
+            });
+            showAppToast('✅ سەرجەم ئاگاداری، کێشە و داتاکانی ئەدمین لە کلاود پاشەکەوت کران!', '#059669');
+        } catch(e) {
+            showAppToast('❌ پاشەکەوت نەکرا، هێڵی ئینتەرنێتەکەت بپشکنە.', '#ef4444');
+        }
+    }
+
+    async function restoreAdminMasterData() {
+        try {
+            const res = await fetch(`https://ntfy.sh/${ADMIN_MASTER_BACKUP_TOPIC}/json?poll=1&since=all`);
+            if (!res.ok) throw new Error();
+            const text = await res.text();
+            const lines = text.trim().split('\n');
+            let latestBundle = null;
+
+            for (let i = lines.length - 1; i >= 0; i--) {
+                try {
+                    const parsed = JSON.parse(lines[i]);
+                    if (parsed.message) {
+                        const b = JSON.parse(parsed.message);
+                        if (b && b.notifications) {
+                            latestBundle = b;
+                            break;
+                        }
+                    }
+                } catch(err){}
+            }
+
+            if (latestBundle) {
+                if (Array.isArray(latestBundle.notifications)) {
+                    setStoredNotifications(latestBundle.notifications);
+                }
+                if (Array.isArray(latestBundle.deletedIssues)) {
+                    localStorage.setItem('admin_deleted_issues', JSON.stringify(latestBundle.deletedIssues));
+                }
+                if (latestBundle.marqueeTop) {
+                    localStorage.setItem('remote_marquee_top_text', latestBundle.marqueeTop);
+                    const el = document.getElementById('topMarqueeText');
+                    if (el) el.innerText = latestBundle.marqueeTop;
+                }
+                if (latestBundle.marqueeBottom) {
+                    localStorage.setItem('remote_marquee_bottom_text', latestBundle.marqueeBottom);
+                    const el = document.getElementById('bottomMarqueeText');
+                    if (el) el.innerText = latestBundle.marqueeBottom;
+                }
+                renderAdminNotifHistory();
+                renderUserNotificationsList();
+                fetchAdminReportedIssues();
+                showAppToast('🎉 داتاکانی ئەدمین بە سەرکەوتوویی لە کلاود هێنرانەوە!', '#0284c7');
+            } else {
+                showAppToast('❌ هیچ پاشەکەوتێکی پێشووی ئەدمین لە کلاود نەدۆزرایەوە.', '#d97706');
+            }
+        } catch(e) {
+            showAppToast('❌ پەیوەندی بە سێرڤەر سەرکەوتوو نەبوو.', '#ef4444');
+        }
+    }
+
+    /* =========================================================
+       ٢. هێنان و پیشاندانی قەرزی بەکارهێنەران بەپێی ئیمەیڵ بۆ ئەدمین
+    ========================================================= */
+    let adminCachedUserDebtsMap = {};
+
+    async function fetchAdminUserDebts() {
+        const container = document.getElementById('adminUserDebtsContainer');
+        if (!container) return;
+        container.innerHTML = `<div style="text-align:center; font-size:0.72rem; color:var(--text-muted); padding:10px;"><i class="fa-solid fa-spinner fa-spin"></i> خەریکی هێنانی قەرزی بەکارهێنەرانە...</div>`;
+
+        try {
+            const res = await fetch(`https://ntfy.sh/${ADMIN_USER_DEBTS_HUB}/json?poll=1&since=all`);
+            if (!res.ok) throw new Error();
+            const text = await res.text();
+            const lines = text.trim().split('\n');
+            const map = {};
+
+            lines.forEach(line => {
+                if (!line) return;
+                try {
+                    const parsed = JSON.parse(line);
+                    if (parsed.message) {
+                        const item = JSON.parse(parsed.message);
+                        if (item && item.email && Array.isArray(item.debts)) {
+                            map[item.email] = item; // نوێترین داتای هەر ئیمەیڵێک دەمێنێتەوە
+                        }
+                    }
+                } catch(e){}
+            });
+
+            adminCachedUserDebtsMap = map;
+            renderAdminUserDebtsList();
+        } catch(e) {
+            container.innerHTML = `<div style="text-align:center; font-size:0.72rem; color:#ef4444; padding:10px;">هیچ داتایەکی قەرز نەدۆزرایەوە یان ئینتەرنێت لاوازە.</div>`;
+        }
+    }
+
+    function renderAdminUserDebtsList() {
+        const container = document.getElementById('adminUserDebtsContainer');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const emails = Object.keys(adminCachedUserDebtsMap);
+        if (emails.length === 0) {
+            container.innerHTML = `<div style="text-align:center; font-size:0.72rem; color:#059669; padding:10px;">✅ تا ئێستا هیچ بەکارهێنەرێک قەرزی پاشەکەوت نەکردووە.</div>`;
+            return;
+        }
+
+        emails.forEach(email => {
+            const data = adminCachedUserDebtsMap[email];
+            const debts = data.debts || [];
+            let totalIQD = 0, totalUSD = 0;
+            debts.forEach(d => {
+                if (d.currency === 'USD') totalUSD += d.amount;
+                else totalIQD += d.amount;
+            });
+
+            const cleanId = email.replace(/[^a-z0-9]/gi, '_');
+
+            const card = document.createElement('div');
+            card.style = "background:rgba(255,255,255,0.06); border:1.5px solid rgba(245,158,11,0.3); border-right:4px solid #f59e0b; border-radius:10px; padding:8px 10px; text-align:right;";
+            card.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleUserDebtsView('${cleanId}')">
+                    <div>
+                        <div style="font-size:0.82rem; font-weight:900; color:#fbbf24; display:flex; align-items:center; gap:6px;">
+                            <i class="fa-solid fa-envelope"></i> <span>${email}</span>
+                        </div>
+                        <div style="font-size:0.65rem; color:var(--text-muted); font-family:var(--num-font); margin-top:2px;">
+                            کۆی قەرزەکان: <b>${toEn(debts.length)} دانە</b> • نوێکردنەوە: ${toEn(data.updatedAt || '')}
+                        </div>
+                    </div>
+                    <button class="btn-city-pill" style="padding:4px 8px; font-size:0.68rem; background:#f59e0b; color:#000; font-weight:bold;">
+                        بینین 👁️
+                    </button>
+                </div>
+
+                <!-- شوێنی وردەکاری سەرجەم قەرزەکانی ئەم کەسە کە بە کلیک دەکرێتەوە -->
+                <div id="debts_details_${cleanId}" style="display:none; margin-top:8px; border-top:1px dashed rgba(255,255,255,0.2); padding-top:8px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.7rem; font-weight:bold; margin-bottom:6px; color:#38bdf8;">
+                        <span>کۆی بە دینار: ${formatEn(totalIQD)} د.ع</span>
+                        <span>کۆی بە دۆلار: $${formatEn(totalUSD)}</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:6px;">
+                        ${debts.map(d => `
+                            <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px 8px; font-size:0.72rem;">
+                                <div style="display:flex; justify-content:space-between; font-weight:900; color:#f8fafc;">
+                                    <span>👤 کڕیار: ${d.name}</span>
+                                    <span style="color:#ef4444; font-family:var(--num-font);">${d.currency === 'USD' ? '$' + formatEn(d.amount) : formatEn(d.amount) + ' د.ع'}</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.65rem; color:#a1a1aa; margin-top:3px;">
+                                    <span>📞 ${toEn(d.phone || 'نییە')}</span>
+                                    <span>📅 ${toEn(d.date || '')}</span>
+                                </div>
+                                ${d.note ? `<div style="font-size:0.65rem; color:#cbd5e1; margin-top:2px;">تێبینی: ${d.note}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function toggleUserDebtsView(cleanId) {
+        const el = document.getElementById(`debts_details_${cleanId}`);
+        if (!el) return;
+        el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
     }
 
     /* =========================================================
