@@ -2266,19 +2266,6 @@
         <button class="btn-action-primary" id="btnExecuteCloudAction" style="background:#059669;" onclick="executeCloudBackupOrRestore()">
             <i class="fa-solid fa-check"></i> <span id="cloudModalBtnText">پاشەکەوتکردن (Save)</span>
         </button>
-
-        <!-- بەشی پاراستنی سەلامەت بە فایلی JSON -->
-        <div style="margin-top:12px; padding-top:10px; border-top:1px dashed var(--card-border); text-align:center;">
-            <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:6px; font-weight:bold;">
-                <i class="fa-solid fa-file-shield"></i> پاراستن بە فایلی هەمیشەیی (بێ بەسەرچوون):
-            </div>
-            <div style="display:flex; gap:6px;">
-                <button type="button" class="btn-city-pill" style="flex:1; padding:7px; font-size:0.72rem; background:#0284c7; color:#fff;" onclick="exportDebtsToFile()">
-                    <i class="fa-solid fa-file-arrow-down"></i> داگرتنی فایلی پاشەکەوت
-                </button>
-                <label class="btn-city-pill" style="flex:1; padding:7px; font-size:0.72rem; background:#f59e0b; color:#000; cursor:pointer; text-align:center; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:4px;">
-                    <i class="fa-solid fa-file-arrow-up"></i> <span>هێنانەوە بە فایل</span>
-                    <input type="file" accept=".json" style="display:none;" onchange="importDebtsFromFile(this)">
                 </label>
            </div>
        </div>
@@ -7994,7 +7981,7 @@ function updateTopNotifBadge() {
     let currentLevelMode = 'horizontal';
     let calibX = 0, calibY = 0;
     let lastAngleX = 0, lastAngleY = 0;
-    let smoothX = 0, smoothY = 0; // بۆ نەرمکردنەوە و ڕاگرتنی لەرزین
+    let smoothX = 0, smoothY = 0;
 
     const levelHoldGuides = {
         'horizontal': {
@@ -8039,7 +8026,6 @@ function updateTopNotifBadge() {
         document.querySelectorAll('.btn-level-type').forEach(b => b.classList.remove('active'));
         if (btn) btn.classList.add('active');
 
-        // نوێکردنەوەی لۆگۆی وێنەیی و ڕێنماییەکە
         if (levelHoldGuides[mode]) {
             const g = levelHoldGuides[mode];
             const svgWrap = document.getElementById('phoneGuideSvgIcon');
@@ -8073,23 +8059,34 @@ function updateTopNotifBadge() {
     }
 
     function calibrateLevelZero() {
-        calibX = lastAngleX + calibX;
-        calibY = lastAngleY + calibY;
-        updateLevelUI(0, 0);
-        alert('سەنتەری ئێستا کرایە سفر (تەصفیر کرا)!');
+        calibX = smoothX;
+        calibY = (currentLevelMode === 'vertical') ? (Math.abs(smoothY) - 90) : smoothY;
+        showAppToast('سەنتەری ئێستا بە سەرکەوتوویی تەصفیر کرا 🎯', '#22c55e');
     }
 
     function updateLevelUI(rawX, rawY) {
-        // فلتەری نەرمکردنەوە (Low-pass filter) بۆ ئەوەی بڵقەکە وەک ئاو بە هێمنی بجوڵێت
-        smoothX = smoothX + 0.12 * (rawX - smoothX);
-        smoothY = smoothY + 0.12 * (rawY - smoothY);
+        rawX = (typeof rawX === 'number' && !isNaN(rawX)) ? rawX : 0;
+        rawY = (typeof rawY === 'number' && !isNaN(rawY)) ? rawY : 0;
+
+        if (typeof smoothX !== 'number' || isNaN(smoothX)) smoothX = rawX;
+        if (typeof smoothY !== 'number' || isNaN(smoothY)) smoothY = rawY;
+
+        smoothX = smoothX + 0.18 * (rawX - smoothX);
+        smoothY = smoothY + 0.18 * (rawY - smoothY);
 
         let x = smoothX - calibX;
         let y = smoothY - calibY;
 
-        // وەستاندنی لەرزینی وردی ژمارەکان لە دەوری سفر
-        if (Math.abs(x) < 0.15) x = 0;
-        if (Math.abs(y) < 0.15) y = 0;
+        let displayDegree = Math.abs(x);
+
+        if (currentLevelMode === 'vertical') {
+            let vertOffset = (Math.abs(smoothY) - 90) - calibY;
+            y = vertOffset;
+            displayDegree = Math.abs(vertOffset);
+        }
+
+        if (Math.abs(x) < 0.1) x = 0;
+        if (Math.abs(y) < 0.1) y = 0;
 
         if (x > 90) x = 90; if (x < -90) x = -90;
         if (y > 90) y = 90; if (y < -90) y = -90;
@@ -8108,11 +8105,11 @@ function updateTopNotifBadge() {
         if (angTotEl) angTotEl.innerText = toEn(totalAngle.toFixed(1)) + "°";
 
         const digDeg = document.getElementById('digitalDegreeDisplay');
-        if (digDeg) digDeg.innerText = toEn((currentLevelMode === 'vertical' ? y : x).toFixed(1)) + "°";
+        if (digDeg) digDeg.innerText = toEn(displayDegree.toFixed(1)) + "°";
 
         const digSlope = document.getElementById('digitalSlopePercent');
         if (digSlope) {
-            let slope = Math.tan(totalAngle * Math.PI / 180) * 100;
+            let slope = Math.tan(displayDegree * Math.PI / 180) * 100;
             if (isNaN(slope) || slope > 999) slope = 999;
             digSlope.innerText = "لێژی: " + toEn(slope.toFixed(1)) + "%";
         }
@@ -8120,8 +8117,8 @@ function updateTopNotifBadge() {
         const bubbleH = document.getElementById('bubbleHoriz');
         if (bubbleH) {
             const maxTravelH = 105;
-            const factorH = currentLevelMode === 'precision' ? 6 : 2.4;
-            let moveH = x * factorH;
+            const factorH = currentLevelMode === 'precision' ? 5.5 : 2.4;
+            let moveH = -x * factorH;
             if (moveH > maxTravelH) moveH = maxTravelH;
             if (moveH < -maxTravelH) moveH = -maxTravelH;
             bubbleH.style.transform = `translateX(${moveH}px)`;
@@ -8130,7 +8127,7 @@ function updateTopNotifBadge() {
         const bubbleV = document.getElementById('bubbleVert');
         if (bubbleV) {
             const maxTravelV = 95;
-            const factorV = currentLevelMode === 'precision' ? 6 : 2.4;
+            const factorV = currentLevelMode === 'precision' ? 5.5 : 2.4;
             let moveV = y * factorV;
             if (moveV > maxTravelV) moveV = maxTravelV;
             if (moveV < -maxTravelV) moveV = -maxTravelV;
@@ -8140,8 +8137,8 @@ function updateTopNotifBadge() {
         const bubbleR = document.getElementById('bubbleRound');
         if (bubbleR) {
             const maxR = 75;
-            let mx = x * 1.8;
-            let my = y * 1.8;
+            let mx = -x * 1.8;
+            let my = -y * 1.8;
             let dist = Math.sqrt(mx * mx + my * my);
             if (dist > maxR) {
                 let ratio = maxR / dist;
@@ -8153,7 +8150,7 @@ function updateTopNotifBadge() {
 
         const badge = document.getElementById('levelStateBadge');
         const stateText = document.getElementById('levelStateText');
-        const isPerfect = (currentLevelMode === 'vertical') ? Math.abs(y) < 0.6 : Math.abs(x) < 0.6;
+        const isPerfect = (currentLevelMode === 'vertical') ? Math.abs(y) < 0.65 : (Math.abs(x) < 0.65 && (currentLevelMode !== 'circular' || Math.abs(y) < 0.65));
 
         if (badge && stateText) {
             if (isPerfect) {
@@ -8167,33 +8164,30 @@ function updateTopNotifBadge() {
     }
 
     function onDeviceOrientation(e) {
-        if (e.gamma !== null && e.beta !== null) {
-            updateLevelUI(e.gamma, e.beta);
-        }
+        if (!e) return;
+        let gx = (e.gamma !== undefined && e.gamma !== null) ? e.gamma : 0;
+        let by = (e.beta !== undefined && e.beta !== null) ? e.beta : 0;
+        updateLevelUI(gx, by);
     }
 
-    // لێرە تەنها یەک هەستەوەر چالاکە تا کێشەی پێکدادان و لەرزین نەمێنێت
     function startLevelSensors() {
-        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-            DeviceOrientationEvent.requestPermission().then(res => {
-                if (res === 'granted') {
-                    window.addEventListener('deviceorientation', onDeviceOrientation, true);
-                }
-            }).catch(() => {});
-        } else {
-            window.addEventListener('deviceorientation', onDeviceOrientation, true);
-        }
+        window.removeEventListener('deviceorientation', onDeviceOrientation);
+        window.addEventListener('deviceorientation', onDeviceOrientation);
     }
     
     function requestMotionPermission() {
-        startLevelSensors();
         if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
             DeviceOrientationEvent.requestPermission().then(res => {
-                if (res === 'granted') alert('هەستەوەر چالاککرا!');
-                else alert('ڕێگەپێدانی هەستەوەر لە براوزەرەکە نەدراوە.');
-            }).catch(() => alert('دەسەڵاتی هەستەوەر پێویستە.'));
+                if (res === 'granted') {
+                    startLevelSensors();
+                    showAppToast('هەستەوەر بە سەرکەوتوویی چالاککرا! ✅', '#22c55e');
+                } else {
+                    showAppToast('ڕێگەپێدانی هەستەوەر لە براوزەرەکە نەدراوە.', '#d97706');
+                }
+            }).catch(() => showAppToast('دەسەڵاتی هەستەوەر پێویستە.', '#ef4444'));
         } else {
-            alert('هەستەوەر بەستراوەتەوە و دەتوانیت مۆبایلەکەت بجوڵێنیت.');
+            startLevelSensors();
+            showAppToast('هەستەوەر چالاکە و دەخوێنێتەوە 📱', '#22c55e');
         }
     }
 
