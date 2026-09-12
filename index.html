@@ -443,6 +443,125 @@
 .app-modal-card { background: #20130b; border: 2px solid #f59e0b; border-radius: 14px; padding: 20px; text-align: center; max-width: 380px; width: 90%; }
 .room-code-badge { font-family: 'Share Tech Mono', monospace; font-size: 28px; font-weight: 800; background: #000; color: #22c55e; padding: 6px 14px; border-radius: 8px; border: 2px dashed #22c55e; letter-spacing: 3px; margin: 10px 0; display: inline-block; }
 
+        /* دیزاینی تەکتیکی بێتەلی دەنگی Walkie-Talkie Intercom بە کۆد */
+        .walkie-chassis {
+            background: linear-gradient(165deg, #181513 0%, #090807 100%);
+            border: 4px solid #332a24;
+            border-radius: 26px;
+            padding: 16px 14px;
+            box-shadow: 0 16px 36px rgba(0,0,0,0.9), inset 0 2px 4px rgba(255,255,255,0.08);
+            position: relative;
+            margin-bottom: 14px;
+        }
+        .walkie-antenna {
+            position: absolute;
+            top: -22px;
+            left: 24px;
+            width: 14px;
+            height: 24px;
+            background: #443b34;
+            border-radius: 4px 4px 0 0;
+            border: 2px solid #1c1917;
+        }
+        .walkie-antenna::after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 8px;
+            background: #27221d;
+            border-radius: 4px;
+        }
+        .walkie-screen {
+            background: #0f2417;
+            border: 3px solid #27272a;
+            border-radius: 14px;
+            padding: 10px 12px;
+            box-shadow: inset 0 0 18px rgba(0,0,0,0.9), 0 0 10px rgba(34,197,94,0.15);
+            font-family: 'Share Tech Mono', monospace !important;
+            color: #4ade80;
+            margin-bottom: 12px;
+        }
+        .walkie-screen-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 800;
+            border-bottom: 1px dashed rgba(74, 222, 128, 0.3);
+            padding-bottom: 4px;
+            margin-bottom: 6px;
+        }
+        .walkie-room-big {
+            font-size: 1.7rem;
+            font-weight: 900;
+            text-align: center;
+            letter-spacing: 3px;
+            line-height: 1;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.8);
+            margin: 6px 0;
+        }
+        .walkie-status-strip {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.68rem;
+            font-weight: 800;
+        }
+        .ptt-main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 12px 0 8px 0;
+        }
+        .btn-ptt-trigger {
+            width: 145px;
+            height: 145px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #ef4444, #991b1b 75%, #450a0a 100%);
+            border: 6px solid #292524;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.8), inset 0 4px 8px rgba(255,255,255,0.4), 0 0 20px rgba(239, 68, 68, 0.3);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            user-select: none;
+            touch-action: none;
+            transition: all 0.1s ease;
+        }
+        .btn-ptt-trigger:active, .btn-ptt-trigger.transmitting {
+            transform: scale(0.94);
+            background: radial-gradient(circle at 35% 30%, #22c55e, #15803d 75%, #052e16 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.9), inset 0 2px 4px rgba(255,255,255,0.4), 0 0 35px rgba(34, 197, 94, 0.85);
+            border-color: #22c55e;
+        }
+        .btn-ptt-trigger.receiving {
+            background: radial-gradient(circle at 35% 30%, #38bdf8, #0284c7 75%, #082f49 100%);
+            border-color: #38bdf8;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.8);
+            animation: pulseWalkieRx 1s infinite alternate;
+        }
+        @keyframes pulseWalkieRx {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.04); }
+        }
+        .ptt-btn-label {
+            font-size: 1.15rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+        }
+        .ptt-sub-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            opacity: 0.9;
+        }
+
         /* کاتژمێری دیواری */
         .digital-wall-clock-card {
             background: linear-gradient(180deg, #0b0f19 0%, #030712 100%);
@@ -3201,6 +3320,107 @@
         </div>
     </div>
 
+    <!-- ========================================================= -->
+    <!-- بەشی نوێ: بێتەلی دەنگی PTT Intercom بە کۆدی ڕووم (وەک داما) -->
+    <!-- ========================================================= -->
+    <div id="walkieTab" class="app-tab-content" style="display:none;">
+        <div class="walkie-chassis fire-glow-card">
+            <div class="walkie-antenna"></div>
+
+            <!-- سەرپەڕە -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-right:30px;">
+                <div>
+                    <span style="font-size:0.95rem; font-weight:900; color:#f59e0b; display:flex; align-items:center; gap:6px;">
+                        <i class="fa-solid fa-walkie-talkie"></i> بێتەلی دەنگی (PTT Intercom)
+                    </span>
+                    <span style="font-size:0.65rem; color:#a8a29e;">پەیوەندی دەنگی دەستبەجێ بە کۆدی تایبەت</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <span id="walkieLedIndicator" style="width:10px; height:10px; border-radius:50%; background:#71717a; box-shadow:0 0 6px #71717a;"></span>
+                    <span style="font-size:0.68rem; font-weight:800; color:#cbd5e1;" id="walkieConnStatusText">داخراوە</span>
+                </div>
+            </div>
+
+            <!-- شاشەی LCD ی بێتەل -->
+            <div class="walkie-screen">
+                <div class="walkie-screen-top">
+                    <span id="walkieScreenRoomHeader">📡 [ SECURE PTT ]</span>
+                    <span id="walkieLockStatusIcon"><i class="fa-solid fa-lock-open"></i></span>
+                    <span>🔋 100%</span>
+                </div>
+                <div class="walkie-room-big" id="walkieDisplayRoomCode">NO CODE</div>
+                <div class="walkie-status-strip">
+                    <span id="walkieModeState" style="color:#a1a1aa;">[ چاوەڕوانی بەستنەوە... ]</span>
+                    <span id="walkiePeerCountText">هاوڕێ: نییە</span>
+                </div>
+            </div>
+
+            <!-- پانێڵی دروستکردنی کۆد و گەڕان بە کۆد (هاوشێوەی داما) -->
+            <div id="walkieConnectPanel" style="display:block;">
+                <!-- بۆکسی دروستکردنی کۆد -->
+                <div style="background:rgba(0,0,0,0.4); border:1.5px solid #442a18; border-radius:14px; padding:12px; margin-bottom:10px;">
+                    <div style="font-size:0.8rem; font-weight:900; color:#fde68a; margin-bottom:6px;">
+                        <i class="fa-solid fa-plus-circle" style="color:#22c55e;"></i> ١. دروستکردنی کۆدی نوێ (تۆ هۆست دەبیت):
+                    </div>
+                    <input type="text" id="walkieCreatePassInput" class="form-input-custom" placeholder="وشەی نهێنی دابنێ (ئارەزوومەندانە)..." style="font-size:0.78rem; margin-bottom:6px;">
+                    <button class="btn-icon-gold" style="width:100%; justify-content:center; padding:9px;" onclick="createWalkieRoom()">
+                        <i class="fa-solid fa-tower-broadcast"></i> دروستکردنی کۆدی بێتەل
+                    </button>
+                    <div id="walkieCreatedCodeBox" style="display:none; text-align:center; margin-top:8px;">
+                        <div class="room-code-badge" id="walkieShowGeneratedCode" style="font-size:24px; padding:4px 14px;">------</div>
+                        <div style="font-size:0.7rem; color:#a1a1aa;">ئەم کۆدە بدە بە هاوڕێکەت تا پەیوەندیت پێوە بکات!</div>
+                    </div>
+                </div>
+
+                <!-- بۆکسی چوونەژوورەوە بە کۆد -->
+                <div style="background:rgba(0,0,0,0.4); border:1.5px solid #442a18; border-radius:14px; padding:12px; margin-bottom:10px;">
+                    <div style="font-size:0.8rem; font-weight:900; color:#fde68a; margin-bottom:6px;">
+                        <i class="fa-solid fa-right-to-bracket" style="color:#0284c7;"></i> ٢. پەیوەندیکردن بە کۆد (گەڕان بەدوای هاوڕێ):
+                    </div>
+                    <div style="display:flex; gap:6px; margin-bottom:6px;">
+                        <input type="text" inputmode="numeric" id="walkieJoinCodeInput" class="form-input-custom num-font-target" placeholder="کۆدی 6 ژمارەیی..." style="margin-bottom:0; flex:1;">
+                        <input type="text" id="walkieJoinPassInput" class="form-input-custom" placeholder="وشەی نهێنی (ئەگەر هەیە)..." style="margin-bottom:0; flex:1;">
+                    </div>
+                    <button class="btn-icon-gold" style="width:100%; justify-content:center; padding:9px;" onclick="joinWalkieRoom()">
+                        <i class="fa-solid fa-link"></i> چوونە ناو ئەم بێتەلە
+                    </button>
+                </div>
+            </div>
+
+            <!-- پانێڵی چالاکی کاتێک بەسترایەوە -->
+            <div id="walkieActiveControls" style="display:none;">
+                <!-- دوگمەی گەورەی PUSH TO TALK -->
+                <div class="ptt-main-container">
+                    <div class="btn-ptt-trigger" id="mainPttButton"
+                         onmousedown="startPttTransmission(event)"
+                         onmouseup="stopPttTransmission(event)"
+                         ontouchstart="startPttTransmission(event)"
+                         ontouchend="stopPttTransmission(event)">
+                        <i class="fa-solid fa-microphone-lines" style="font-size:2rem;"></i>
+                        <span class="ptt-btn-label" id="pttButtonLabel">PTT</span>
+                        <span class="ptt-sub-label">دەست بگرە بۆ قسەکردن</span>
+                    </div>
+                </div>
+
+                <!-- دوگمەکانی قوفڵ و دەنگ و پچڕاندن -->
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-top:8px;">
+                    <button type="button" class="btn-action-primary" id="btnPttLockToggle" style="background:#44403c; padding:8px; font-size:0.72rem;" onclick="togglePttLock()">
+                        <i class="fa-solid fa-lock"></i> <span id="txtPttLock">قوفڵی دەستی ئازاد</span>
+                    </button>
+                    <button type="button" class="btn-action-primary" id="btnRogerBeepToggle" style="background:#059669; padding:8px; font-size:0.72rem;" onclick="toggleRogerBeep()">
+                        <i class="fa-solid fa-volume-high"></i> <span id="txtRogerBeep">Roger Beep: کارایە</span>
+                    </button>
+                </div>
+
+                <button type="button" class="btn-action-primary" style="background:#dc2626; margin-top:8px; padding:8px; font-size:0.75rem;" onclick="disconnectWalkieRoom()">
+                    <i class="fa-solid fa-phone-slash"></i> <span>پچڕاندن و چوونەدەرەوە</span>
+                </button>
+            </div>
+
+            <audio id="walkieRemoteAudio" autoplay playsinline></audio>
+        </div>
+    </div>
+
     </div>
 
 <!-- پەنجەرەی سەربەخۆی ئاگادارییەکان بۆ بەکارهێنەران (بێ پەیوەندی بە پاسۆرد و ئەدمین) -->
@@ -3665,6 +3885,11 @@
         <!-- بەشی یارییەکان ڕێک لە بن تەسبیح -->
         <button class="drawer-nav-btn" onclick="selectDrawerTab('gamesTab', 'بەشی یارییەکان', 'fa-gamepad')">
             <i class="fa-solid fa-gamepad" style="color:#f59e0b;"></i> <span>🎮 بەشی یارییەکان (Games Hub)</span>
+        </button>
+
+        <!-- دوگمەی نوێی بێتەلی دەنگی Walkie-Talkie Intercom -->
+        <button class="drawer-nav-btn" onclick="selectDrawerTab('walkieTab', 'بێتەلی دەنگی (Walkie-Talkie)', 'fa-walkie-talkie')">
+            <i class="fa-solid fa-walkie-talkie" style="color:#22c55e;"></i> <span>📻 بێتەلی دەنگی (PTT Intercom)</span>
         </button>
 
         <div style="height:1px; background:var(--card-border); margin:4px 0;"></div>
@@ -9660,6 +9885,364 @@ function updateTopNotifBadge() {
         btn.className = 'btn-mic';
         btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
       }
+    }
+
+    /* ==========================================================================
+       تەواوی مەکینەی بێتەلی دەنگی PTT Intercom بە کۆدی ڕووم (وەک داما)
+       ========================================================================== */
+    let walkiePeer = null;
+    let walkieConn = null;
+    let walkieCall = null;
+    let walkieLocalStream = null;
+    let isPttTransmitting = false;
+    let isPttLocked = false;
+    let isRogerBeepEnabled = true;
+    let walkieCurrentRoomCode = null;
+    let walkieRoomPassword = "";
+    let walkieSndCtx = null;
+
+    function playRadioSound(type) {
+        if (!isRogerBeepEnabled) return;
+        try {
+            if (!walkieSndCtx) walkieSndCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (walkieSndCtx.state === 'suspended') walkieSndCtx.resume();
+            const now = walkieSndCtx.currentTime;
+
+            if (type === 'start') {
+                const osc = walkieSndCtx.createOscillator();
+                const gain = walkieSndCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(650, now);
+                osc.frequency.exponentialRampToValueAtTime(120, now + 0.05);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                osc.connect(gain);
+                gain.connect(walkieSndCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            } else if (type === 'roger') {
+                const osc1 = walkieSndCtx.createOscillator();
+                const gain1 = walkieSndCtx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(1150, now);
+                gain1.gain.setValueAtTime(0.3, now);
+                gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc1.connect(gain1);
+                gain1.connect(walkieSndCtx.destination);
+                osc1.start(now);
+                osc1.stop(now + 0.08);
+
+                const osc2 = walkieSndCtx.createOscillator();
+                const gain2 = walkieSndCtx.createGain();
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(1380, now + 0.09);
+                gain2.gain.setValueAtTime(0.3, now + 0.09);
+                gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.17);
+                osc2.connect(gain2);
+                gain2.connect(walkieSndCtx.destination);
+                osc2.start(now + 0.09);
+                osc2.stop(now + 0.17);
+            }
+        } catch(e) {}
+    }
+
+    async function ensureWalkieMicStream() {
+        if (!walkieLocalStream) {
+            walkieLocalStream = await navigator.mediaDevices.getUserMedia({
+                audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+            });
+            // لە سەرەتادا مایکرۆفۆن کپ دەکرێت تاوەکو دوگمەی PTT دەگیرێت
+            walkieLocalStream.getAudioTracks()[0].enabled = false;
+        }
+        return walkieLocalStream;
+    }
+
+    /* دروستکردنی ڕوومی بێتەل (وەک داما) */
+    async function createWalkieRoom() {
+        try {
+            await ensureWalkieMicStream();
+        } catch(e) {
+            alert('تکایە ڕێگە بە مایکرۆفۆن بدە بۆ کارکردنی بێتەل!');
+            return;
+        }
+
+        const passInput = document.getElementById('walkieCreatePassInput');
+        walkieRoomPassword = passInput ? passInput.value.trim() : "";
+
+        const code = Math.floor(100000 + Math.random() * 900000);
+        walkieCurrentRoomCode = String(code);
+        const peerId = 'walkie-room-' + code;
+
+        if (walkiePeer) walkiePeer.destroy();
+        walkiePeer = new Peer(peerId);
+
+        walkiePeer.on('open', () => {
+            const showCode = document.getElementById('walkieShowGeneratedCode');
+            const codeBox = document.getElementById('walkieCreatedCodeBox');
+            if (showCode) showCode.textContent = code;
+            if (codeBox) codeBox.style.display = 'block';
+
+            document.getElementById('walkieDisplayRoomCode').textContent = code;
+            document.getElementById('walkieScreenRoomHeader').textContent = `📡 [ ROOM #${code} ]`;
+            document.getElementById('walkieModeState').innerHTML = `<span style="color:#fde68a;">[ چاوەڕوانی هاوڕێکەت... ]</span>`;
+
+            walkiePeer.on('connection', (c) => {
+                walkieConn = c;
+                walkieConn.on('data', (data) => {
+                    handleWalkieSignaling(data);
+                });
+
+                walkieConn.on('close', () => {
+                    handleWalkieDisconnect();
+                });
+            });
+
+            walkiePeer.on('call', (call) => {
+                call.answer(walkieLocalStream);
+                call.on('stream', (remoteStream) => {
+                    const audioEl = document.getElementById('walkieRemoteAudio');
+                    if (audioEl) audioEl.srcObject = remoteStream;
+                });
+                walkieCall = call;
+            });
+        });
+
+        walkiePeer.on('error', (err) => {
+            console.error('Walkie Peer Error:', err);
+            alert('کێشەیەک ڕوویدا لە دروستکردنی ڕووم: ' + err.type);
+        });
+    }
+
+    /* چوونەژوورەوە بە کۆدی بێتەل */
+    async function joinWalkieRoom() {
+        const codeInput = document.getElementById('walkieJoinCodeInput');
+        const passInput = document.getElementById('walkieJoinPassInput');
+
+        const code = codeInput ? toEn(codeInput.value.trim()) : "";
+        const pass = passInput ? passInput.value.trim() : "";
+
+        if (!code || code.length < 5) {
+            alert('تکایە کۆدی دروستی بێتەل بنووسە!');
+            return;
+        }
+
+        try {
+            await ensureWalkieMicStream();
+        } catch(e) {
+            alert('تکایە ڕێگە بە مایکرۆفۆن بدە بۆ کارکردنی بێتەل!');
+            return;
+        }
+
+        walkieCurrentRoomCode = code;
+        const targetPeerId = 'walkie-room-' + code;
+
+        if (walkiePeer) walkiePeer.destroy();
+        walkiePeer = new Peer();
+
+        walkiePeer.on('open', () => {
+            walkieConn = walkiePeer.connect(targetPeerId);
+
+            walkieConn.on('open', () => {
+                // ناردنی وشەی نهێنی بۆ هۆست
+                walkieConn.send({ type: 'AUTH_REQ', pass: pass });
+            });
+
+            walkieConn.on('data', (data) => {
+                handleWalkieSignaling(data);
+            });
+
+            walkieConn.on('close', () => {
+                handleWalkieDisconnect();
+            });
+
+            // پەیوەندی دەنگی دەستبەجێ بە هۆست
+            const call = walkiePeer.call(targetPeerId, walkieLocalStream);
+            call.on('stream', (remoteStream) => {
+                const audioEl = document.getElementById('walkieRemoteAudio');
+                if (audioEl) audioEl.srcObject = remoteStream;
+            });
+            walkieCall = call;
+
+            walkiePeer.on('call', (inCall) => {
+                inCall.answer(walkieLocalStream);
+                inCall.on('stream', (remoteStream) => {
+                    const audioEl = document.getElementById('walkieRemoteAudio');
+                    if (audioEl) audioEl.srcObject = remoteStream;
+                });
+                walkieCall = inCall;
+            });
+        });
+
+        walkiePeer.on('error', (err) => {
+            console.error('Walkie Connect Error:', err);
+            alert('نەتوانرا پەیوەندی ببەسترێت بەم کۆدە، دڵنیابە لە کۆدەکە!');
+        });
+    }
+
+    function handleWalkieSignaling(data) {
+        if (!data || !data.type) return;
+
+        if (data.type === 'AUTH_REQ') {
+            if (walkieRoomPassword && walkieRoomPassword !== data.pass) {
+                walkieConn.send({ type: 'AUTH_FAIL', msg: 'وشەی نهێنی هەڵەیە!' });
+                setTimeout(() => walkieConn.close(), 500);
+                return;
+            }
+            walkieConn.send({ type: 'AUTH_SUCCESS' });
+            onWalkieConnectedUI();
+            // دەستبەجێ پەیوەندی دەنگی دەکات
+            if (walkiePeer && walkieConn.peer) {
+                const c = walkiePeer.call(walkieConn.peer, walkieLocalStream);
+                c.on('stream', (st) => {
+                    const el = document.getElementById('walkieRemoteAudio');
+                    if (el) el.srcObject = st;
+                });
+                walkieCall = c;
+            }
+        } else if (data.type === 'AUTH_SUCCESS') {
+            onWalkieConnectedUI();
+        } else if (data.type === 'AUTH_FAIL') {
+            alert(data.msg || 'وشەی نهێنی هەڵەیە!');
+            disconnectWalkieRoom();
+        } else if (data.type === 'PTT_SIGNAL') {
+            const pttBtn = document.getElementById('mainPttButton');
+            const modeState = document.getElementById('walkieModeState');
+
+            if (data.active) {
+                if (pttBtn && !isPttTransmitting) pttBtn.classList.add('receiving');
+                if (modeState) modeState.innerHTML = `<span style="color:#38bdf8; font-weight:900;">[ RX: هاوڕێکەت قسە دەکات... 📻 ]</span>`;
+                playRadioSound('start');
+            } else {
+                if (pttBtn) pttBtn.classList.remove('receiving');
+                if (modeState) modeState.innerHTML = `<span style="color:#22c55e;">[ STANDBY / ئامادەباش ]</span>`;
+                playRadioSound('roger');
+            }
+        }
+    }
+
+    function onWalkieConnectedUI() {
+        document.getElementById('walkieConnectPanel').style.display = 'none';
+        document.getElementById('walkieActiveControls').style.display = 'block';
+
+        document.getElementById('walkieLedIndicator').style.background = '#22c55e';
+        document.getElementById('walkieLedIndicator').style.boxShadow = '0 0 10px #22c55e';
+        document.getElementById('walkieConnStatusText').innerText = 'بەستراوەتەوە';
+        document.getElementById('walkieDisplayRoomCode').textContent = walkieCurrentRoomCode;
+        document.getElementById('walkieScreenRoomHeader').textContent = `📡 [ ROOM #${walkieCurrentRoomCode} ]`;
+        document.getElementById('walkieModeState').innerHTML = `<span style="color:#22c55e;">[ STANDBY / ئامادەباش ]</span>`;
+        document.getElementById('walkiePeerCountText').innerText = 'هاوڕێ: بەستراوەتەوە 🟢';
+
+        showAppToast('✅ بێتەل بە سەرکەوتوویی بەستراوەتەوە، ئێستا دەتوانی قسە بکەیت!', '#22c55e');
+    }
+
+    function handleWalkieDisconnect() {
+        document.getElementById('walkieConnectPanel').style.display = 'block';
+        document.getElementById('walkieActiveControls').style.display = 'none';
+
+        document.getElementById('walkieLedIndicator').style.background = '#71717a';
+        document.getElementById('walkieLedIndicator').style.boxShadow = '0 0 6px #71717a';
+        document.getElementById('walkieConnStatusText').innerText = 'داخراوە';
+        document.getElementById('walkieDisplayRoomCode').textContent = 'NO CODE';
+        document.getElementById('walkieScreenRoomHeader').textContent = '📡 [ SECURE PTT ]';
+        document.getElementById('walkieModeState').innerHTML = `<span style="color:#a1a1aa;">[ پەیوەندی پچڕا ]</span>`;
+        document.getElementById('walkiePeerCountText').innerText = 'هاوڕێ: نییە';
+
+        const btn = document.getElementById('mainPttButton');
+        if (btn) btn.classList.remove('transmitting', 'receiving');
+
+        if (walkieLocalStream && walkieLocalStream.getAudioTracks()[0]) {
+            walkieLocalStream.getAudioTracks()[0].enabled = false;
+        }
+    }
+
+    function disconnectWalkieRoom() {
+        if (walkieConn) walkieConn.close();
+        if (walkieCall) walkieCall.close();
+        if (walkiePeer) walkiePeer.destroy();
+        walkieConn = null;
+        walkieCall = null;
+        walkiePeer = null;
+        handleWalkieDisconnect();
+    }
+
+    /* کردارەکانی Push-To-Talk */
+    function startPttTransmission(event) {
+        if (event && event.cancelable) event.preventDefault();
+        if (isPttTransmitting || !walkieConn) return;
+
+        isPttTransmitting = true;
+        playRadioSound('start');
+
+        const btn = document.getElementById('mainPttButton');
+        const lbl = document.getElementById('pttButtonLabel');
+        const modeState = document.getElementById('walkieModeState');
+
+        if (btn) btn.classList.add('transmitting');
+        if (lbl) lbl.innerText = 'TX LIVE';
+        if (modeState) modeState.innerHTML = `<span style="color:#ef4444; font-weight:900;">[ TX: دەنگت دەڕوات... 🎙️ ]</span>`;
+
+        if (walkieLocalStream && walkieLocalStream.getAudioTracks()[0]) {
+            walkieLocalStream.getAudioTracks()[0].enabled = true;
+        }
+
+        if (walkieConn && walkieConn.open) {
+            walkieConn.send({ type: 'PTT_SIGNAL', active: true });
+        }
+    }
+
+    function stopPttTransmission(event) {
+        if (event && event.cancelable) event.preventDefault();
+        if (!isPttTransmitting || isPttLocked) return;
+
+        isPttTransmitting = false;
+
+        const btn = document.getElementById('mainPttButton');
+        const lbl = document.getElementById('pttButtonLabel');
+        const modeState = document.getElementById('walkieModeState');
+
+        if (btn) btn.classList.remove('transmitting');
+        if (lbl) lbl.innerText = 'PTT';
+        if (modeState) modeState.innerHTML = `<span style="color:#22c55e;">[ STANDBY / ئامادەباش ]</span>`;
+
+        if (walkieLocalStream && walkieLocalStream.getAudioTracks()[0]) {
+            walkieLocalStream.getAudioTracks()[0].enabled = false;
+        }
+
+        if (walkieConn && walkieConn.open) {
+            walkieConn.send({ type: 'PTT_SIGNAL', active: false });
+        }
+
+        playRadioSound('roger');
+    }
+
+    function togglePttLock() {
+        isPttLocked = !isPttLocked;
+        const btn = document.getElementById('btnPttLockToggle');
+        const txt = document.getElementById('txtPttLock');
+
+        if (isPttLocked) {
+            startPttTransmission();
+            if (btn) btn.style.background = '#ef4444';
+            if (txt) txt.innerText = 'قوفڵە (کراوەیە) 🔓';
+        } else {
+            isPttLocked = false;
+            stopPttTransmission();
+            if (btn) btn.style.background = '#44403c';
+            if (txt) txt.innerText = 'قوفڵی دەستی ئازاد';
+        }
+    }
+
+    function toggleRogerBeep() {
+        isRogerBeepEnabled = !isRogerBeepEnabled;
+        const btn = document.getElementById('btnRogerBeepToggle');
+        const txt = document.getElementById('txtRogerBeep');
+        if (isRogerBeepEnabled) {
+            if (btn) btn.style.background = '#059669';
+            if (txt) txt.innerText = 'Roger Beep: کارایە';
+        } else {
+            if (btn) btn.style.background = '#44403c';
+            if (txt) txt.innerText = 'Roger Beep: بێدەنگ';
+        }
     }
 </script>
 
