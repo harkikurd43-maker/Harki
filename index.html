@@ -133,11 +133,11 @@
             box-shadow: 0 0 18px rgba(234, 88, 12, 0.4), inset 0 0 8px rgba(234, 88, 12, 0.2) !important;
         }
 
-        /* سەرپەڕە / Header */
+        /* سەرپەڕەی ڕەسەن بە شێوازی فەرمی و ئاڵای کوردستان */
         header { 
             background: var(--header-bg); 
             color: white; 
-            padding-top: max(32px, env(safe-area-inset-top, 28px));
+            padding-top: max(16px, env(safe-area-inset-top, 14px));
             padding-bottom: 14px;
             padding-left: 12px;
             padding-right: 12px;
@@ -148,6 +148,80 @@
             position: relative;
             overflow: hidden;
             border-bottom: 3px solid var(--theme-color);
+        }
+
+        /* شریتی سەرەوە: لۆگۆ، ناوی ئاسانکاری، مانگ و زەنگ */
+        .app-top-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto 10px auto;
+            padding: 0 4px;
+        }
+        .app-brand-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .app-brand-logo-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+        }
+        .app-brand-title {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+        .app-top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .top-action-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            color: #ffffff;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .top-action-btn:active {
+            transform: scale(0.9);
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .top-bell-badge {
+            position: absolute;
+            top: -2px;
+            left: -4px;
+            background: #ef4444;
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 900;
+            min-width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #1e293b;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.5);
+            font-family: var(--num-font);
         }
 
         .header-top-bar {
@@ -248,13 +322,14 @@
             cursor: pointer;
         }
 
-        /* شریتی جوڵاوی دووەم لە سەرووی سەرەوە */
+        /* شریتی سەرەوە بە ڕێکی و بێ کەوتنەسەر ناونیشان */
         .top-marquee-bar {
-            background: rgba(0, 0, 0, 0.35) !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-            border-top: none !important;
-            margin: -20px -12px 10px -12px !important;
-            padding: 5px 0 !important;
+            background: rgba(0, 0, 0, 0.4) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+            margin: 6px -12px 12px -12px !important;
+            padding: 6px 0 !important;
+            width: calc(100% + 24px) !important;
         }
 
         /* شریتی خوارەوەی فڕۆکەیی ئاوێنەیی (iOS Glassmorphism Floating Island) */
@@ -534,20 +609,20 @@
             transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             will-change: transform;
         }
-        /* هەر وێنەیەک ٨٦٪ ی پانی دەگرێت و بەینێکی ١٢ پێکسڵی لەگەڵ کارتی دواتر هەیە */
+        /* قەبارەی تەواو ١٠٠٪ بۆ ئەوەی وێنە بۆ هیچ لایەک لار نەبێتەوە */
         .ad-slide-item {
-            flex: 0 0 86%;
-            min-width: 86%;
-            width: 86%;
-            height: 175px;
-            margin-right: 12px;
+            flex: 0 0 100%;
+            min-width: 100%;
+            width: 100%;
+            height: 180px;
+            margin: 0;
             position: relative;
             cursor: pointer;
             user-select: none;
-            border-radius: 20px;
+            border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.18);
             background: #0f172a;
         }
         .ad-slide-item img {
@@ -1864,38 +1939,50 @@
 </head>
 <body>
 
-<!-- سەرپەڕە / Header -->
+<!-- سەرپەڕە / Header (شێوازی کۆنی ئاڵای کوردستان + سەرەپەڕەی نوێی لۆگۆ) -->
 <header class="fire-glow-card">
-    <!-- شریتی جوڵاوی یەکەم (سەرووی ئاڵا) -->
+    <!-- ١. شریتی سەرەوە (لۆگۆ، ناوی ئاسانکاری، دۆخی تاریکی، و زەنگ) -->
+    <div class="app-top-header-row">
+        <div class="app-brand-area" onclick="openAboutModal()">
+            <img src="https://cdn.phototourl.com/free/2026-09-12-eb98c9f2-617f-429d-bda9-254fa37124c0.png" class="app-brand-logo-img" alt="Logo">
+            <span class="app-brand-title">چاکسازی</span>
+        </div>
+        <div class="app-top-actions">
+            <button class="top-action-btn" onclick="toggleThemeMode()" title="تاریکی / ڕۆشنایی">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <button class="top-action-btn" onclick="openUserNotificationsModal()" title="ئاگادارییەکان">
+                <i class="fa-solid fa-bell"></i>
+                <span class="top-bell-badge" id="topHeaderBellBadge" style="display:none;">0</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ٢. شریتی جوڵاوی یەکەم (بە سەربەخۆیی و بێ ئەوەی بەسەر هیچ شتێکدا بکەوێت) -->
     <div class="scrolling-container top-marquee-bar" onclick="openAboutModal()">
         <div class="scrolling-text" style="color:#fde047;" id="topMarqueeText">
             ⭐️ بەخێربێن بۆ ئەپڵیکەیشنی ئاسانکاری بۆ کارسازان • بۆرسەی ڕاستەوخۆ • قورئان • شاسی • کەشناسی • نەخشە و دۆنم ⭐️
         </div>
     </div>
 
+    <!-- ٣. چوارچێوەی ئاگرین و ئاڵای پیرۆزی کوردستان -->
     <div class="fire-frame">
         <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Flag_of_Kurdistan.svg" class="kurdistan-flag" alt="ئاڵای کوردستان">
     </div>
 
     <h1>ئاسانکاری بۆ کارسازان</h1>
-    <!-- ٥ کلیکی لەسەریەک: ئەدمینی محمدسلیم (پاسۆرد: H075076@) -->
+
+    <!-- ٤. ناوەکان بە ١٢ کلیکی نهێنی بۆ ئەدمین -->
     <div class="colored-name" onclick="handleSecretSalimClicks()" style="cursor:pointer; user-select:none; touch-action:manipulation;">محمدسليم عبدالعزیز الهركي</div>
-    <!-- ٥ کلیکی لەسەریەک: ئەدمینی هەرکی (پاسۆرد: H2011m@) -->
     <div class="colored-name" onclick="handleSecretHarkiClicks()" style="cursor:pointer; user-select:none; touch-action:manipulation;">هركي محمدسلیم عبدالعزیز</div>
 
-    <!-- بەشی سلایدەری ڕیکلام (بە سوایپی پەنجە و کۆنتڕۆڵی بەکارهێنەر) -->
+    <!-- ٥. بەشی سلایدەری ڕیکلام (تەنها یەک دانە و بە تەواوی سەنتەرکراو) -->
     <div class="ads-banner-wrapper" id="adsBannerWrapper">
         <div class="ads-slider-container" id="adsSliderContainer">
-            <!-- تیرەکانی چەپ و ڕاست بۆ گۆڕینی دەستی -->
             <button class="ad-nav-btn ad-nav-prev" onclick="manualPrevAd(event)" title="پێشوو">❮</button>
             <button class="ad-nav-btn ad-nav-next" onclick="manualNextAd(event)" title="دواتر">❯</button>
-
-            <div class="ads-track" id="adsTrack">
-                <!-- وێنەکان لێرە بە شێوازی دینامیکی دادەنرێن -->
-            </div>
-            <div class="ad-tag-badge">ڕیکلام</div>
+            <div class="ads-track" id="adsTrack"></div>
         </div>
-        <!-- خاڵەکانی خوارەوە بۆ گۆڕین بە کلیک -->
         <div class="ads-pagination-dots" id="adsPaginationDots"></div>
     </div>
 
@@ -4214,6 +4301,37 @@
     }
 
     /* کاتژمێری دیواری */
+    /* سیستەمی سڵاوکردنی خودکار بەپێی کاتی ڕۆژ هاوشێوەی وێنەکە */
+    function updateDynamicGreeting() {
+        const now = new Date();
+        const hours = now.getHours();
+
+        const titleEl = document.getElementById('greetingTimeText');
+        const descEl = document.getElementById('greetingSubText');
+        const cardEl = document.getElementById('greetingIconCard');
+
+        if (!titleEl || !descEl || !cardEl) return;
+
+        if (hours >= 5 && hours < 12) {
+            titleEl.innerText = "بەیانیت باش";
+            descEl.innerText = "بەهیوای بەیانییەکی پڕ خێر و بەرەکەت بۆتۆ";
+            cardEl.innerHTML = `<i class="fa-solid fa-sun" style="color:#eab308;"></i>`;
+        } else if (hours >= 12 && hours < 17) {
+            titleEl.innerText = "ڕۆژ باش";
+            descEl.innerText = "بەهیوای ڕۆژێکی شاد و سەرکەوتوو بۆتۆ";
+            cardEl.innerHTML = `<i class="fa-solid fa-sun" style="color:#f59e0b;"></i>`;
+        } else if (hours >= 17 && hours < 21) {
+            titleEl.innerText = "ئێوارەت باش";
+            descEl.innerText = "بەهیوای ئێوارەیەکی ئارام بۆتۆ";
+            cardEl.innerHTML = `<i class="fa-solid fa-cloud-sun" style="color:#ea580c;"></i>`;
+        } else {
+            // لە شەودا وەک ناو وێنەکە دەبێت
+            titleEl.innerText = "شەوت باش";
+            descEl.innerText = "بەهیوای شەوێکی ئارام بۆتۆ";
+            cardEl.innerHTML = `<i class="fa-solid fa-moon"></i>`;
+        }
+    }
+
     function updateWallClock() {
         const now = new Date();
         let hours = now.getHours();
@@ -4877,8 +4995,8 @@ function renderUserAdsSlider() {
 function updateAdSlidePosition() {
     const track = document.getElementById('adsTrack');
     if (!track) return;
-    // جوڵەی تەواو بە پێوانەی ٨٦٪ + بەینی ١٢ پێکسڵ وەک وێنەکە
-    track.style.transform = `translateX(calc(-${currentAdSlideIndex} * (86% + 12px)))`;
+    // گۆڕینی وێنە بە شێوازی ١٠٠٪ تەواو سەنتەرکراو بێ لاری
+    track.style.transform = `translateX(-${currentAdSlideIndex * 100}%)`;
 
     const dots = document.querySelectorAll('.ad-dot');
     dots.forEach((d, i) => {
@@ -9465,6 +9583,8 @@ function updateTopNotifBadge() {
             calculateLiveAge();
             processConversion();
             updateWallClock();
+            updateDynamicGreeting(); // سڵاوکردنی خودکار
+            syncTopBellBadgeCount(); // ژمارەی زەنگ
             loadPrayerTimesByCity('Erbil', 'هەولێر', null);
             fetchLiveWeather(36.1911, 44.0091, 'هەولێر');
             populateQuranSurahDropdown();
