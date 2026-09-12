@@ -486,36 +486,69 @@
 .app-modal-card { background: #20130b; border: 2px solid #f59e0b; border-radius: 14px; padding: 20px; text-align: center; max-width: 380px; width: 90%; }
 .room-code-badge { font-family: 'Share Tech Mono', monospace; font-size: 28px; font-weight: 800; background: #000; color: #22c55e; padding: 6px 14px; border-radius: 8px; border: 2px dashed #22c55e; letter-spacing: 3px; margin: 10px 0; display: inline-block; }
 
-        /* دیزاینی مۆدێرنی سلایدەری ڕیکلام وەک ناو وێنەکە */
+        /* دیزاینی کارتی پەڕاوی بە بەینەوە هاوشێوەی وێنەکە */
         .ads-banner-wrapper {
             width: 100%;
-            max-width: 440px;
+            max-width: 480px;
             margin: 10px auto 8px auto;
             position: relative;
-            display: none; /* ئەگەر ڕیکلام نەبێت نامێنێت */
+            display: none;
         }
         .ads-slider-container {
             position: relative;
             width: 100%;
-            height: 175px;
-            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            background: #0f172a;
+            direction: ltr !important;
+            touch-action: pan-y;
+            padding: 4px 2px;
         }
+        .ad-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 1.05rem;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .ad-nav-btn:active {
+            transform: translateY(-50%) scale(0.9);
+            background: var(--theme-color);
+        }
+        .ad-nav-prev { left: 6px; }
+        .ad-nav-next { right: 6px; }
         .ads-track {
             display: flex;
             width: 100%;
-            height: 100%;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform;
         }
+        /* هەر وێنەیەک ٨٦٪ ی پانی دەگرێت و بەینێکی ١٢ پێکسڵی لەگەڵ کارتی دواتر هەیە */
         .ad-slide-item {
-            min-width: 100%;
-            height: 100%;
+            flex: 0 0 86%;
+            min-width: 86%;
+            width: 86%;
+            height: 175px;
+            margin-right: 12px;
             position: relative;
             cursor: pointer;
             user-select: none;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            background: #0f172a;
         }
         .ad-slide-item img {
             width: 100%;
@@ -523,7 +556,7 @@
             object-fit: cover;
             display: block;
         }
-        /* باجی ڕیکلام لە خوارەوەی ڕاست وەک وێنەکە */
+        /* باجی ڕیکلام لەسەر هەر وێنەیەک جیاواز وەک وێنەکە */
         .ad-tag-badge {
             position: absolute;
             bottom: 8px;
@@ -554,13 +587,12 @@
             justify-content: center;
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
-        /* خاڵەکانی پەڕاندن (Dots) لە ژێر ڕیکلامەکە */
         .ads-pagination-dots {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 6px;
-            margin-top: 6px;
+            margin-top: 8px;
         }
         .ad-dot {
             width: 8px;
@@ -1851,14 +1883,19 @@
     <!-- ٥ کلیکی لەسەریەک: ئەدمینی هەرکی (پاسۆرد: H2011m@) -->
     <div class="colored-name" onclick="handleSecretHarkiClicks()" style="cursor:pointer; user-select:none; touch-action:manipulation;">هركي محمدسلیم عبدالعزیز</div>
 
-    <!-- بەشی سلایدەری ڕیکلام (لە بن ناوەکان و سەر شریتی ئاگاداری) -->
+    <!-- بەشی سلایدەری ڕیکلام (بە سوایپی پەنجە و کۆنتڕۆڵی بەکارهێنەر) -->
     <div class="ads-banner-wrapper" id="adsBannerWrapper">
         <div class="ads-slider-container" id="adsSliderContainer">
+            <!-- تیرەکانی چەپ و ڕاست بۆ گۆڕینی دەستی -->
+            <button class="ad-nav-btn ad-nav-prev" onclick="manualPrevAd(event)" title="پێشوو">❮</button>
+            <button class="ad-nav-btn ad-nav-next" onclick="manualNextAd(event)" title="دواتر">❯</button>
+
             <div class="ads-track" id="adsTrack">
                 <!-- وێنەکان لێرە بە شێوازی دینامیکی دادەنرێن -->
             </div>
             <div class="ad-tag-badge">ڕیکلام</div>
         </div>
+        <!-- خاڵەکانی خوارەوە بۆ گۆڕین بە کلیک -->
         <div class="ads-pagination-dots" id="adsPaginationDots"></div>
     </div>
 
@@ -3416,13 +3453,13 @@
             </div>
         </div>
 
-        <!-- بەشی نوێ: بەڕێوەبردنی وێنەکانی ڕیکلام (تەنها ٢ وێنە بە جوڵەی ٢٠ چرکە) -->
+        <!-- بەشی نوێ: بەڕێوەبردنی ڕیکلامەکان (بێ سنوور - هەر چەند وێنەت بوێت) -->
         <div style="background:rgba(245,158,11,0.08); border:1.5px solid #f59e0b; border-radius:12px; padding:10px; margin-bottom:10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <span style="font-size:0.82rem; font-weight:900; color:#f59e0b;">
-                    <i class="fa-solid fa-rectangle-ad"></i> بەڕێوەبردنی ڕیکلامەکان (زۆرینە ٢ وێنە):
+                    <i class="fa-solid fa-rectangle-ad"></i> بەڕێوەبردنی ڕیکلامەکان (بێ سنوور):
                 </span>
-                <span style="font-size:0.65rem; color:var(--text-muted);">گۆڕینی خودکار: ٢٠ چرکە</span>
+                <span style="font-size:0.65rem; color:var(--text-muted);">گۆڕینی خودکار: ١٠ چرکە</span>
             </div>
 
             <!-- فۆڕمی زیادکردنی وێنەی نوێ لە مۆبایل و فایلەوە -->
@@ -4779,7 +4816,7 @@ function getStoredAds() {
 }
 
 function setStoredAds(ads) {
-    userAdsList = ads.slice(0, 2); // تەنها ڕێگە بە زۆرینەی ٢ وێنە دەدات
+    userAdsList = Array.isArray(ads) ? ads : []; // هیچ سنوورێکی ژمارە نییە
     localStorage.setItem('asankari_ads_list', JSON.stringify(userAdsList));
     renderUserAdsSlider();
     renderAdminAdsList();
@@ -4788,6 +4825,7 @@ function setStoredAds(ads) {
 function initAdsSlider() {
     userAdsList = getStoredAds();
     renderUserAdsSlider();
+    initAdSwipeGestures(); // چالاککردنی ڕاکێشان بە پەنجە
     startAdsAutoPlay();
 }
 
@@ -4818,11 +4856,12 @@ function renderUserAdsSlider() {
 
         slide.innerHTML = `
             <img src="${ad.imgUrl}" alt="ڕیکلام">
+            <div class="ad-tag-badge">ڕیکلام</div>
             ${ad.targetUrl ? '<div class="ad-link-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>' : ''}
         `;
         track.appendChild(slide);
 
-        // دروستکردنی خاڵەکان تەنها ئەگەر ٢ وێنە بێت
+        // دروستکردنی خاڵەکان بەپێی هەموو وێنەکان (هەر چەند وێنەیەک بێت)
         if (dotsContainer && userAdsList.length > 1) {
             const dot = document.createElement('div');
             dot.className = `ad-dot ${idx === 0 ? 'active' : ''}`;
@@ -4831,9 +4870,24 @@ function renderUserAdsSlider() {
         }
     });
 
-    currentAdSlideIndex = 0;
+    if (currentAdSlideIndex >= userAdsList.length) currentAdSlideIndex = 0;
     updateAdSlidePosition();
 }
+
+function updateAdSlidePosition() {
+    const track = document.getElementById('adsTrack');
+    if (!track) return;
+    // جوڵەی تەواو بە پێوانەی ٨٦٪ + بەینی ١٢ پێکسڵ وەک وێنەکە
+    track.style.transform = `translateX(calc(-${currentAdSlideIndex} * (86% + 12px)))`;
+
+    const dots = document.querySelectorAll('.ad-dot');
+    dots.forEach((d, i) => {
+        d.classList.toggle('active', i === currentAdSlideIndex);
+    });
+}
+
+let adTouchStartX = 0;
+let adTouchEndX = 0;
 
 function goToAdSlide(idx) {
     if (idx < 0 || idx >= userAdsList.length) return;
@@ -4848,29 +4902,74 @@ function nextAdSlide() {
     updateAdSlidePosition();
 }
 
+function prevAdSlide() {
+    if (userAdsList.length <= 1) return;
+    currentAdSlideIndex = (currentAdSlideIndex - 1 + userAdsList.length) % userAdsList.length;
+    updateAdSlidePosition();
+}
+
+// گۆڕینی بە دەست بە تیرەکانی تەنیشت
+function manualNextAd(e) {
+    if (e) e.stopPropagation();
+    nextAdSlide();
+    resetAdsAutoPlayTimer();
+}
+
+function manualPrevAd(e) {
+    if (e) e.stopPropagation();
+    prevAdSlide();
+    resetAdsAutoPlayTimer();
+}
+
 function updateAdSlidePosition() {
     const track = document.getElementById('adsTrack');
     if (!track) return;
-    // گۆڕین بەپێی ڕێژەی سەدی بۆ لای چەپ
-    track.style.transform = `translateX(${currentAdSlideIndex * 100}%)`;
+    // جوڵاندن بەرەو پێشەوە بە شێوازی نەرم
+    track.style.transform = `translateX(-${currentAdSlideIndex * 100}%)`;
 
-    // نوێکردنەوەی خاڵە سەوزەکە
+    // نوێکردنەوەی خاڵە سەوزەکان
     const dots = document.querySelectorAll('.ad-dot');
     dots.forEach((d, i) => {
         d.classList.toggle('active', i === currentAdSlideIndex);
     });
 }
 
+// کارکردنی خۆکار هەر ١٠ چرکە جارێک
 function startAdsAutoPlay() {
     clearInterval(adAutoSlideTimer);
-    // هەر ٢٠ چرکە جارێک خۆی دەگۆڕێت (20,000 میلی چرکە)
     adAutoSlideTimer = setInterval(() => {
         nextAdSlide();
-    }, 20000);
+    }, 10000); // ١٠ چرکە (10,000 میلی چرکە)
 }
 
 function resetAdsAutoPlayTimer() {
     startAdsAutoPlay();
+}
+
+// زیادکردنی تایبەتمەندی سوایپ بە پەنجە (Swipe Gesture)
+function initAdSwipeGestures() {
+    const container = document.getElementById('adsSliderContainer');
+    if (!container || container.dataset.swipeInit) return;
+    container.dataset.swipeInit = "true";
+
+    container.addEventListener('touchstart', (e) => {
+        adTouchStartX = e.changedTouches[0].clientX;
+    }, { passive: true });
+
+    container.addEventListener('touchend', (e) => {
+        adTouchEndX = e.changedTouches[0].clientX;
+        const diff = adTouchStartX - adTouchEndX;
+
+        // ئەگەر پەنجەی بۆ لای چەپ یان ڕاست ڕاکێشا بە زیاتر لە 35 پێکسڵ
+        if (Math.abs(diff) > 35) {
+            if (diff > 0) {
+                nextAdSlide(); // ڕاکێشان بۆ چەپ
+            } else {
+                prevAdSlide(); // ڕاکێشان بۆ ڕاست
+            }
+            resetAdsAutoPlayTimer();
+        }
+    }, { passive: true });
 }
 
 /* کۆنتڕۆڵی ڕیکلام لە ناو پەنجەرەی ئەدمین */
@@ -4882,10 +4981,8 @@ function renderAdminAdsList() {
     container.innerHTML = '';
     const ads = getStoredAds();
 
-    // ئەگەر ٢ وێنە پڕ بوو، فۆڕمی زیادکردن دادەخرێت تا زیاتر نەبێت
-    if (form) {
-        form.style.display = ads.length >= 2 ? 'none' : 'block';
-    }
+    // فۆڕمەکە هەمیشە کراوەیە چونکە چیتر سنووری ٢ وێنە نییە
+    if (form) form.style.display = 'block';
 
     if (ads.length === 0) {
         container.innerHTML = `<div style="text-align:center; font-size:0.72rem; color:var(--text-muted); padding:8px;">هیچ وێنەیەکی ڕیکلام دانەنراوە.</div>`;
@@ -4894,28 +4991,47 @@ function renderAdminAdsList() {
 
     ads.forEach((ad, i) => {
         const item = document.createElement('div');
-        item.style = "background:rgba(255,255,255,0.06); border:1px solid rgba(245,158,11,0.3); border-radius:10px; padding:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;";
+        item.style = "background:rgba(255,255,255,0.06); border:1px solid rgba(245,158,11,0.3); border-radius:10px; padding:8px; display:flex; align-items:center; justify-content:space-between; gap:6px;";
         item.innerHTML = `
             <div style="display:flex; align-items:center; gap:8px;">
-                <img src="${ad.imgUrl}" style="width:50px; height:35px; object-fit:cover; border-radius:6px; border:1px solid #fff;">
+                <img src="${ad.imgUrl}" style="width:48px; height:36px; object-fit:cover; border-radius:6px; border:1px solid #fff;">
                 <div style="text-align:right;">
-                    <div style="font-size:0.75rem; font-weight:900; color:#fbbf24;">وێنەی #${toEn(i + 1)} ${i === 0 ? '⭐️ (سەرەکی/یەکەم)' : ''}</div>
-                    <div style="font-size:0.62rem; color:#94a3b8; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${ad.targetUrl || 'بێ لینک'}</div>
+                    <div style="font-size:0.75rem; font-weight:900; color:#fbbf24;">وێنەی #${toEn(i + 1)} ${i === 0 ? '⭐️ (سەرەکی)' : ''}</div>
+                    <div style="font-size:0.62rem; color:#94a3b8; max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${ad.targetUrl || 'بێ لینک'}</div>
                 </div>
             </div>
-            <div style="display:flex; gap:4px;">
-                ${ads.length === 2 ? `
-                    <button type="button" class="btn-city-pill" style="padding:4px 8px; font-size:0.65rem; background:#0284c7; color:#fff;" onclick="swapAdsOrder()">
-                        <i class="fa-solid fa-arrows-up-down"></i> ${i === 0 ? 'بیکە دووەم' : 'بیکە یەکەم ⬆️'}
+            <div style="display:flex; gap:3px;">
+                ${i > 0 ? `
+                    <button type="button" class="btn-city-pill" style="padding:4px 6px; font-size:0.65rem; background:#0284c7; color:#fff;" onclick="moveAdOrder(${i}, -1)" title="هێنانە پێشەوە">
+                        ⬆️
                     </button>
                 ` : ''}
-                <button type="button" class="btn-city-pill" style="padding:4px 8px; font-size:0.65rem; background:#dc2626; color:#fff;" onclick="deleteAdFromAdmin(${i})">
-                    <i class="fa-solid fa-trash"></i> سڕینەوە
+                ${i < ads.length - 1 ? `
+                    <button type="button" class="btn-city-pill" style="padding:4px 6px; font-size:0.65rem; background:#475569; color:#fff;" onclick="moveAdOrder(${i}, 1)" title="بردنە دواوە">
+                        ⬇️
+                    </button>
+                ` : ''}
+                <button type="button" class="btn-city-pill" style="padding:4px 7px; font-size:0.65rem; background:#dc2626; color:#fff;" onclick="deleteAdFromAdmin(${i})" title="سڕینەوە">
+                    <i class="fa-solid fa-trash"></i>
                 </button>
             </div>
         `;
         container.appendChild(item);
     });
+}
+
+// پێشخستن و پاشخستنی وێنەکان (بۆ نموونە بیکەیتە یەکەم یان دووەم)
+function moveAdOrder(index, direction) {
+    let ads = getStoredAds();
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= ads.length) return;
+
+    const temp = ads[index];
+    ads[index] = ads[newIndex];
+    ads[newIndex] = temp;
+
+    setStoredAds(ads);
+    broadcastAdminControl({ action: 'sync_ads', ads: ads });
 }
 
 let preparedAdBase64Image = '';
@@ -4970,10 +5086,6 @@ async function addAdFromAdmin() {
     }
 
     let ads = getStoredAds();
-    if (ads.length >= 2) {
-        alert('تەنها دەتوانیت ٢ وێنە دابنێیت! تکایە سەرەتا یەکێکیان بسڕەوە.');
-        return;
-    }
 
     const previewWrap = document.getElementById('adminAdFilePreviewWrap');
     const originalBtn = event?.target || document.querySelector('#adminAddAdForm button');
