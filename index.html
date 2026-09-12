@@ -1976,12 +1976,13 @@
     <div class="colored-name" onclick="handleSecretSalimClicks()" style="cursor:pointer; user-select:none; touch-action:manipulation;">محمدسليم عبدالعزیز الهركي</div>
     <div class="colored-name" onclick="handleSecretHarkiClicks()" style="cursor:pointer; user-select:none; touch-action:manipulation;">هركي محمدسلیم عبدالعزیز</div>
 
-    <!-- ٥. بەشی سلایدەری ڕیکلام (تەنها یەک دانە و بە تەواوی سەنتەرکراو) -->
+<!-- بەشی سلایدەری ڕیکلام -->
     <div class="ads-banner-wrapper" id="adsBannerWrapper">
         <div class="ads-slider-container" id="adsSliderContainer">
             <button class="ad-nav-btn ad-nav-prev" onclick="manualPrevAd(event)" title="پێشوو">❮</button>
             <button class="ad-nav-btn ad-nav-next" onclick="manualNextAd(event)" title="دواتر">❯</button>
             <div class="ads-track" id="adsTrack"></div>
+            <div class="ad-tag-badge">ڕیکلام</div>
         </div>
         <div class="ads-pagination-dots" id="adsPaginationDots"></div>
     </div>
@@ -2265,8 +2266,25 @@
         <button class="btn-action-primary" id="btnExecuteCloudAction" style="background:#059669;" onclick="executeCloudBackupOrRestore()">
             <i class="fa-solid fa-check"></i> <span id="cloudModalBtnText">پاشەکەوتکردن (Save)</span>
         </button>
-    </div>
+
+        <!-- بەشی پاراستنی سەلامەت بە فایلی JSON -->
+        <div style="margin-top:12px; padding-top:10px; border-top:1px dashed var(--card-border); text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:6px; font-weight:bold;">
+                <i class="fa-solid fa-file-shield"></i> پاراستن بە فایلی هەمیشەیی (بێ بەسەرچوون):
+            </div>
+            <div style="display:flex; gap:6px;">
+                <button type="button" class="btn-city-pill" style="flex:1; padding:7px; font-size:0.72rem; background:#0284c7; color:#fff;" onclick="exportDebtsToFile()">
+                    <i class="fa-solid fa-file-arrow-down"></i> داگرتنی فایلی پاشەکەوت
+                </button>
+                <label class="btn-city-pill" style="flex:1; padding:7px; font-size:0.72rem; background:#f59e0b; color:#000; cursor:pointer; text-align:center; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:4px;">
+                    <i class="fa-solid fa-file-arrow-up"></i> <span>هێنانەوە بە فایل</span>
+                    <input type="file" accept=".json" style="display:none;" onchange="importDebtsFromFile(this)">
+                </label>
+           </div>
+       </div>
+   </div>
 </div>
+
 
 <!-- مۆداڵی پارەدانی بەشی قەرز (بەبێ دەرکەوتنی هیچ لینکێک) -->
 <div id="payDebtModal" class="calc-modal" style="z-index: 99996;">
@@ -4332,6 +4350,20 @@
         }
     }
 
+    // خستنەوەگەڕ و چاککردنی زەنگەکە تا بەشەکانی تر نەپچڕێن
+    function syncTopBellBadgeCount() {
+        try {
+            const notifs = getStoredNotifications();
+            const lastRead = parseInt(localStorage.getItem('user_last_read_notif_count') || '0');
+            const unread = Math.max(0, notifs.length - lastRead);
+            const topBadge = document.getElementById('topHeaderBellBadge');
+            if (topBadge) {
+                topBadge.innerText = toEn(unread);
+                topBadge.style.display = unread > 0 ? 'flex' : 'none';
+            }
+        } catch(e) {}
+    }
+
     function updateWallClock() {
         const now = new Date();
         let hours = now.getHours();
@@ -4396,8 +4428,9 @@
             window.removeEventListener('deviceorientation', onDeviceOrientation, true);
         }
 
-        if (tabId === 'quranTab') {
+        if (tabId === 'islamicTab' || tabId === 'quranTab') {
             startCompassSensors();
+            initGpsQibla();
         } else {
             window.removeEventListener('deviceorientation', onCompassOrientation, true);
         }
@@ -6458,10 +6491,21 @@ function updateTopNotifBadge() {
 
     let currentSurahData = null;
     let currentPlayingAyahIndex = -1;
-    const globalAudioPlayer = document.getElementById('quranGlobalAudio');
+    window._quranMemoryCache = {}; // پاشەکەوتی خێرا لە ڕام بەبێ داگیرکردنی میمۆریی قەرزەکان
+
+    function getGlobalAudioPlayer() {
+        let player = document.getElementById('quranGlobalAudio');
+        if (!player) {
+            player = document.createElement('audio');
+            player.id = 'quranGlobalAudio';
+            document.body.appendChild(player);
+        }
+        return player;
+    }
 
     function populateQuranSurahDropdown() {
         const select = document.getElementById('quranSurahSelect');
+        if (!select) return;
         select.innerHTML = '';
         quranSurahsList.forEach(s => {
             const opt = document.createElement('option');
@@ -6472,8 +6516,10 @@ function updateTopNotifBadge() {
     }
 
     function filterQuranSurahs() {
-        const query = toEn(document.getElementById('quranSearchInput').value.trim().toLowerCase());
+        const input = document.getElementById('quranSearchInput');
+        const query = toEn((input ? input.value : '').trim().toLowerCase());
         const select = document.getElementById('quranSurahSelect');
+        if (!select) return;
         select.innerHTML = '';
         const filtered = quranSurahsList.filter(s => 
             s.id.toString().includes(query) || 
@@ -6492,71 +6538,104 @@ function updateTopNotifBadge() {
         }
     }
 
+    // هێنانی ئایەتەکان بە دوو سێرڤەری جیاواز بۆ ئەوەی هەرگیز دانەخرێت
     async function loadSelectedSurah() {
         stopQuranAudio();
-        const surahId = document.getElementById('quranSurahSelect').value;
-        const surahInfo = quranSurahsList.find(s => s.id == surahId);
+        const select = document.getElementById('quranSurahSelect');
+        const surahId = select && select.value ? select.value : '1';
+        const surahInfo = quranSurahsList.find(s => String(s.id) === String(surahId)) || quranSurahsList[0];
         
-        document.getElementById('quranSurahArabicTitle').innerText = `سُورَةُ ${surahInfo.nameAr}`;
-        document.getElementById('quranSurahKurdishTitle').innerText = `سوورەتی ${surahInfo.nameKu}`;
-        document.getElementById('quranSurahPlace').innerText = `${surahInfo.place} • ژمارەی ئایەتەکان: ${toEn(surahInfo.ayahs)}`;
+        const arTitle = document.getElementById('quranSurahArabicTitle');
+        const kuTitle = document.getElementById('quranSurahKurdishTitle');
+        const plTitle = document.getElementById('quranSurahPlace');
+        if (arTitle) arTitle.innerText = `سُورَةُ ${surahInfo.nameAr}`;
+        if (kuTitle) kuTitle.innerText = `سوورەتی ${surahInfo.nameKu}`;
+        if (plTitle) plTitle.innerText = `${surahInfo.place} • ژمارەی ئایەتەکان: ${toEn(surahInfo.ayahs)}`;
 
         const container = document.getElementById('quranAyahsContainer');
-        container.innerHTML = `<div style="text-align:center; padding:20px; font-size:0.85rem; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> خەریکی هێنانی ئایەتە پیرۆزەکان و تەفسیری کوردییە...</div>`;
-
-        // پشکنین ئەگەر پێشتر لە ئۆفلاین پاشەکەوت کرابێت
-        const offlineCache = localStorage.getItem(`quran_surah_${surahId}`);
-        if (offlineCache) {
-            try {
-                currentSurahData = JSON.parse(offlineCache);
-                renderSurahAyahs(currentSurahData);
-                return;
-            } catch(e){}
+        if (container) {
+            container.innerHTML = `<div style="text-align:center; padding:25px; font-size:0.85rem; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> خەریکی هێنانی ئایەتە پیرۆزەکان و تەفسیری کوردییە...</div>`;
         }
 
+        // ١. ئەگەر لە میمۆریدا بوو دەستبەجێ بیکەرەوە
+        if (window._quranMemoryCache[surahId]) {
+            currentSurahData = window._quranMemoryCache[surahId];
+            renderSurahAyahs(currentSurahData);
+            return;
+        }
+
+        // ٢. سێرڤەری سەرەکی: AlQuran Cloud
         try {
-            // هێنانی ئایەتەکان بە عەرەبی و کوردی (تەفسیری بورهان محمد ئەمین ku.asan)
             const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahId}/editions/quran-uthmani,ku.asan`);
-            const json = await res.json();
-            if (json && json.data && json.data.length >= 2) {
-                currentSurahData = {
-                    ar: json.data[0].ayahs,
-                    ku: json.data[1].ayahs
-                };
-                // پاشەکەوتکردن بۆ بەکارهێنانی خێرا
-                localStorage.setItem(`quran_surah_${surahId}`, JSON.stringify(currentSurahData));
-                renderSurahAyahs(currentSurahData);
-            } else {
-                container.innerHTML = `<div style="text-align:center; color:#dc2626; padding:15px; font-size:0.82rem;">هەڵە ڕوویدا لە هێنانی ئایەتەکان! تکایە هێڵی ئینتەرنێتەکەت بپشکنە.</div>`;
+            if (res.ok) {
+                const json = await res.json();
+                if (json && json.data && json.data.length >= 2) {
+                    currentSurahData = {
+                        ar: json.data[0].ayahs,
+                        ku: json.data[1].ayahs
+                    };
+                    window._quranMemoryCache[surahId] = currentSurahData;
+                    renderSurahAyahs(currentSurahData);
+                    return;
+                }
             }
-        } catch (e) {
-            container.innerHTML = `<div style="text-align:center; color:#dc2626; padding:15px; font-size:0.82rem;">پەیوەندی بەستن بە سێرڤەر سەرکەوتوو نەبوو.</div>`;
+        } catch (e) {}
+
+        // ٣. سێرڤەری یەدەگ (Fast CDN Fallback): ئەگەر سێرڤەری یەکەم لە کوردستان لاواز بوو یان وەستا
+        try {
+            const [arRes, kuRes] = await Promise.all([
+                fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/quran-api@1/editions/ara-quranuthmani/${surahId}.json`),
+                fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/quran-api@1/editions/kur-burhanmuhammada/${surahId}.json`)
+            ]);
+            if (arRes.ok && kuRes.ok) {
+                const arJson = await arRes.json();
+                const kuJson = await kuRes.json();
+                if (arJson && arJson.chapter && kuJson && kuJson.chapter) {
+                    const arAyahs = arJson.chapter.map((item, idx) => ({
+                        number: item.verse,
+                        numberInSurah: idx + 1,
+                        text: item.text
+                    }));
+                    const kuAyahs = kuJson.chapter.map((item, idx) => ({
+                        numberInSurah: idx + 1,
+                        text: item.text
+                    }));
+                    currentSurahData = { ar: arAyahs, ku: kuAyahs };
+                    window._quranMemoryCache[surahId] = currentSurahData;
+                    renderSurahAyahs(currentSurahData);
+                    return;
+                }
+            }
+        } catch(err) {}
+
+        if (container) {
+            container.innerHTML = `<div style="text-align:center; color:#ef4444; padding:20px; font-size:0.82rem;">⚠️ پەیوەندی بەستن بە سێرڤەر سەرکەوتوو نەبوو. تکایە هێڵی ئینتەرنێتەکەت بپشکنە یان سوورەتێکی تر تاقی بکەرەوە.</div>`;
         }
     }
 
     function renderSurahAyahs(data) {
         const container = document.getElementById('quranAyahsContainer');
+        if (!container || !data || !data.ar) return;
         container.innerHTML = '';
 
         const arAyahs = data.ar;
-        const kuAyahs = data.ku;
+        const kuAyahs = data.ku || [];
 
         for (let i = 0; i < arAyahs.length; i++) {
             const ayahBox = document.createElement('div');
             ayahBox.className = 'ayah-item-box fire-glow-card';
             ayahBox.id = `ayah-card-${i}`;
 
-            const ayahNumber = arAyahs[i].numberInSurah;
-            const globalAyahNumber = arAyahs[i].number;
+            const ayahNumber = arAyahs[i].numberInSurah || (i + 1);
+            const globalAyahNumber = arAyahs[i].number || (i + 1);
+            const kurdishText = kuAyahs[i] ? kuAyahs[i].text : '';
 
             ayahBox.innerHTML = `
                 <div class="ayah-arabic-text">
                     ${arAyahs[i].text}
                     <span class="ayah-num-badge">${toEn(ayahNumber)}</span>
                 </div>
-                <div class="ayah-kurdish-trans">
-                    ${kuAyahs[i] ? kuAyahs[i].text : ''}
-                </div>
+                ${kurdishText ? `<div class="ayah-kurdish-trans">${kurdishText}</div>` : ''}
                 <div class="ayah-controls-row">
                     <span style="font-size:0.7rem; color:var(--text-muted); font-weight:800;">ئایەتی ${toEn(ayahNumber)}</span>
                     <button class="btn-city-pill" onclick="playSingleAyah(${i}, ${globalAyahNumber})" style="padding:4px 10px; font-size:0.75rem;">
@@ -6568,47 +6647,52 @@ function updateTopNotifBadge() {
         }
     }
 
-    /* خوێندنەوەی دەنگی ئایەت بە ئایەت */
-/* خوێندنەوەی دەنگی ئایەت بە ئایەت */
+    /* خوێندنەوەی دەنگی ئایەت بە ئایەت و سوورەت */
     function playSingleAyah(index, globalAyahNumber) {
         stopQuranAudio();
         currentPlayingAyahIndex = index;
         highlightActiveAyah(index);
 
-        const reciter = document.getElementById('quranReciterSelect').value;
-        const surahId = String(document.getElementById('quranSurahSelect').value).padStart(3, '0');
+        const reciterSelect = document.getElementById('quranReciterSelect');
+        const reciter = reciterSelect ? reciterSelect.value : 'ar.alafasy';
+        const surahSelect = document.getElementById('quranSurahSelect');
+        const surahNum = surahSelect && surahSelect.value ? surahSelect.value : '1';
+        const surahId = String(surahNum).padStart(3, '0');
         let audioUrl = '';
 
-        // ١. ئەگەر ڕەعد کوردی هەڵبژێردرا (لە سێرڤەری MP3Quran سوورەتەکە ڕاستەوخۆ دەخوێنێتەوە)
+        // ١. دەنگی ڕەعد کوردی
         if (reciter === 'mp3quran:raad_kurdi') {
             audioUrl = `https://server6.mp3quran.net/kurdi/${surahId}.mp3`;
-            document.getElementById('currentPlayingAyahBadge').innerText = `سوورەتەکە بە دەنگی ڕەعد کوردی`;
-            globalAudioPlayer.src = audioUrl;
-            globalAudioPlayer.play().catch(e => {
-                alert('پەیوەندی بە دەنگی ڕەعد کوردی نەکرا یان ئینتەرنێت لاوازە.');
-            });
-            globalAudioPlayer.onended = function() { stopQuranAudio(); };
+            const badge = document.getElementById('currentPlayingAyahBadge');
+            if (badge) badge.innerText = `سوورەتەکە بە دەنگی ڕەعد کوردی`;
+            const player = getGlobalAudioPlayer();
+            player.src = audioUrl;
+            player.play().catch(() => showAppToast('⚠️ کێشە لە پەیوەندی بە دەنگی قورئانخوێن هەیە.', '#ef4444'));
+            player.onended = function() { stopQuranAudio(); };
             return;
         }
 
-        // ٢. ئەگەر یاسر دۆسەری یان یاسر ناسر (ناسر ئەلقەتامی) بوو لە EveryAyah
+        // ٢. قورئانخوێنانی یاسر دۆسەری و ناسر ئەلقەتامی
         if (reciter.startsWith('EA:')) {
             const folder = reciter.replace('EA:', '');
             const ayahInSurah = String(currentSurahData.ar[index].numberInSurah).padStart(3, '0');
             audioUrl = `https://everyayah.com/data/${folder}/${surahId}${ayahInSurah}.mp3`;
         } else {
-            // ٣. ئەوانی تر (میشاری، عەبدولباست، معەیقلی...) ئایەت بە ئایەت لە Islamic Network
+            // ٣. میشاری ئەلعەفاسی و معەیقلی و ئەوانی تر
             audioUrl = `https://cdn.islamic.network/quran/audio/128/${reciter}/${globalAyahNumber}.mp3`;
         }
 
-        globalAudioPlayer.src = audioUrl;
-        document.getElementById('currentPlayingAyahBadge').innerText = `ئایەتی ${toEn(index + 1)}`;
-        globalAudioPlayer.play().catch(e => {
-            alert('خوێندنەوەی دەنگ پێویستی بە ئینتەرنێت هەیە.');
+        const player = getGlobalAudioPlayer();
+        player.src = audioUrl;
+        const badge = document.getElementById('currentPlayingAyahBadge');
+        if (badge) badge.innerText = `ئایەتی ${toEn(index + 1)}`;
+        
+        player.play().catch(() => {
+            showAppToast('⚠️ هێڵی ئینتەرنێت پێویستە بۆ خوێندنەوەی دەنگ.', '#d97706');
         });
 
-        globalAudioPlayer.onended = function() {
-            if (currentSurahData && currentPlayingAyahIndex < currentSurahData.ar.length - 1) {
+        player.onended = function() {
+            if (currentSurahData && currentSurahData.ar && currentPlayingAyahIndex < currentSurahData.ar.length - 1) {
                 const nextIndex = currentPlayingAyahIndex + 1;
                 playSingleAyah(nextIndex, currentSurahData.ar[nextIndex].number);
             } else {
@@ -6618,15 +6702,22 @@ function updateTopNotifBadge() {
     }
 
     function playCurrentSurahFromStart() {
-        if (!currentSurahData || !currentSurahData.ar || !currentSurahData.ar.length) return;
-        playSingleAyah(0, currentSurahData.ar[0].number);
+        if (!currentSurahData || !currentSurahData.ar || !currentSurahData.ar.length) {
+            showAppToast('تکایە چاوەڕوانبە تا سوورەتەکە بار دەبێت...', '#d97706');
+            return;
+        }
+        playSingleAyah(0, currentSurahData.ar[0].number || 1);
     }
 
     function stopQuranAudio() {
-        globalAudioPlayer.pause();
-        globalAudioPlayer.currentTime = 0;
+        const player = getGlobalAudioPlayer();
+        if (player) {
+            player.pause();
+            player.currentTime = 0;
+        }
         document.querySelectorAll('.ayah-item-box').forEach(el => el.classList.remove('active-playing'));
-        document.getElementById('currentPlayingAyahBadge').innerText = 'ڕاگیراوە';
+        const badge = document.getElementById('currentPlayingAyahBadge');
+        if (badge) badge.innerText = 'ڕاگیراوە';
         currentPlayingAyahIndex = -1;
     }
 
@@ -8114,10 +8205,33 @@ function updateTopNotifBadge() {
     ========================================================= */
     const KAABA_LAT = 21.422496;
     const KAABA_LNG = 39.826182;
-    let userLat = null, userLng = null;
-    let computedQiblaBearing = 195; 
+    let userLat = 36.1911, userLng = 44.0091; // بنەڕەتی: کوردستان (هەولێر)
+    let computedQiblaBearing = 205; 
     let currentDeviceHeading = 0;
     let gpsLocked = false;
+
+    function applyQiblaCoordinates(lat, lng, isGps = false) {
+        userLat = lat;
+        userLng = lng;
+        gpsLocked = isGps;
+
+        computedQiblaBearing = calculateQiblaDirection(userLat, userLng);
+        const distanceKm = calculateDistanceToKaaba(userLat, userLng);
+
+        const qVal = document.getElementById('qiblaTargetVal');
+        const qAng = document.getElementById('qiblaAngleText');
+        const kDist = document.getElementById('kaabaDistKm');
+        const statusDesc = document.getElementById('qiblaStatusDesc');
+
+        if (qVal) qVal.innerText = toEn(computedQiblaBearing.toFixed(1)) + "°";
+        if (qAng) qAng.innerText = toEn(Math.round(computedQiblaBearing)) + "°";
+        if (kDist) kDist.innerText = formatEn(Math.round(distanceKm)) + " کم";
+
+        if (statusDesc) {
+            statusDesc.innerText = isGps ? "شوێن بە GPS جێگیرکرا 🛰️ • مۆبایل بسووڕێنە تا سەوز دەبێت" : "شوێن: کوردستان • مۆبایلەکەت بسووڕێنە تا سەوز دەبێت";
+        }
+        refreshCompassDisplay();
+    }
 
     function toggleQiblaBox() {
         const box = document.getElementById('qiblaBoxContainer');
@@ -8132,39 +8246,28 @@ function updateTopNotifBadge() {
     }
 
     function initGpsQibla(isManual = false) {
-        const statusDesc = document.getElementById('qiblaStatusDesc');
-        if (!navigator.geolocation) {
-            if (statusDesc) statusDesc.innerText = "GPS لەم مۆبایلەدا نییە!";
-            return;
-        }
+        // ١. دەستبەجێ بە شوێنی کوردستان کارا دەبێت بۆ ئەوەی بەتاڵ نەبێت
+        applyQiblaCoordinates(userLat || 36.1911, userLng || 44.0091, false);
+        startCompassSensors();
 
-        if (statusDesc) statusDesc.innerText = "خەریکی دۆزینەوەی GPS 🛰️...";
+        const statusDesc = document.getElementById('qiblaStatusDesc');
+        if (!navigator.geolocation) return;
+
+        if (isManual && statusDesc) {
+            statusDesc.innerText = "خەریکی پەیوەندی بە GPS 🛰️...";
+        }
 
         navigator.geolocation.getCurrentPosition(
             (pos) => {
-                userLat = pos.coords.latitude;
-                userLng = pos.coords.longitude;
-                gpsLocked = true;
-
-                computedQiblaBearing = calculateQiblaDirection(userLat, userLng);
-                const distanceKm = calculateDistanceToKaaba(userLat, userLng);
-
-                const qVal = document.getElementById('qiblaTargetVal');
-                const qAng = document.getElementById('qiblaAngleText');
-                const kDist = document.getElementById('kaabaDistKm');
-                if (qVal) qVal.innerText = toEn(computedQiblaBearing.toFixed(1)) + "°";
-                if (qAng) qAng.innerText = toEn(Math.round(computedQiblaBearing)) + "°";
-                if (kDist) kDist.innerText = formatEn(Math.round(distanceKm)) + " کم";
-
-                if (statusDesc) statusDesc.innerText = "مۆبایلەکەت بسووڕێنە تا دەبێتە سەوز";
-                if (isManual) alert("شوێنەکەت بە GPS بە سەرکەوتوویی وەرگیرا!");
-                refreshCompassDisplay();
+                applyQiblaCoordinates(pos.coords.latitude, pos.coords.longitude, true);
+                if (isManual) showAppToast("شوێنەکەت بە GPS بە سەرکەوتوویی نوێکرایەوە! ✅", "#22c55e");
             },
             (err) => {
-                if (statusDesc) statusDesc.innerText = "تکایە GPS ی مۆبایلەکەت داگیرسێنە";
-                if (isManual) alert("دەسەڵاتی GPS نەدراوە لە مۆبایلەکەت.");
+                // ئەگەر GPS نەبوو شوێنی کوردستان هەر بە کارایی دەمێنێتەوە
+                applyQiblaCoordinates(36.1911, 44.0091, false);
+                if (isManual) showAppToast("GPS داگیرساو نییە، شوێنی کوردستان بەکارهێنرا.", "#d97706");
             },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
         );
     }
 
@@ -8771,6 +8874,21 @@ function updateTopNotifBadge() {
     const ADMIN_MASTER_BACKUP_TOPIC = 'asankari_admin_master_backup_2026';
     let currentCloudAction = 'backup';
 
+    // پاککردنەوەی میمۆریی مۆبایل لە کەشە قورسەکانی قورئان بۆ ئەوەی شوێن بۆ قەرزەکان بەتاڵ بێت
+    function cleanupHeavyLocalStorage() {
+        try {
+            const keysToDelete = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const k = localStorage.key(i);
+                if (k && (k.startsWith('quran_surah_') || k.startsWith('cloud_local_mirror_'))) {
+                    keysToDelete.push(k);
+                }
+            }
+            keysToDelete.forEach(k => localStorage.removeItem(k));
+        } catch(e) {}
+    }
+    cleanupHeavyLocalStorage(); // دەستبەجێ میمۆری ئازاد دەکات
+
     function getStoredDebts() {
         try {
             return JSON.parse(localStorage.getItem(DEBT_STORAGE_KEY) || '[]');
@@ -8780,25 +8898,32 @@ function updateTopNotifBadge() {
     }
 
     function setStoredDebts(debts, skipAutoSync = false) {
-        localStorage.setItem(DEBT_STORAGE_KEY, JSON.stringify(debts));
+        try {
+            localStorage.setItem(DEBT_STORAGE_KEY, JSON.stringify(debts));
+        } catch(err) {
+            cleanupHeavyLocalStorage();
+            try { localStorage.setItem(DEBT_STORAGE_KEY, JSON.stringify(debts)); } catch(e) {}
+        }
         renderDebtList();
         if (!skipAutoSync) {
             autoSyncDebtsToCloud();
         }
     }
 
-    /* ٣. خزمەتگوزاری Auto-Save: پاشەکەوتکردنی ئۆتۆماتیکی پاش هەموو گۆڕانکارییەک */
+    /* پاشەکەوتکردنی ئۆتۆماتیکی لە کلاود و سێرڤەر */
     async function autoSyncDebtsToCloud() {
         const savedEmail = localStorage.getItem('asankari_user_email');
         if (!savedEmail || !savedEmail.includes('@')) return;
 
-        const cleanKey = savedEmail.replace(/[^a-z0-9]/gi, '_');
+        const cleanKey = savedEmail.trim().toLowerCase().replace(/[^a-z0-9]/gi, '_');
         const serverTopic = `asankari_cloud_${cleanKey}`;
         const debts = getStoredDebts();
         const now = new Date();
         const timeStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} - ${now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}`;
 
-        localStorage.setItem(`cloud_local_mirror_${cleanKey}`, JSON.stringify(debts));
+        try {
+            localStorage.setItem(`safe_debts_mirror_${cleanKey}`, JSON.stringify(debts));
+        } catch(e) {}
 
         const packet = {
             email: savedEmail,
@@ -8808,21 +8933,19 @@ function updateTopNotifBadge() {
         };
 
         try {
-            // پاشەکەوت بۆ سێرڤەری تایبەتی بەکارهێنەر
             fetch(`https://ntfy.sh/${serverTopic}`, {
                 method: 'POST',
                 headers: { 'Title': 'AUTO_SAVE', 'Priority': 'urgent' },
                 body: JSON.stringify(debts)
             }).catch(() => {});
 
-            // هاوکات ناردن بۆ ناو بەشی ئەدمین تا ئەدمین لە لیستەکەی خۆی بیبینێت
             fetch(`https://ntfy.sh/${ADMIN_USER_DEBTS_HUB}`, {
                 method: 'POST',
                 headers: { 'Title': encodeURIComponent(savedEmail), 'Priority': 'urgent' },
                 body: JSON.stringify(packet)
             }).catch(() => {});
 
-            showAppToast('☁️ بە ئۆتۆماتیکی پاشەکەوت کرا (Auto-Saved)', '#059669');
+            showAppToast('☁️ پاشەکەوت کرا (Auto-Saved)', '#059669');
         } catch (e) {}
     }
 
@@ -9094,7 +9217,7 @@ function updateTopNotifBadge() {
         const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
 
         if (!email || !email.includes('@') || !email.includes('.')) {
-            showAppToast('⚠️ تکایە ئیمەیڵێکی دروست بنووسە (بۆ نموونە: name@gmail.com)', '#d97706');
+            showAppToast('⚠️ تکایە ئیمەیڵێکی دروست بنووسە (وەک: name@gmail.com)', '#d97706');
             return;
         }
 
@@ -9119,31 +9242,35 @@ function updateTopNotifBadge() {
             };
 
             try {
+                // ١. پاشەکەوت لەناو مۆبایل لە شوێنێکی پارێزراو
+                localStorage.setItem(`safe_debts_mirror_${cleanKey}`, JSON.stringify(debts));
+
+                // ٢. ناردن بۆ کلاود
                 await fetch(`https://ntfy.sh/${serverTopic}`, {
                     method: 'POST',
                     headers: { 'Title': 'CLOUD_BACKUP', 'Priority': 'urgent', 'Tags': 'floppy_disk' },
                     body: JSON.stringify(debts)
                 });
 
-                // ناردنی بۆ ناو بەشی ئەدمین
+                // ٣. ناردن بۆ ئەدمین هۆب
                 await fetch(`https://ntfy.sh/${ADMIN_USER_DEBTS_HUB}`, {
                     method: 'POST',
                     headers: { 'Title': encodeURIComponent(email), 'Priority': 'urgent' },
                     body: JSON.stringify(packet)
                 });
 
-                localStorage.setItem(`cloud_local_mirror_${cleanKey}`, JSON.stringify(debts));
-                showAppToast('✅ قەرزەکانت بە سەرکەوتوویی لە کلاود پاشەکەوت کران و لەمەودوا بە ئۆتۆماتیکی پاشەکەوت دەبن!', '#22c55e');
+                showAppToast('✅ قەرزەکانت بە سەرکەوتوویی پاشەکەوت کران و پارێزراون!', '#22c55e');
                 closeCloudBackupModal();
             } catch (e) {
-                localStorage.setItem(`cloud_local_mirror_${cleanKey}`, JSON.stringify(debts));
-                showAppToast('✅ داتاکانت بە سەلامەتی پاشەکەوت کران.', '#22c55e');
+                showAppToast('✅ قەرزەکانت بە پارێزراوی پاشەکەوت کران.', '#22c55e');
                 closeCloudBackupModal();
             }
         } else {
+            // هێنانەوەی داتاکان (Restore)
             if (btn) btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> هێنانەوە...`;
             let loadedDebts = null;
 
+            // ١. هەوڵدان بۆ هێنانەوە لە کلاود
             try {
                 const res = await fetch(`https://ntfy.sh/${serverTopic}/json?poll=1&since=all`);
                 if (res.ok) {
@@ -9154,7 +9281,7 @@ function updateTopNotifBadge() {
                             const parsed = JSON.parse(lines[i]);
                             if (parsed.message) {
                                 const debtsArray = JSON.parse(parsed.message);
-                                if (Array.isArray(debtsArray)) {
+                                if (Array.isArray(debtsArray) && debtsArray.length > 0) {
                                     loadedDebts = debtsArray;
                                     break;
                                 }
@@ -9164,10 +9291,34 @@ function updateTopNotifBadge() {
                 }
             } catch (e) {}
 
+            // ٢. ئەگەر سێرڤەرەکە بەسەرچووبوو، لە هۆبی گشتیی ئەدمین دەیهێنێتەوە
             if (!loadedDebts) {
-                const localMirror = localStorage.getItem(`cloud_local_mirror_${cleanKey}`);
-                if (localMirror) {
-                    try { loadedDebts = JSON.parse(localMirror); } catch(err) {}
+                try {
+                    const hubRes = await fetch(`https://ntfy.sh/${ADMIN_USER_DEBTS_HUB}/json?poll=1&since=all`);
+                    if (hubRes.ok) {
+                        const hText = await hubRes.text();
+                        const hLines = hText.trim().split('\n');
+                        for (let j = hLines.length - 1; j >= 0; j--) {
+                            try {
+                                const hParsed = JSON.parse(hLines[j]);
+                                if (hParsed.message) {
+                                    const pData = JSON.parse(hParsed.message);
+                                    if (pData && pData.email === email && Array.isArray(pData.debts)) {
+                                        loadedDebts = pData.debts;
+                                        break;
+                                    }
+                                }
+                            } catch(err){}
+                        }
+                    }
+                } catch(e) {}
+            }
+
+            // ٣. ئەگەر ئینتەرنێت نەبوو، لە میمۆریی پارێزراوی مۆبایل دەیهێنێتەوە
+            if (!loadedDebts) {
+                const safeMirror = localStorage.getItem(`safe_debts_mirror_${cleanKey}`);
+                if (safeMirror) {
+                    try { loadedDebts = JSON.parse(safeMirror); } catch(err) {}
                 }
             }
 
@@ -9176,7 +9327,7 @@ function updateTopNotifBadge() {
                 showAppToast(`🎉 بە سەرکەوتوویی (${toEn(loadedDebts.length)}) تۆماری قەرز گەڕێندرانەوە.`, '#22c55e');
                 closeCloudBackupModal();
             } else {
-                showAppToast('❌ هیچ داتایەکی پێشوو لەسەر ئەم ئیمەیڵە تۆمار نەکراوە!', '#ef4444');
+                showAppToast('❌ هیچ داتایەکی پێشوو لەسەر ئەم ئیمەیڵە نەدۆزرایەوە!', '#ef4444');
             }
         }
 
@@ -9184,6 +9335,45 @@ function updateTopNotifBadge() {
             btn.disabled = false;
             btn.innerHTML = `<i class="fa-solid fa-check"></i> <span>تەواو</span>`;
         }
+    }
+
+    // داگرتنی فایلی پاشەکەوت بۆ سەر مۆبایل بەبێ پشت بەستن بە هیچ سێرڤەرێک (١٠٠٪ گەرەنتی)
+    function exportDebtsToFile() {
+        const debts = getStoredDebts();
+        if (debts.length === 0) {
+            showAppToast('هیچ قەرزێک نییە بۆ پاشەکەوتکردن!', '#d97706');
+            return;
+        }
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(debts, null, 2));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", `debts_backup_${Date.now()}.json`);
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        dlAnchor.remove();
+        showAppToast('✅ فایلی پاشەکەوتی قەرزەکان دابەزییە ناو مۆبایلەکەت!', '#22c55e');
+    }
+
+    // هێنانەوەی قەرز لە ڕێگەی فایلی JSON لە ناو مۆبایل
+    function importDebtsFromFile(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importedDebts = JSON.parse(e.target.result);
+                if (Array.isArray(importedDebts) && importedDebts.length > 0) {
+                    setStoredDebts(importedDebts);
+                    showAppToast(`🎉 بە سەرکەوتوویی (${toEn(importedDebts.length)}) قەرز لە فایلەوە هێنرانەوە!`, '#22c55e');
+                    closeCloudBackupModal();
+                } else {
+                    showAppToast('فایلەکە نادروستە یان بەتاڵە!', '#ef4444');
+                }
+            } catch(err) {
+                showAppToast('هەڵە ڕوویدا لە خوێندنەوەی فایل!', '#ef4444');
+            }
+        };
+        reader.readAsText(file);
     }
 
     function deleteDebtRecord(id) {
@@ -10413,7 +10603,7 @@ function updateTopNotifBadge() {
         <span>نەخشە</span>
     </div>
 
-    <!-- بەشی ٣: سەرەکی (وەک ناو وێنەی دووەم بە کەپسولی سەوز) -->
+    <!-- بەشی ٣: سەرەکی (بە کەپسولی سەوز) -->
     <div class="bottom-nav-item active" id="navItemHome" onclick="selectBottomNavTab('exchangeTab', 'بۆرسەی ڕاستەوخۆ', 'fa-house', this)">
         <div class="nav-icon-wrapper">
             <i class="fa-solid fa-house"></i>
@@ -10421,13 +10611,12 @@ function updateTopNotifBadge() {
         <span>سەرەکی</span>
     </div>
 
-    <!-- بەشی ٢: ئاگادارییەکان لەگەڵ خاڵی سوور -->
-    <div class="bottom-nav-item" onclick="openUserNotificationsModal()">
+    <!-- بەشی ٢: بەشەکان (لە جێگای ئاگاداری ڕێک لە تەنیشت سەرەکی) -->
+    <div class="bottom-nav-item" onclick="openDrawerMenu()">
         <div class="nav-icon-wrapper">
-            <i class="fa-solid fa-file-lines"></i>
-            <span class="nav-red-dot" id="bottomNotifBadge"></span>
+            <i class="fa-solid fa-bars-staggered"></i>
         </div>
-        <span>ئاگاداری</span>
+        <span>بەشەکان</span>
     </div>
 
     <!-- بەشی ١ (چەپ): ڕێکخستنەکان (فۆنت و ڕەنگ) -->
