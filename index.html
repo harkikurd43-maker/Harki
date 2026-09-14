@@ -176,10 +176,10 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.25);
         }
         .app-brand-title {
-            font-size: 1.2rem;
+            font-size: 0.96rem;
             font-weight: 900;
             color: #ffffff;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.3px;
         }
         .app-top-actions {
             display: flex;
@@ -2776,7 +2776,7 @@
                     <span style="font-size: 0.68rem; color: #d97706; font-weight: 900; background: rgba(217, 119, 6, 0.12); padding: 4px 8px; border-radius: 8px;">بەم زووانە...</span>
                 </div>
 
-                <!-- کارتی یاری ٤: X/O (تەواو و چالاککراو) -->
+                <!-- کارتی یاری ٤: X/O -->
                 <div class="fire-glow-card" style="background: var(--input-bg); border: 2px solid var(--card-border); border-right: 5px solid #8b5cf6; border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="openXOGame()">
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(139, 92, 246, 0.15); border: 1.5px solid #8b5cf6; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #8b5cf6;">
@@ -2784,21 +2784,75 @@
                         </div>
                         <div>
                             <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-main);">تیک تاک تۆ (X/O)</div>
-                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">دژی بۆت • دوو یاریزان • ئۆنلاین بە ڕووم</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">دژی بۆت • دوو یاریزان • ئۆنلاین</div>
                         </div>
                     </div>
                     <button class="btn-city-pill active" style="font-size: 0.75rem; padding: 6px 12px; pointer-events: none; background:#8b5cf6; border-color:#8b5cf6;">دەستپێکردن ◀</button>
+                </div>
+
+                <!-- کارتی یاری ٥: Magic Sort (ڕێکخستنی شوشەی ئاو) -->
+                <div class="fire-glow-card" style="background: var(--input-bg); border: 2px solid var(--card-border); border-right: 5px solid #06b6d4; border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="openWaterSortGame()">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(6, 182, 212, 0.15); border: 1.5px solid #06b6d4; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #06b6d4;">
+                            🧪
+                        </div>
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-main);">ڕێکخستنی ئاو (Magic Sort)</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">جیاکردنەوەی ڕەنگەکان لە شوشە • خاوەنی لیڤڵ</div>
+                        </div>
+                    </div>
+                    <button class="btn-city-pill active" style="font-size: 0.75rem; padding: 6px 12px; pointer-events: none; background:#06b6d4; border-color:#06b6d4;">دەستپێکردن ◀</button>
+                </div>
+
+                <!-- کارتی یاری ٦: Shoot Bubble (تەقاندنی بڵق) -->
+                <div class="fire-glow-card" style="background: var(--input-bg); border: 2px solid var(--card-border); border-right: 5px solid #ec4899; border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="openBubbleGame()">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(236, 72, 153, 0.15); border: 1.5px solid #ec4899; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #ec4899;">
+                            🫧
+                        </div>
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-main);">تەقاندنی بڵق (Shoot Bubble)</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">نیشانەگرتن و تەقاندنی بڵقی ڕەنگاوڕەنگ • لیڤڵدار</div>
+                        </div>
+                    </div>
+                    <button class="btn-city-pill active" style="font-size: 0.75rem; padding: 6px 12px; pointer-events: none; background:#ec4899; border-color:#ec4899;">دەستپێکردن ◀</button>
+                </div>
+
+                <!-- کارتی یاری ٧: Rope Escape Master (کردنەوەی گرێی پەت) -->
+                <div class="fire-glow-card" style="background: var(--input-bg); border: 2px solid var(--card-border); border-right: 5px solid #f59e0b; border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="openRopeGame()">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(245, 158, 11, 0.15); border: 1.5px solid #f59e0b; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #f59e0b;">
+                            🪢
+                        </div>
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-main);">گرێی پەت (Rope Escape)</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">تێکنەئاڵاندنی پەتەکان • تاقیکردنەوەی زیرەکی IQ</div>
+                        </div>
+                    </div>
+                    <button class="btn-city-pill active" style="font-size: 0.75rem; padding: 6px 12px; pointer-events: none; background:#f59e0b; border-color:#f59e0b;">دەستپێکردن ◀</button>
+                </div>
+
+                <!-- کارتی یاری ٨: تاقیکردنەوەی یادگە (Memory Cards بە وێنەی ڕاستی) -->
+                <div class="fire-glow-card" style="background: var(--input-bg); border: 2px solid var(--card-border); border-right: 5px solid #10b981; border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="openMemoryGame()">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(16, 185, 129, 0.15); border: 1.5px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #10b981;">
+                            🧠
+                        </div>
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-main);">تاقیکردنەوەی یادگە (Memory)</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">وێنەی ڕاستەقینە • ئاستی ئاسان، مامناوەند و قورس</div>
+                        </div>
+                    </div>
+                    <button class="btn-city-pill active" style="font-size: 0.75rem; padding: 6px 12px; pointer-events: none; background:#10b981; border-color:#10b981;">دەستپێکردن ◀</button>
                 </div>
 
             </div>
         </div>
     </div>
 
-    <!-- ٢. پەڕەی یاری داما (تەنها کاتێک دەکرێتەوە کە کلیک لەسەر داما بکەیت) -->
+    <!-- ٢. پەڕەی یاری داما -->
     <div id="damaGameView" style="display:none;">
         <div class="section-card fire-glow-card" style="display: flex; flex-direction: column; align-items: center; padding: 12px 6px;">
-            
-            <!-- دوگمەی گەڕانەوە بۆ کەتەلۆگی یارییەکان -->
             <div style="width: 100%; max-width: 500px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <button onclick="backToGamesHub()" class="btn-action-primary" style="width: auto; padding: 6px 14px; font-size: 0.75rem; background: #475569;">
                     <i class="fa-solid fa-arrow-right"></i> <span>گەڕانەوە بۆ لیستی یارییەکان</span>
@@ -2808,16 +2862,13 @@
 
             <audio id="remoteAudioPlayer" autoplay></audio>
 
-            <!-- کاتژمێر و دوگمەی ڕووم و مایکرۆفۆن -->
             <div class="top-header-bar" style="width: 100%; max-width: 500px; margin-bottom: 8px;">
                 <div class="tournament-clock-bar">
                     <div class="digital-timer" id="clockBlackWrap">
                         <div class="timer-val" id="clockBlack">05:00</div>
                         <div class="timer-lbl"><i class="fa-solid fa-circle" style="color: #444;"></i> ڕەش (Black)</div>
                     </div>
-
                     <div style="font-size: 14px; color: #f59e0b; font-weight: 800;">VS</div>
-
                     <div class="digital-timer active" id="clockWhiteWrap">
                         <div class="timer-val" id="clockWhite">05:00</div>
                         <div class="timer-lbl"><i class="fa-solid fa-circle" style="color: #fff;"></i> سپی (White)</div>
@@ -2829,14 +2880,12 @@
                         <i class="fa-solid fa-globe"></i>
                         <span id="roomStatusText">ڕووم</span>
                     </button>
-
                     <button class="btn-mic" id="btnVoiceMic" onclick="toggleVoiceChat()" title="مایکرۆفۆن">
                         <i class="fa-solid fa-microphone"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- تەختەی یاری داما -->
             <div class="dama-tournament-frame theme-walnut pieces-concentric" id="mainDamaFrame" style="max-width: 500px; width: 100%;">
                 <div class="board-status-bar">
                     <div style="display: flex; align-items: center; gap: 6px; color: #fbbf24; font-size: 12px;">
@@ -2845,9 +2894,7 @@
                     </div>
                     <div id="evalScore" style="font-size: 11px; padding: 2px 6px; border-radius: 10px; background: #27272a; color: #a1a1aa;">هاوسەنگ (0.0)</div>
                 </div>
-
                 <div class="dama-grid" id="boardGrid"></div>
-
                 <div class="board-status-bar bottom">
                     <div style="display: flex; align-items: center; gap: 6px; color: #fbbf24; font-size: 12px;">
                         <i class="fa-solid fa-chess-queen"></i>
@@ -2857,7 +2904,6 @@
                 </div>
             </div>
 
-            <!-- هەڵبژاردنی دۆخ، تەختە، و پیلەکان -->
             <div class="settings-control-panel" style="max-width: 500px; width: 100%; margin-top: 10px;">
                 <select id="gameModeSelect" class="custom-select" onchange="changeMode(this.value)">
                     <option value="ai_easy">🟢 بۆت: ئاسان (Easy)</option>
@@ -2865,7 +2911,6 @@
                     <option value="ai_master" selected>🔴 بۆت: ماستەر (Master AI)</option>
                     <option value="pvp">👥 دوو یاریزان (Local 2P)</option>
                 </select>
-
                 <select id="boardThemeSelect" class="custom-select" onchange="changeBoardTheme(this.value)">
                     <option value="theme-walnut" selected>🪵 تەختە: دارینە</option>
                     <option value="theme-marble">🏛️ تەختە: مەڕمەڕ</option>
@@ -2873,7 +2918,6 @@
                     <option value="theme-emerald">💎 تەختە: یاقوت</option>
                     <option value="theme-crimson">🍷 تەختە: سوور</option>
                 </select>
-
                 <select id="pieceDesignSelect" class="custom-select" onchange="changePieceDesign(this.value)">
                     <option value="pieces-concentric" selected>🔘 پیل: کلاسیک</option>
                     <option value="pieces-metallic">✨ پیل: کانزایی</option>
@@ -2881,20 +2925,17 @@
                     <option value="pieces-antique">🪵 پیل: داری ئەنتیک</option>
                     <option value="pieces-modern">⚪ پیل: ماتی مۆدێرن</option>
                 </select>
-
                 <button class="btn-icon-gold" style="flex: 1;" onclick="resetDamaGame()">
                     <i class="fa-solid fa-arrow-rotate-right"></i> یاری نوێ
                 </button>
             </div>
-
         </div>
     </div>
 
-    <!-- مۆداڵی ڕوومی ئۆنلاین -->
+    <!-- مۆداڵی ڕوومی ئۆنلاین بۆ داما -->
     <div class="app-modal-overlay" id="roomModal">
         <div class="app-modal-card">
             <h2 style="font-size: 18px; color: #f59e0b; margin-bottom: 12px;">🌐 ڕوومی ئۆنلاین (Online Room)</h2>
-            
             <div style="background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #442a18;">
                 <div style="font-size: 12px; color: #cbd5e1;">دروستکردنی ڕووم (تۆ سپی دەبیت):</div>
                 <button class="btn-icon-gold" style="margin: 8px auto 0;" onclick="createOnlineRoom()">
@@ -2905,7 +2946,6 @@
                     <div style="font-size: 11px; color: #a1a1aa;">ئەم کۆدە بدە بە هاوڕێکەت!</div>
                 </div>
             </div>
-
             <div style="background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #442a18;">
                 <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 6px;">چوونەژوورەوە بە کۆد (تۆ ڕەش دەبیت):</div>
                 <div style="display: flex; gap: 6px; justify-content: center;">
@@ -2913,12 +2953,11 @@
                     <button class="btn-icon-gold" onclick="joinOnlineRoom()"><i class="fa-solid fa-right-to-bracket"></i> چوونەژوورەوە</button>
                 </div>
             </div>
-
             <button class="btn-icon-gold" style="margin: 0 auto;" onclick="closeRoomModal()">داخستن</button>
         </div>
     </div>
 
-    <!-- مۆداڵی بردنەوە -->
+    <!-- مۆداڵی بردنەوەی داما -->
     <div class="app-modal-overlay" id="winnerModal">
         <div class="app-modal-card">
             <h2 style="font-size: 24px; color: #f59e0b; margin-bottom: 8px;" id="winnerTitle">🎉 بردنەوە!</h2>
@@ -2939,24 +2978,18 @@
                 <span style="font-size: 0.88rem; font-weight: 900; color: #8b5cf6;"><i class="fa-solid fa-gamepad"></i> یاری تیک تاک تۆ (X/O)</span>
             </div>
 
-            <!-- خاڵەکانی X و O -->
             <div style="width: 100%; max-width: 420px; display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); border: 1.5px solid var(--card-border); border-radius: 12px; padding: 8px 12px; margin-bottom: 10px;">
                 <div style="font-weight: 900; font-size: 0.85rem; color: #ef4444;">❌ بردنەوەی X: <span id="xoScoreX">0</span></div>
                 <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">بەرامبەر: <span id="xoScoreTies">0</span></div>
                 <div style="font-weight: 900; font-size: 0.85rem; color: #0284c7;">⭕ بردنەوەی O: <span id="xoScoreO">0</span></div>
             </div>
 
-            <!-- دۆخی ئێستا و نۆرە -->
             <div style="font-size: 0.88rem; font-weight: 900; margin-bottom: 10px; color: var(--theme-color);" id="xoStatusText">
                 نۆرەی: ❌ دەستپێکەرە
             </div>
 
-            <!-- تەختەی ٣ بە ٣ ی یاری X/O -->
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 330px; aspect-ratio: 1 / 1; margin-bottom: 12px;" id="xoBoardGrid">
-                <!-- ٩ خانەکە لێرە پڕدەکرێنەوە -->
-            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 330px; aspect-ratio: 1 / 1; margin-bottom: 12px;" id="xoBoardGrid"></div>
 
-            <!-- هەڵبژاردنی دۆخی یاری (بۆت، ٢ نەفەری، ئۆنلاین) -->
             <div style="width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 6px;">
                 <div style="display: flex; gap: 6px;">
                     <select id="xoModeSelect" class="custom-select" style="flex: 2; padding: 8px; font-size: 0.78rem;" onchange="changeXOMode(this.value)">
@@ -2965,12 +2998,10 @@
                         <option value="pvp_local">👥 دوو یاریزان (لەسەر یەک مۆبایل)</option>
                         <option value="online">🌐 ئۆنلاین (بە کۆدی ڕووم)</option>
                     </select>
-
                     <button class="btn-city-pill active" style="flex: 1; padding: 8px; font-size: 0.75rem; background: #8b5cf6;" onclick="resetXOGame()">
                         <i class="fa-solid fa-rotate-right"></i> یاری نوێ
                     </button>
                 </div>
-
                 <button id="btnXORoomModal" class="btn-icon-gold" style="width: 100%; justify-content: center; padding: 8px; display: none;" onclick="openXORoomModal()">
                     <i class="fa-solid fa-globe"></i> <span>کۆدی ڕوومی ئۆنلاین</span>
                 </button>
@@ -2982,7 +3013,6 @@
     <div class="app-modal-overlay" id="xoRoomModal">
         <div class="app-modal-card">
             <h2 style="font-size: 18px; color: #8b5cf6; margin-bottom: 12px;">🌐 ڕوومی ئۆنلاینی X/O</h2>
-            
             <div style="background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #442a18;">
                 <div style="font-size: 12px; color: #cbd5e1;">دروستکردنی ڕووم (تۆ ❌ دەبیت):</div>
                 <button class="btn-icon-gold" style="margin: 8px auto 0;" onclick="createOnlineXORoom()">
@@ -2993,7 +3023,6 @@
                     <div style="font-size: 11px; color: #a1a1aa;">ئەم کۆدە بدە بە هاوڕێکەت!</div>
                 </div>
             </div>
-
             <div style="background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #442a18;">
                 <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 6px;">چوونەژوورەوە بە کۆد (تۆ ⭕ دەبیت):</div>
                 <div style="display: flex; gap: 6px; justify-content: center;">
@@ -3001,10 +3030,135 @@
                     <button class="btn-icon-gold" onclick="joinOnlineXORoom()"><i class="fa-solid fa-right-to-bracket"></i> چوونەژوورەوە</button>
                 </div>
             </div>
-
             <button class="btn-icon-gold" style="margin: 0 auto;" onclick="closeXORoomModal()">داخستن</button>
         </div>
     </div>
+
+    <!-- ٤. شاشەی تەواوی یاری ١: ڕێکخستنی شوشەی ئاو (Magic Sort) -->
+    <div id="waterSortView" style="display:none;">
+        <div class="section-card fire-glow-card" style="display: flex; flex-direction: column; align-items: center; padding: 14px 10px;">
+            <div style="width: 100%; max-width: 420px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <button onclick="backToGamesHub()" class="btn-action-primary" style="width: auto; padding: 6px 14px; font-size: 0.75rem; background: #475569;">
+                    <i class="fa-solid fa-arrow-right"></i> <span>گەڕانەوە</span>
+                </button>
+                <div style="font-size: 0.92rem; font-weight: 900; color: #06b6d4;"><i class="fa-solid fa-vial"></i> Magic Sort - لیڤڵ: <span id="wsLevelNum">1</span></div>
+                <button onclick="resetWaterSortGame()" class="btn-city-pill active" style="padding: 5px 10px; font-size: 0.72rem; background: #06b6d4;">
+                    <i class="fa-solid fa-rotate-right"></i> سەرلەنوێ
+                </button>
+            </div>
+
+            <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin: 0 0 14px 0;">
+                کلیک لەسەر شوشەیەک بکە تا ئاوەکەی هەڵبگریت، پاشان کلیک لەسەر شوشەیەکی تر بکە بۆ تێکردنی!
+            </p>
+
+            <div id="wsTubesContainer" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; width: 100%; max-width: 380px; min-height: 220px; padding: 10px 0;"></div>
+
+            <div id="wsWinCard" style="display:none; width: 100%; max-width: 320px; background: rgba(6, 182, 212, 0.15); border: 2px solid #06b6d4; border-radius: 14px; padding: 12px; text-align: center; margin-top: 12px;">
+                <div style="font-size: 1.1rem; font-weight: 900; color: #06b6d4; margin-bottom: 6px;">🎉 پیرۆزە! ئەم لیڤڵەت تەواو کرد!</div>
+                <button class="btn-action-primary" style="background: #06b6d4;" onclick="nextWaterSortLevel()">
+                    <span>بڕۆ بۆ لیڤڵی داهاتوو ◀</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ٥. شاشەی تەواوی یاری ٢: تەقاندنی بڵق (Shoot Bubble) -->
+    <div id="bubbleGameView" style="display:none;">
+        <div class="section-card fire-glow-card" style="display: flex; flex-direction: column; align-items: center; padding: 14px 10px;">
+            <div style="width: 100%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <button onclick="backToGamesHub()" class="btn-action-primary" style="width: auto; padding: 6px 14px; font-size: 0.75rem; background: #475569;">
+                    <i class="fa-solid fa-arrow-right"></i> <span>گەڕانەوە</span>
+                </button>
+                <div style="font-size: 0.9rem; font-weight: 900; color: #ec4899;">تەقاندنی بڵق • لیڤڵ <span id="bubbleLevelText">1</span></div>
+                <button onclick="initBubbleShooterGame()" class="btn-city-pill active" style="padding: 5px 10px; font-size: 0.72rem; background: #ec4899;">
+                    <i class="fa-solid fa-rotate-right"></i> نوێ
+                </button>
+            </div>
+
+            <div style="width: 100%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); border: 1.5px solid var(--card-border); border-radius: 12px; padding: 6px 12px; margin-bottom: 8px;">
+                <div style="font-size: 0.8rem; font-weight: 900; color: var(--text-main);">نمرە: <span id="bubbleScoreText" style="color:#ec4899;">0</span></div>
+                <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">نیشانە بگرە و پەنجەت هەڵگرە بۆ تەقاندن</div>
+            </div>
+
+            <div style="position: relative; width: 100%; max-width: 340px; aspect-ratio: 1 / 1.25; background: #080d1a; border: 3px solid #1e293b; border-radius: 16px; overflow: hidden; box-shadow: inset 0 0 25px rgba(0,0,0,0.8);">
+                <canvas id="bubbleCanvas" width="320" height="400" style="width: 100%; height: 100%; display: block; touch-action: none;"></canvas>
+                <div id="bubbleWinOverlay" style="display:none; position:absolute; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(3px); flex-direction:column; align-items:center; justify-content:center; color:#fff;">
+                    <div style="font-size:1.3rem; font-weight:900; color:#ec4899; margin-bottom:6px;">🎉 نایابە! بڵقەکان پاککرانەوە!</div>
+                    <button class="btn-action-primary" style="background:#ec4899; width:auto; padding:8px 20px;" onclick="nextBubbleLevel()">
+                        <span>لیڤڵی داهاتوو ◀</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ٦. شاشەی تەواوی یاری ٣: گرێی پەت (Rope Escape Master) -->
+    <div id="ropeGameView" style="display:none;">
+        <div class="section-card fire-glow-card" style="display: flex; flex-direction: column; align-items: center; padding: 14px 10px;">
+            <div style="width: 100%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <button onclick="backToGamesHub()" class="btn-action-primary" style="width: auto; padding: 6px 14px; font-size: 0.75rem; background: #475569;">
+                    <i class="fa-solid fa-arrow-right"></i> <span>گەڕانەوە</span>
+                </button>
+                <div style="font-size: 0.9rem; font-weight: 900; color: #f59e0b;">Rope Escape • لیڤڵ <span id="ropeLevelText">1</span></div>
+                <button onclick="initRopeGame()" class="btn-city-pill active" style="padding: 5px 10px; font-size: 0.72rem; background: #f59e0b;">
+                    <i class="fa-solid fa-rotate-right"></i> سەرلەنوێ
+                </button>
+            </div>
+
+            <div style="width: 100%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); border: 1.5px solid var(--card-border); border-radius: 12px; padding: 6px 12px; margin-bottom: 8px;">
+                <div style="font-size: 0.8rem; font-weight: 900; color: var(--text-main);">گرێی ماوە: <span id="ropeCrossCount" style="color:#ef4444;">0</span></div>
+                <div style="font-size: 0.72rem; color: #22c55e; font-weight: 800;">خاڵەکان ڕابکێشە تا پەتەکان سەوز دەبن</div>
+            </div>
+
+            <div style="position: relative; width: 100%; max-width: 340px; aspect-ratio: 1 / 1.1; background: #18130f; border: 3px solid #3d2514; border-radius: 16px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.8);">
+                <canvas id="ropeCanvas" width="320" height="350" style="width: 100%; height: 100%; display: block; touch-action: none;"></canvas>
+                <div id="ropeWinOverlay" style="display:none; position:absolute; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(3px); flex-direction:column; align-items:center; justify-content:center; color:#fff;">
+                    <div style="font-size:1.3rem; font-weight:900; color:#22c55e; margin-bottom:6px;">🎉 ئافەرم! هەموو گرێیەکان کرانەوە!</div>
+                    <button class="btn-action-primary" style="background:#22c55e; width:auto; padding:8px 20px;" onclick="nextRopeLevel()">
+                        <span>لیڤڵی داهاتوو ◀</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ٧. شاشەی تەواوی یاری ٤: تاقیکردنەوەی یادگە (Memory Match Cards بە وێنەی ڕاستی و ٣ ئاست) -->
+    <div id="memoryGameView" style="display:none;">
+        <div class="section-card fire-glow-card" style="display: flex; flex-direction: column; align-items: center; padding: 14px 10px;">
+            <div style="width: 100%; max-width: 420px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <button onclick="backToGamesHub()" class="btn-action-primary" style="width: auto; padding: 6px 14px; font-size: 0.75rem; background: #475569;">
+                    <i class="fa-solid fa-arrow-right"></i> <span>گەڕانەوە</span>
+                </button>
+                <span style="font-size: 0.9rem; font-weight: 900; color: #10b981;"><i class="fa-solid fa-brain"></i> یاری یادگە (Memory)</span>
+                <button onclick="resetMemoryGame()" class="btn-city-pill active" style="padding: 5px 10px; font-size: 0.72rem; background: #10b981;">
+                    <i class="fa-solid fa-rotate-right"></i> سەرلەنوێ
+                </button>
+            </div>
+
+            <!-- هەڵبژاردنی ٣ ئاستەکە: ئاسان، مامناوەند، قورس -->
+            <div style="display: flex; gap: 6px; width: 100%; max-width: 360px; margin-bottom: 10px;">
+                <button id="btnMemEasy" class="btn-city-pill active" style="flex:1; padding:7px; font-size:0.75rem;" onclick="setMemoryDifficulty('easy', this)">
+                    🟢 ئاسان (8 کارت)
+                </button>
+                <button id="btnMemMed" class="btn-city-pill" style="flex:1; padding:7px; font-size:0.75rem;" onclick="setMemoryDifficulty('medium', this)">
+                    🟡 مامناوەند (12)
+                </button>
+                <button id="btnMemHard" class="btn-city-pill" style="flex:1; padding:7px; font-size:0.75rem;" onclick="setMemoryDifficulty('hard', this)">
+                    🔴 قورس (16)
+                </button>
+            </div>
+
+            <!-- زانیاری هەوڵ و دۆزراوەکان -->
+            <div style="width: 100%; max-width: 360px; display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); border: 1.5px solid var(--card-border); border-radius: 12px; padding: 6px 14px; margin-bottom: 12px;">
+                <div style="font-weight: 900; font-size: 0.8rem; color: var(--text-main);">هەوڵەکان: <span id="memoryMovesCount" style="color:#0284c7;">0</span></div>
+                <div style="font-weight: 900; font-size: 0.8rem; color: var(--text-main);">دۆزراوەتەوە: <span id="memoryMatchesCount" style="color:#10b981;">0 / 4</span></div>
+            </div>
+
+            <!-- تەختەی کارتەکان (وێنەی ڕاستەقینە) -->
+            <div id="memoryGrid" style="display: grid; gap: 8px; width: 100%; max-width: 350px; justify-content: center;"></div>
+        </div>
+    </div>
+
 </div>
 
     <!-- ========================================================= -->
@@ -3030,7 +3184,7 @@
                 <button class="btn-city-pill" onclick="flyToMapLocation(36.1911, 44.0091, 18)">هەولێر</button>
                 <button class="btn-city-pill" onclick="flyToMapLocation(36.8679, 42.9886, 18)">دهۆک</button>
                 <button class="btn-city-pill" onclick="flyToMapLocation(35.5558, 45.4351, 18)">سلێمانی</button>
-                <button class="btn-city-pill" onclick="flyToMapLocation(37.1436, 42.6869, 18)">زاخۆ</button>
+                <button class="btn-city-pill" onclick="flyToMapLocation(35.1778, 45.9861, 18)">هەڵەبجە</button>
                 <button class="btn-city-pill" onclick="flyToMapLocation(35.4681, 44.3922, 18)">کەرکووک</button>
             </div>
 
@@ -4036,9 +4190,12 @@
 <!-- حاسیبەی ئەسڵی Canon AS-220RTS (هاوشێوەی وێنەکە) -->
 <div id="myCalc" class="calc-modal" onclick="if(event.target===this) this.style.display='none'">
     <div class="calc-wrapper">
-        <div class="canon-header-row">
-            <span class="canon-model-lbl">AS-220RTS 21 DIGITS</span>
-            <span class="canon-logo-lbl" onclick="document.getElementById('myCalc').style.display='none'" title="داخستن">Canon</span>
+        <div class="canon-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px;">
+            <span class="canon-model-lbl" style="font-size: 1.15rem; font-weight: 900; color: #ffffff; font-family: var(--app-main-font) !important;">چاکسازی</span>
+            <div style="display: flex; align-items: center; gap: 8px; cursor: pointer;" onclick="document.getElementById('myCalc').style.display='none'" title="داخستن">
+                <img src="https://cdn.phototourl.com/free/2026-09-12-eb98c9f2-617f-429d-bda9-254fa37124c0.png" style="width: 32px; height: 32px; border-radius: 9px; object-fit: cover; border: 1.5px solid rgba(255,255,255,0.4); box-shadow: 0 2px 8px rgba(0,0,0,0.3);" alt="Logo">
+                <i class="fa-solid fa-xmark" style="color: #94a3b8; font-size: 18px; margin-right: 2px;"></i>
+            </div>
         </div>
 
         <div class="canon-lcd-display">
@@ -4496,6 +4653,651 @@
         document.getElementById('gamesHubMenu').style.display = 'block';
         document.getElementById('damaGameView').style.display = 'none';
         document.getElementById('xoGameView').style.display = 'none';
+        document.getElementById('waterSortView').style.display = 'none';
+        document.getElementById('bubbleGameView').style.display = 'none';
+        document.getElementById('ropeGameView').style.display = 'none';
+        document.getElementById('memoryGameView').style.display = 'none';
+    }
+
+    /* کردنەوەی شاشەی یارییەکان */
+    function openWaterSortGame() {
+        document.getElementById('gamesHubMenu').style.display = 'none';
+        document.getElementById('waterSortView').style.display = 'block';
+        initWaterSortGame();
+    }
+    function openBubbleGame() {
+        document.getElementById('gamesHubMenu').style.display = 'none';
+        document.getElementById('bubbleGameView').style.display = 'block';
+        initBubbleShooterGame();
+    }
+    function openRopeGame() {
+        document.getElementById('gamesHubMenu').style.display = 'none';
+        document.getElementById('ropeGameView').style.display = 'block';
+        initRopeGame();
+    }
+    function openMemoryGame() {
+        document.getElementById('gamesHubMenu').style.display = 'none';
+        document.getElementById('memoryGameView').style.display = 'block';
+        resetMemoryGame();
+    }
+
+    /* =========================================================
+       ١. ماتۆڕی یاری ڕێکخستنی شوشەی ئاو (Magic Sort Engine)
+    ========================================================= */
+    const WS_PALETTE = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+    let wsLevel = 1;
+    let wsTubes = [];
+    let wsSelectedTubeIdx = null;
+
+    function initWaterSortGame() {
+        const lvlEl = document.getElementById('wsLevelNum');
+        if (lvlEl) lvlEl.innerText = toEn(wsLevel);
+        const winCard = document.getElementById('wsWinCard');
+        if (winCard) winCard.style.display = 'none';
+        wsSelectedTubeIdx = null;
+
+        let numColors = Math.min(6, 2 + wsLevel);
+        let numEmpty = wsLevel > 2 ? 2 : 1;
+        let colors = [];
+        for (let i = 0; i < numColors; i++) {
+            for (let k = 0; k < 4; k++) colors.push(WS_PALETTE[i]);
+        }
+        colors.sort(() => Math.random() - 0.5);
+
+        wsTubes = [];
+        for (let i = 0; i < numColors; i++) {
+            wsTubes.push(colors.slice(i * 4, (i + 1) * 4));
+        }
+        for (let i = 0; i < numEmpty; i++) {
+            wsTubes.push([]);
+        }
+
+        renderWaterSortUI();
+    }
+
+    function renderWaterSortUI() {
+        const container = document.getElementById('wsTubesContainer');
+        if (!container) return;
+        container.innerHTML = '';
+
+        wsTubes.forEach((tube, idx) => {
+            const tubeWrap = document.createElement('div');
+            const isSelected = wsSelectedTubeIdx === idx;
+            tubeWrap.style = `position:relative; width:46px; height:140px; border:3px solid #06b6d4; border-top:none; border-radius:0 0 20px 20px; background:rgba(255,255,255,0.04); display:flex; flex-direction:column-reverse; overflow:hidden; cursor:pointer; transition:transform 0.2s, box-shadow 0.2s; ${isSelected ? 'transform:translateY(-14px); box-shadow:0 0 15px #06b6d4;' : ''}`;
+            tubeWrap.onclick = () => handleWaterTubeClick(idx);
+
+            tube.forEach(color => {
+                const seg = document.createElement('div');
+                seg.style = `width:100%; height:32px; background:${color}; border-top:1px solid rgba(255,255,255,0.3);`;
+                tubeWrap.appendChild(seg);
+            });
+
+            container.appendChild(tubeWrap);
+        });
+    }
+
+    function handleWaterTubeClick(idx) {
+        if (wsSelectedTubeIdx === null) {
+            if (wsTubes[idx].length > 0) {
+                wsSelectedTubeIdx = idx;
+                playAudio('move');
+                renderWaterSortUI();
+            }
+        } else if (wsSelectedTubeIdx === idx) {
+            wsSelectedTubeIdx = null;
+            renderWaterSortUI();
+        } else {
+            pourWater(wsSelectedTubeIdx, idx);
+        }
+    }
+
+    function pourWater(fromIdx, toIdx) {
+        const fromTube = wsTubes[fromIdx];
+        const toTube = wsTubes[toIdx];
+
+        if (fromTube.length === 0 || toTube.length >= 4) {
+            wsSelectedTubeIdx = null;
+            renderWaterSortUI();
+            return;
+        }
+
+        const movingColor = fromTube[fromTube.length - 1];
+        if (toTube.length === 0 || toTube[toTube.length - 1] === movingColor) {
+            while (fromTube.length > 0 && fromTube[fromTube.length - 1] === movingColor && toTube.length < 4) {
+                toTube.push(fromTube.pop());
+            }
+            playAudio('capture');
+        }
+
+        wsSelectedTubeIdx = null;
+        renderWaterSortUI();
+        checkWaterSortWin();
+    }
+
+    function checkWaterSortWin() {
+        let isWon = true;
+        for (let tube of wsTubes) {
+            if (tube.length === 0) continue;
+            if (tube.length < 4) { isWon = false; break; }
+            const first = tube[0];
+            if (!tube.every(c => c === first)) { isWon = false; break; }
+        }
+
+        if (isWon) {
+            playAudio('king');
+            const winCard = document.getElementById('wsWinCard');
+            if (winCard) winCard.style.display = 'block';
+        }
+    }
+
+    function resetWaterSortGame() { initWaterSortGame(); }
+    function nextWaterSortLevel() { wsLevel++; initWaterSortGame(); }
+
+    /* =========================================================
+       ٢. ماتۆڕی تەقاندنی بڵق (Shoot Bubble Engine)
+    ========================================================= */
+    const BUBBLE_COLORS = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#ec4899'];
+    let bubbleCanvas, bubbleCtx;
+    let bubbleGrid = [];
+    let bubbleRows = 5, bubbleCols = 8;
+    let bubbleRadius = 18;
+    let currentShootingBubble = null;
+    let bubbleScore = 0;
+    let bubbleLevel = 1;
+    let bubbleAimAngle = -Math.PI / 2;
+    let isBubbleFlying = false;
+
+    function initBubbleShooterGame() {
+        bubbleCanvas = document.getElementById('bubbleCanvas');
+        if (!bubbleCanvas) return;
+        bubbleCtx = bubbleCanvas.getContext('2d');
+        bubbleScore = 0;
+        const scEl = document.getElementById('bubbleScoreText');
+        if (scEl) scEl.innerText = toEn(bubbleScore);
+        const lvlEl = document.getElementById('bubbleLevelText');
+        if (lvlEl) lvlEl.innerText = toEn(bubbleLevel);
+        const winEl = document.getElementById('bubbleWinOverlay');
+        if (winEl) winEl.style.display = 'none';
+
+        bubbleGrid = [];
+        let numColors = Math.min(BUBBLE_COLORS.length, 3 + (bubbleLevel > 2 ? 1 : 0));
+        for (let r = 0; r < bubbleRows + Math.min(3, bubbleLevel - 1); r++) {
+            bubbleGrid[r] = [];
+            for (let c = 0; c < bubbleCols; c++) {
+                bubbleGrid[r][c] = BUBBLE_COLORS[Math.floor(Math.random() * numColors)];
+            }
+        }
+
+        prepareNextShootingBubble();
+        setupBubbleEvents();
+        drawBubbleScene();
+    }
+
+    function prepareNextShootingBubble() {
+        const availableColors = [];
+        bubbleGrid.forEach(row => row.forEach(color => {
+            if (color && !availableColors.includes(color)) availableColors.push(color);
+        }));
+        let chosenColor = availableColors.length > 0 ? availableColors[Math.floor(Math.random() * availableColors.length)] : BUBBLE_COLORS[0];
+
+        currentShootingBubble = {
+            x: bubbleCanvas.width / 2,
+            y: bubbleCanvas.height - 30,
+            color: chosenColor,
+            vx: 0,
+            vy: 0
+        };
+        isBubbleFlying = false;
+    }
+
+    function setupBubbleEvents() {
+        if (bubbleCanvas._eventsBound) return;
+        bubbleCanvas._eventsBound = true;
+
+        const updateAim = (e) => {
+            const rect = bubbleCanvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const mouseX = (clientX - rect.left) * (bubbleCanvas.width / rect.width);
+            const mouseY = (clientY - rect.top) * (bubbleCanvas.height / rect.height);
+            bubbleAimAngle = Math.atan2(mouseY - (bubbleCanvas.height - 30), mouseX - (bubbleCanvas.width / 2));
+            if (bubbleAimAngle > -0.2) bubbleAimAngle = -0.2;
+            if (bubbleAimAngle < -Math.PI + 0.2) bubbleAimAngle = -Math.PI + 0.2;
+            if (!isBubbleFlying) drawBubbleScene();
+        };
+
+        bubbleCanvas.addEventListener('pointermove', updateAim);
+        bubbleCanvas.addEventListener('pointerup', () => {
+            if (!isBubbleFlying && currentShootingBubble) {
+                isBubbleFlying = true;
+                const speed = 14;
+                currentShootingBubble.vx = Math.cos(bubbleAimAngle) * speed;
+                currentShootingBubble.vy = Math.sin(bubbleAimAngle) * speed;
+                playAudio('move');
+                requestAnimationFrame(updateFlyingBubble);
+            }
+        });
+    }
+
+    function updateFlyingBubble() {
+        if (!isBubbleFlying || !currentShootingBubble) return;
+
+        currentShootingBubble.x += currentShootingBubble.vx;
+        currentShootingBubble.y += currentShootingBubble.vy;
+
+        if (currentShootingBubble.x - bubbleRadius <= 0 || currentShootingBubble.x + bubbleRadius >= bubbleCanvas.width) {
+            currentShootingBubble.vx = -currentShootingBubble.vx;
+        }
+
+        let hit = false;
+        if (currentShootingBubble.y - bubbleRadius <= 0) {
+            hit = true;
+        } else {
+            for (let r = 0; r < bubbleGrid.length; r++) {
+                for (let c = 0; c < bubbleCols; c++) {
+                    if (bubbleGrid[r][c]) {
+                        const bx = c * (bubbleRadius * 2) + bubbleRadius + (r % 2 === 1 ? bubbleRadius : 0);
+                        const by = r * (bubbleRadius * 1.8) + bubbleRadius;
+                        const dist = Math.hypot(currentShootingBubble.x - bx, currentShootingBubble.y - by);
+                        if (dist < bubbleRadius * 1.7) {
+                            hit = true;
+                            break;
+                        }
+                    }
+                }
+                if (hit) break;
+            }
+        }
+
+        if (hit) {
+            snapBubbleToGrid(currentShootingBubble);
+            return;
+        }
+
+        drawBubbleScene();
+        requestAnimationFrame(updateFlyingBubble);
+    }
+
+    function snapBubbleToGrid(bubble) {
+        let bestR = Math.max(0, Math.round((bubble.y - bubbleRadius) / (bubbleRadius * 1.8)));
+        let rowOffset = (bestR % 2 === 1) ? bubbleRadius : 0;
+        let bestC = Math.max(0, Math.min(bubbleCols - 1, Math.round((bubble.x - bubbleRadius - rowOffset) / (bubbleRadius * 2))));
+
+        if (!bubbleGrid[bestR]) bubbleGrid[bestR] = [];
+        bubbleGrid[bestR][bestC] = bubble.color;
+
+        const matched = findConnectedBubbles(bestR, bestC, bubble.color);
+        if (matched.length >= 3) {
+            matched.forEach(({ r, c }) => { bubbleGrid[r][c] = null; });
+            bubbleScore += matched.length * 10;
+            const scEl = document.getElementById('bubbleScoreText');
+            if (scEl) scEl.innerText = toEn(bubbleScore);
+            playAudio('capture');
+        }
+
+        drawBubbleScene();
+        checkBubbleWin();
+        prepareNextShootingBubble();
+    }
+
+    function findConnectedBubbles(startR, startC, targetColor) {
+        const visited = {};
+        const matched = [];
+        const queue = [{ r: startR, c: startC }];
+        visited[`${startR},${startC}`] = true;
+
+        while (queue.length > 0) {
+            const { r, c } = queue.pop();
+            matched.push({ r, c });
+
+            const isOdd = r % 2 === 1;
+            const neighbors = [
+                { r: r - 1, c: isOdd ? c : c - 1 }, { r: r - 1, c: isOdd ? c + 1 : c },
+                { r: r, c: c - 1 }, { r: r, c: c + 1 },
+                { r: r + 1, c: isOdd ? c : c - 1 }, { r: r + 1, c: isOdd ? c + 1 : c }
+            ];
+
+            neighbors.forEach(n => {
+                if (n.r >= 0 && n.r < bubbleGrid.length && n.c >= 0 && n.c < bubbleCols) {
+                    if (bubbleGrid[n.r] && bubbleGrid[n.r][n.c] === targetColor && !visited[`${n.r},${n.c}`]) {
+                        visited[`${n.r},${n.c}`] = true;
+                        queue.push(n);
+                    }
+                }
+            });
+        }
+        return matched;
+    }
+
+    function checkBubbleWin() {
+        let hasRemaining = false;
+        for (let r = 0; r < bubbleGrid.length; r++) {
+            if (bubbleGrid[r] && bubbleGrid[r].some(c => c !== null)) {
+                hasRemaining = true;
+                break;
+            }
+        }
+        if (!hasRemaining) {
+            playAudio('king');
+            const winEl = document.getElementById('bubbleWinOverlay');
+            if (winEl) winEl.style.display = 'flex';
+        }
+    }
+
+    function nextBubbleLevel() { bubbleLevel++; initBubbleShooterGame(); }
+
+    function drawBubbleScene() {
+        if (!bubbleCtx) return;
+        bubbleCtx.fillStyle = '#080d1a';
+        bubbleCtx.fillRect(0, 0, bubbleCanvas.width, bubbleCanvas.height);
+
+        for (let r = 0; r < bubbleGrid.length; r++) {
+            if (!bubbleGrid[r]) continue;
+            for (let c = 0; c < bubbleCols; c++) {
+                const color = bubbleGrid[r][c];
+                if (color) {
+                    const bx = c * (bubbleRadius * 2) + bubbleRadius + (r % 2 === 1 ? bubbleRadius : 0);
+                    const by = r * (bubbleRadius * 1.8) + bubbleRadius;
+                    drawSingleBubble(bx, by, color);
+                }
+            }
+        }
+
+        if (!isBubbleFlying) {
+            bubbleCtx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
+            bubbleCtx.lineWidth = 2.5;
+            bubbleCtx.setLineDash([6, 6]);
+            bubbleCtx.beginPath();
+            bubbleCtx.moveTo(bubbleCanvas.width / 2, bubbleCanvas.height - 30);
+            bubbleCtx.lineTo(bubbleCanvas.width / 2 + Math.cos(bubbleAimAngle) * 90, (bubbleCanvas.height - 30) + Math.sin(bubbleAimAngle) * 90);
+            bubbleCtx.stroke();
+            bubbleCtx.setLineDash([]);
+        }
+
+        if (currentShootingBubble) {
+            drawSingleBubble(currentShootingBubble.x, currentShootingBubble.y, currentShootingBubble.color);
+        }
+    }
+
+    function drawSingleBubble(x, y, color) {
+        bubbleCtx.save();
+        bubbleCtx.beginPath();
+        bubbleCtx.arc(x, y, bubbleRadius - 1.5, 0, Math.PI * 2);
+        bubbleCtx.fillStyle = color;
+        bubbleCtx.shadowColor = color;
+        bubbleCtx.shadowBlur = 8;
+        bubbleCtx.fill();
+
+        bubbleCtx.beginPath();
+        bubbleCtx.arc(x - 5, y - 5, bubbleRadius / 3.5, 0, Math.PI * 2);
+        bubbleCtx.fillStyle = 'rgba(255,255,255,0.6)';
+        bubbleCtx.fill();
+        bubbleCtx.restore();
+    }
+
+    /* =========================================================
+       ٣. ماتۆڕی گرێی پەت (Rope Escape Master Engine)
+    ========================================================= */
+    let ropeCanvas, ropeCtx;
+    let ropeNodes = [];
+    let ropeEdges = [];
+    let ropeLevel = 1;
+    let draggedRopeNode = null;
+
+    function initRopeGame() {
+        ropeCanvas = document.getElementById('ropeCanvas');
+        if (!ropeCanvas) return;
+        ropeCtx = ropeCanvas.getContext('2d');
+        const lvlEl = document.getElementById('ropeLevelText');
+        if (lvlEl) lvlEl.innerText = toEn(ropeLevel);
+        const winEl = document.getElementById('ropeWinOverlay');
+        if (winEl) winEl.style.display = 'none';
+
+        const count = Math.min(8, 4 + ropeLevel);
+        const w = ropeCanvas.width;
+        const h = ropeCanvas.height;
+
+        ropeNodes = [];
+        for (let i = 0; i < count; i++) {
+            ropeNodes.push({
+                id: i,
+                x: 40 + Math.random() * (w - 80),
+                y: 40 + Math.random() * (h - 80),
+                r: 14
+            });
+        }
+
+        ropeEdges = [];
+        for (let i = 0; i < count; i++) {
+            ropeEdges.push([i, (i + 1) % count]);
+            if (i + 2 < count) ropeEdges.push([i, i + 2]);
+        }
+
+        setupRopeEvents();
+        drawRopeScene();
+    }
+
+    function setupRopeEvents() {
+        if (ropeCanvas._eventsBound) return;
+        ropeCanvas._eventsBound = true;
+
+        const getPos = (e) => {
+            const rect = ropeCanvas.getBoundingClientRect();
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (cx - rect.left) * (ropeCanvas.width / rect.width),
+                y: (cy - rect.top) * (ropeCanvas.height / rect.height)
+            };
+        };
+
+        ropeCanvas.addEventListener('pointerdown', (e) => {
+            const p = getPos(e);
+            draggedRopeNode = ropeNodes.find(n => Math.hypot(n.x - p.x, n.y - p.y) < 22);
+        });
+
+        ropeCanvas.addEventListener('pointermove', (e) => {
+            if (draggedRopeNode) {
+                const p = getPos(e);
+                draggedRopeNode.x = Math.max(18, Math.min(ropeCanvas.width - 18, p.x));
+                draggedRopeNode.y = Math.max(18, Math.min(ropeCanvas.height - 18, p.y));
+                drawRopeScene();
+            }
+        });
+
+        window.addEventListener('pointerup', () => {
+            if (draggedRopeNode) {
+                draggedRopeNode = null;
+                playAudio('move');
+                checkRopeWin();
+            }
+        });
+    }
+
+    function ccw(A, B, C) {
+        return (C.y - A.y) * (B.x - A.x) > (B.y - A.y) * (C.x - A.x);
+    }
+    function linesIntersect(A, B, C, D) {
+        if ((A.x === C.x && A.y === C.y) || (A.x === D.x && A.y === D.y) ||
+            (B.x === C.x && B.y === C.y) || (B.x === D.x && B.y === D.y)) return false;
+        return ccw(A, C, D) !== ccw(B, C, D) && ccw(A, B, C) !== ccw(A, B, D);
+    }
+
+    function drawRopeScene() {
+        if (!ropeCtx) return;
+        ropeCtx.fillStyle = '#18130f';
+        ropeCtx.fillRect(0, 0, ropeCanvas.width, ropeCanvas.height);
+
+        let crossCount = 0;
+        const intersectingEdges = new Set();
+
+        for (let i = 0; i < ropeEdges.length; i++) {
+            for (let j = i + 1; j < ropeEdges.length; j++) {
+                const [u1, v1] = ropeEdges[i];
+                const [u2, v2] = ropeEdges[j];
+                if (linesIntersect(ropeNodes[u1], ropeNodes[v1], ropeNodes[u2], ropeNodes[v2])) {
+                    crossCount++;
+                    intersectingEdges.add(i);
+                    intersectingEdges.add(j);
+                }
+            }
+        }
+
+        const crEl = document.getElementById('ropeCrossCount');
+        if (crEl) crEl.innerText = toEn(crossCount);
+
+        ropeEdges.forEach(([u, v], idx) => {
+            const isCrossing = intersectingEdges.has(idx);
+            ropeCtx.save();
+            ropeCtx.lineWidth = 4.5;
+            ropeCtx.strokeStyle = isCrossing ? '#ef4444' : '#22c55e';
+            ropeCtx.shadowColor = isCrossing ? '#ef4444' : '#22c55e';
+            ropeCtx.shadowBlur = 10;
+            ropeCtx.beginPath();
+            ropeCtx.moveTo(ropeNodes[u].x, ropeNodes[u].y);
+            ropeCtx.lineTo(ropeNodes[v].x, ropeNodes[v].y);
+            ropeCtx.stroke();
+            ropeCtx.restore();
+        });
+
+        ropeNodes.forEach(node => {
+            ropeCtx.save();
+            ropeCtx.beginPath();
+            ropeCtx.arc(node.x, node.y, node.r, 0, Math.PI * 2);
+            ropeCtx.fillStyle = '#f59e0b';
+            ropeCtx.shadowColor = '#f59e0b';
+            ropeCtx.shadowBlur = 8;
+            ropeCtx.fill();
+            ropeCtx.lineWidth = 3;
+            ropeCtx.strokeStyle = '#ffffff';
+            ropeCtx.stroke();
+            ropeCtx.restore();
+        });
+    }
+
+    function checkRopeWin() {
+        let crossings = 0;
+        for (let i = 0; i < ropeEdges.length; i++) {
+            for (let j = i + 1; j < ropeEdges.length; j++) {
+                const [u1, v1] = ropeEdges[i];
+                const [u2, v2] = ropeEdges[j];
+                if (linesIntersect(ropeNodes[u1], ropeNodes[v1], ropeNodes[u2], ropeNodes[v2])) crossings++;
+            }
+        }
+        if (crossings === 0) {
+            playAudio('king');
+            const winEl = document.getElementById('ropeWinOverlay');
+            if (winEl) winEl.style.display = 'flex';
+        }
+    }
+
+    function nextRopeLevel() { ropeLevel++; initRopeGame(); }
+
+    /* =========================================================
+       ٤. تاقیکردنەوەی یادگە بە وێنەی ڕاستەقینە و ٣ ئاست (Memory Cards)
+    ========================================================= */
+    const REAL_PHOTOS = [
+        'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=200&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=200&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1518770660439-4636190af475?w=200&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200&auto=format&fit=crop&q=80'
+    ];
+
+    let memoryDifficulty = 'easy'; // easy (4 pairs), medium (6 pairs), hard (8 pairs)
+    let memoryCards = [];
+    let flippedCards = [];
+    let memoryMoves = 0;
+    let memoryMatches = 0;
+    let memoryLock = false;
+
+    function setMemoryDifficulty(diff, btn) {
+        memoryDifficulty = diff;
+        document.querySelectorAll('#memoryGameView .btn-city-pill').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        resetMemoryGame();
+    }
+
+    function resetMemoryGame() {
+        let pairCount = memoryDifficulty === 'easy' ? 4 : (memoryDifficulty === 'medium' ? 6 : 8);
+        const chosenPhotos = REAL_PHOTOS.slice(0, pairCount);
+        memoryCards = [...chosenPhotos, ...chosenPhotos].sort(() => Math.random() - 0.5);
+
+        flippedCards = [];
+        memoryMoves = 0;
+        memoryMatches = 0;
+        memoryLock = false;
+
+        const mvEl = document.getElementById('memoryMovesCount');
+        if (mvEl) mvEl.innerText = '0';
+        const mtEl = document.getElementById('memoryMatchesCount');
+        if (mtEl) mtEl.innerText = `0 / ${toEn(pairCount)}`;
+
+        const grid = document.getElementById('memoryGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+
+        memoryCards.forEach((imgUrl, idx) => {
+            const card = document.createElement('div');
+            card.className = 'memory-card-item fire-glow-card';
+            card.style = `position:relative; width:100%; aspect-ratio:1/1; border-radius:12px; background:#1e293b; border:2px solid var(--card-border); cursor:pointer; overflow:hidden; display:flex; align-items:center; justify-content:center; transition:transform 0.3s;`;
+            card.dataset.img = imgUrl;
+
+            card.innerHTML = `<i class="fa-solid fa-question" style="font-size:1.6rem; color:#64748b;"></i>`;
+            card.onclick = () => flipRealPhotoCard(card, imgUrl);
+            grid.appendChild(card);
+        });
+    }
+
+    function flipRealPhotoCard(card, imgUrl) {
+        if (memoryLock || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+        card.classList.add('flipped');
+        card.innerHTML = `<img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover;">`;
+        card.style.borderColor = '#10b981';
+        flippedCards.push(card);
+
+        if (flippedCards.length === 2) {
+            memoryMoves++;
+            const mvEl = document.getElementById('memoryMovesCount');
+            if (mvEl) mvEl.innerText = toEn(memoryMoves);
+            memoryLock = true;
+
+            const [c1, c2] = flippedCards;
+            let pairCount = memoryDifficulty === 'easy' ? 4 : (memoryDifficulty === 'medium' ? 6 : 8);
+
+            if (c1.dataset.img === c2.dataset.img) {
+                playAudio('king');
+                c1.classList.add('matched');
+                c2.classList.add('matched');
+                memoryMatches++;
+                const mtEl = document.getElementById('memoryMatchesCount');
+                if (mtEl) mtEl.innerText = `${toEn(memoryMatches)} / ${toEn(pairCount)}`;
+                flippedCards = [];
+                memoryLock = false;
+
+                if (memoryMatches === pairCount) {
+                    setTimeout(() => {
+                        alert(`🎉 پیرۆزە! هەموو وێنەکانت بە سەرکەوتوویی لە (${toEn(memoryMoves)}) هەوڵ دۆزییەوە!`);
+                    }, 400);
+                }
+            } else {
+                setTimeout(() => {
+                    c1.classList.remove('flipped');
+                    c2.classList.remove('flipped');
+                    c1.innerHTML = `<i class="fa-solid fa-question" style="font-size:1.6rem; color:#64748b;"></i>`;
+                    c2.innerHTML = `<i class="fa-solid fa-question" style="font-size:1.6rem; color:#64748b;"></i>`;
+                    c1.style.borderColor = 'var(--card-border)';
+                    c2.style.borderColor = 'var(--card-border)';
+                    flippedCards = [];
+                    memoryLock = false;
+                }, 850);
+            }
+        }
     }
 
     /* ==========================================================================
@@ -4622,7 +5424,6 @@
         resetXOGame();
     }
 
-    /* ژیری دەستکردی بۆت بۆ X/O (Minimax نەدۆڕاو) */
     function runXOAI() {
         if (xoIsGameOver || xoCurrentTurn !== 'O') return;
 
@@ -4688,7 +5489,6 @@
         }
     }
 
-    /* سیستەمی ئۆنلاینی X/O بە کۆدی ڕووم (PeerJS) */
     function openXORoomModal() { document.getElementById('xoRoomModal')?.classList.add('show'); }
     function closeXORoomModal() { document.getElementById('xoRoomModal')?.classList.remove('show'); }
 
