@@ -2408,20 +2408,79 @@
                     <i class="fa-solid fa-calendar-days" style="color:#8b5cf6;"></i> <span>ڕۆژژمێری کۆچی و کاتی بۆنە پیرۆزەکان</span>
                 </div>
 
-                <!-- کارتی بەرواری ئەمڕۆی کۆچی -->
+                <!-- کارتی بەرواری ئەمڕۆی کۆچی لەگەڵ دوگمەی دەستکاریکردنی ڕۆژ (+1/-1 Day Adjust) -->
                 <div style="background:linear-gradient(135deg, #4c1d95 0%, #6d28d9 100%); color:#ffffff; border-radius:16px; padding:16px; text-align:center; margin-bottom:12px;">
-                    <div style="font-size:0.75rem; opacity:0.9;">بەرواری ئەمڕۆ بە کۆچی</div>
-                    <div style="font-size:1.4rem; font-weight:900; margin:6px 0; color:#fef08a;" id="liveHijriDateCard">--</div>
+                    <div style="font-size:0.75rem; opacity:0.9;">بەرواری ئەمڕۆ بە کۆچی (لەگەڵ ڕێکخستنی بینینی مانگ)</div>
+                    <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin:6px 0;">
+                        <button type="button" class="btn-city-pill" style="padding:4px 10px; font-size:0.85rem; background:rgba(255,255,255,0.2); color:#fff;" onclick="adjustHijriDay(-1)">-١ ڕۆژ</button>
+                        <div style="font-size:1.35rem; font-weight:900; color:#fef08a;" id="liveHijriDateCard">--</div>
+                        <button type="button" class="btn-city-pill" style="padding:4px 10px; font-size:0.85rem; background:rgba(255,255,255,0.2); color:#fff;" onclick="adjustHijriDay(1)">+١ ڕۆژ</button>
+                    </div>
                     <div style="font-size:0.78rem; opacity:0.85;" id="liveGregorianDateCard">--</div>
                 </div>
 
-                <!-- بۆنە ئاینییەکانی ساڵ و ماوەی ڕۆژەکان -->
+                <!-- خاڵی ٣: ژماردنی پێچەوانە (Countdown) بۆ ڕەمەزان و جەژنەکان -->
+                <div style="background:var(--input-bg); border:1.5px solid var(--card-border); border-radius:14px; padding:12px; margin-bottom:12px;">
+                    <div style="font-size:0.82rem; font-weight:900; color:#8b5cf6; margin-bottom:8px;">
+                        <i class="fa-solid fa-hourglass-half"></i> چەند ماوە بۆ بۆنە گەورەکان؟ (ژماردنی پێچەوانە):
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; text-align:center;">
+                        <div class="level-readout-card" style="border-color:#059669; background:rgba(5,150,105,0.08);">
+                            <span style="font-size:0.62rem; color:var(--text-muted); font-weight:bold;">مانگی ڕەمەزان</span>
+                            <span class="level-readout-val" style="font-size:0.85rem; color:#059669;" id="cntRamadanDays">-- ڕۆژ</span>
+                        </div>
+                        <div class="level-readout-card" style="border-color:#f59e0b; background:rgba(245,158,11,0.08);">
+                            <span style="font-size:0.62rem; color:var(--text-muted); font-weight:bold;">جەژنی ڕەمەزان</span>
+                            <span class="level-readout-val" style="font-size:0.85rem; color:#f59e0b;" id="cntFitrDays">-- ڕۆژ</span>
+                        </div>
+                        <div class="level-readout-card" style="border-color:#ef4444; background:rgba(239,68,68,0.08);">
+                            <span style="font-size:0.62rem; color:var(--text-muted); font-weight:bold;">ڕۆژی عەرەفە</span>
+                            <span class="level-readout-val" style="font-size:0.85rem; color:#ef4444;" id="cntArafahDays">-- ڕۆژ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- خاڵی ١: گۆڕینی بەروار (زایینی ↔ کۆچی ↔ کوردی) -->
+                <div style="background:var(--input-bg); border:1.5px solid var(--card-border); border-radius:14px; padding:12px; margin-bottom:12px;">
+                    <div style="font-size:0.82rem; font-weight:900; color:#0284c7; margin-bottom:8px;">
+                        <i class="fa-solid fa-repeat"></i> گۆڕینی بەروار (زایینی ↔ کۆچی ↔ کوردی):
+                    </div>
+                    <div style="display:flex; gap:6px; margin-bottom:6px;">
+                        <input type="date" id="calConvertDateInput" class="form-input-custom" style="margin-bottom:0;" onchange="convertThreeCalendars()">
+                        <button class="btn-action-primary" style="width:auto; padding:0 14px; background:#0284c7;" onclick="convertThreeCalendars()">
+                            <span>گۆڕین</span>
+                        </button>
+                    </div>
+                    <div id="calConvertResultsBox" style="font-size:0.75rem; display:flex; flex-direction:column; gap:4px; margin-top:6px;">
+                        <div class="result-item"><span>بەروار بە کۆچی:</span><span id="resHijriConverted" class="badge-val" style="color:#8b5cf6;">-</span></div>
+                        <div class="result-item"><span>بەروار بە کوردی:</span><span id="resKurdishConverted" class="badge-val" style="color:#059669;">-</span></div>
+                    </div>
+                </div>
+
+                <!-- خاڵی ٢: زەنگ و ئاگاداری ڕۆژووی دووشەممە و پێنجشەممە -->
+                <div style="background:var(--input-bg); border:1.5px solid var(--card-border); border-radius:14px; padding:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-size:0.82rem; font-weight:900; color:#059669;"><i class="fa-solid fa-bell"></i> زەنگی ڕۆژووی دووشەممە و پێنجشەممە</div>
+                        <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">ئاگاداربکردنەوە لە شەوانی یەکشەممە و چوارشەممە</div>
+                    </div>
+                    <button class="btn-city-pill" id="btnToggleFastingReminder" style="padding:6px 12px; font-size:0.74rem;" onclick="toggleFastingReminder()">
+                        چالاککردن 🔔
+                    </button>
+                </div>
+
+                <!-- خاڵی ٥: ڕووداوە مێژووییە گەورەکانی ئیسلام لەم مانگەدا -->
+                <div style="background:var(--input-bg); border:1.5px solid var(--card-border); border-radius:14px; padding:12px; margin-bottom:12px;">
+                    <div style="font-size:0.82rem; font-weight:900; color:#d97706; margin-bottom:6px;">
+                        <i class="fa-solid fa-landmark"></i> ڕووداوە گرنگە مێژووییەکانی ئیسلام لەم مانگەدا:
+                    </div>
+                    <div id="historicalIslamicEventsList" style="display:flex; flex-direction:column; gap:6px; font-size:0.75rem;"></div>
+                </div>
+
+                <!-- بۆنە ئاینییەکانی ساڵ -->
                 <div style="font-weight:900; font-size:0.82rem; color:var(--text-main); margin-bottom:6px;">
                     <i class="fa-solid fa-mosque" style="color:#8b5cf6;"></i> کاتی بۆنە و جەژنە پیرۆزەکان:
                 </div>
-                <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:12px;" id="islamicEventsList">
-                    <!-- لیستی بۆنەکان لە سکریپتەوە پڕ دەکرێتەوە -->
-                </div>
+                <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:12px;" id="islamicEventsList"></div>
 
                 <!-- ڕۆژژمێری ڕۆژووە سوننەتەکان -->
                 <div style="background:var(--input-bg); border:1.5px solid var(--card-border); border-radius:14px; padding:12px;">
@@ -3269,6 +3328,12 @@
                 <button class="btn-city-pill" onclick="fetchLiveWeather(33.3152, 44.3661, 'بەغدا')">بەغدا</button>
             </div>
 
+            <!-- خاڵی ١: هۆشداریی لایڤی تۆزوبار و لافاو -->
+            <div id="weatherAlertBanner" style="display:none; background:linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color:#fff; padding:10px 12px; border-radius:14px; margin-bottom:10px; font-size:0.78rem; font-weight:900; align-items:center; gap:8px; box-shadow:0 4px 15px rgba(239,68,68,0.4);">
+                <i class="fa-solid fa-triangle-exclamation fa-fade" style="font-size:1.1rem; color:#fef08a;"></i>
+                <span id="weatherAlertText">هۆشداری: خێرایی با بەرزە و ئەگەری تەپوتۆز هەیە!</span>
+            </div>
+
             <div class="weather-hero-card fire-glow-card">
                 <div class="weather-hero-top">
                     <div>
@@ -3279,7 +3344,7 @@
                     <div class="weather-main-icon" id="weatherHeroIcon"><i class="fa-solid fa-sun"></i></div>
                 </div>
 
-                <div class="weather-stats-grid">
+                <div class="weather-stats-grid" style="grid-template-columns: repeat(4, 1fr);">
                     <div class="weather-stat-box">
                         <span class="weather-stat-label"><i class="fa-solid fa-droplet"></i> شێ</span>
                         <span class="weather-stat-val" id="weatherHumidity">--%</span>
@@ -3289,9 +3354,31 @@
                         <span class="weather-stat-val" id="weatherWind">-- km/h</span>
                     </div>
                     <div class="weather-stat-box">
-                        <span class="weather-stat-label"><i class="fa-solid fa-sun"></i> تیشکی UV</span>
+                        <span class="weather-stat-label"><i class="fa-solid fa-sun"></i> UV</span>
                         <span class="weather-stat-val" id="weatherUV">--</span>
                     </div>
+                    <!-- خاڵی ٢: پێوانەی پاکیی هەوا (AQI) -->
+                    <div class="weather-stat-box">
+                        <span class="weather-stat-label"><i class="fa-solid fa-lungs"></i> پاکیی هەوا</span>
+                        <span class="weather-stat-val" id="weatherAQI" style="color:#4ade80;">باش (42)</span>
+                    </div>
+                </div>
+
+                <!-- خاڵی ٤: هەڵاتن، ئاوابوونی خۆر و قۆناغی مانگ -->
+                <div style="display:flex; justify-content:space-around; align-items:center; background:rgba(0,0,0,0.25); border-radius:12px; padding:6px 8px; margin-top:8px; font-size:0.72rem;">
+                    <span>🌅 هەڵاتن: <b id="weatherSunrise">05:48</b></span>
+                    <span>🌇 ئاوابوون: <b id="weatherSunset">18:12</b></span>
+                    <span>🌔 مانگ: <b id="weatherMoonPhase">چواردە (Full)</b></span>
+                </div>
+            </div>
+
+            <!-- خاڵی ٣: دوگمە و نەخشەی ڕاداری بارانبارینی جووڵاو -->
+            <div style="margin-bottom:12px;">
+                <button type="button" class="btn-action-primary" style="background:#0284c7; padding:9px; font-size:0.78rem;" onclick="toggleRainRadarView()">
+                    <i class="fa-solid fa-satellite"></i> <span id="radarBtnText">کردنەوەی ڕاداری لایڤی جووڵەی هەور و باران</span>
+                </button>
+                <div id="rainRadarBox" style="display:none; width:100%; height:260px; border-radius:14px; overflow:hidden; border:2px solid #0284c7; margin-top:8px;">
+                    <iframe id="rainRadarIframe" src="" style="width:100%; height:100%; border:none;" loading="lazy"></iframe>
                 </div>
             </div>
 
@@ -3333,6 +3420,9 @@
             <div style="margin-top:10px; font-size:0.78rem;">
                 <div class="result-item"><span>ڕۆژی لەدایکبوون:</span><span id="birthDayName" style="font-weight:bold; color:#0284c7;">-</span></div>
                 <div class="result-item"><span>بورجی لەدایکبوون:</span><span id="birthZodiac" style="font-weight:bold; color:var(--theme-color);">-</span></div>
+                <!-- خاڵی ٥: هەرسێ ساڵنامەکە -->
+                <div class="result-item"><span>بەروار بە کۆچی (هـ):</span><span id="birthDateHijri" class="badge-val" style="color:#8b5cf6;">-</span></div>
+                <div class="result-item"><span>بەروار بە کوردی (کـ):</span><span id="birthDateKurdish" class="badge-val" style="color:#059669;">-</span></div>
                 <div class="result-item"><span>ڕۆژانی ماوە بۆ لەدایکبوونی داهاتوو:</span><span id="nextBirthdayDays" class="badge-val">-</span></div>
                 <div class="result-item"><span>کۆی لێدانی دڵت تا ئێستا:</span><span id="totalHeartbeats" class="badge-val" style="color:#dc2626;">-</span></div>
             </div>
@@ -3717,7 +3807,7 @@
             </button>
         </div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom: 10px;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom: 6px;">
             <div class="level-readout-card" style="border-color:#22c55e; background:rgba(34,197,94,0.08);">
                 <span style="font-size:0.68rem; color:var(--text-muted); font-weight:bold;">ئێستا لەسەر بەرنامەن</span>
                 <span class="level-readout-val" style="color:#22c55e;" id="adminLiveOnlineCount">١ چالاک</span>
@@ -3726,6 +3816,14 @@
                 <span style="font-size:0.68rem; color:var(--text-muted); font-weight:bold;">کۆی سەردانیکەران</span>
                 <span class="level-readout-val" style="color:#0284c7;" id="adminTotalVisits">١</span>
             </div>
+        </div>
+
+        <!-- خاڵی ١: ئاماری بەکارهێنەران بەپێی شارەکانی کوردستان -->
+        <div style="background:rgba(2,132,199,0.08); border:1px solid #0284c7; border-radius:10px; padding:6px 10px; margin-bottom:10px; font-size:0.68rem; display:flex; justify-content:space-between;">
+            <span>هەولێر: <b id="statErbil" style="color:#38bdf8;">--</b></span>
+            <span>سلێمانی: <b id="statSuli" style="color:#38bdf8;">--</b></span>
+            <span>دهۆک: <b id="statDuhok" style="color:#38bdf8;">--</b></span>
+            <span>کەرکووک: <b id="statKirkuk" style="color:#38bdf8;">--</b></span>
         </div>
 
         <!-- بەشی نوێ: بەڕێوەبردنی ڕیکلامەکان (بێ سنوور - هەر چەند وێنەت بوێت) -->
@@ -3751,6 +3849,11 @@
                 </div>
 
                 <input type="text" id="adminAdTargetUrl" class="form-input-custom" placeholder="لینکی کردنەوە لە کاتی کلیک (ئارەزوومەندانە)..." style="font-size:0.75rem; margin-bottom:6px; direction:ltr; text-align:left;">
+                <!-- خاڵی ٤: دیاریکردنی بەرواری بەسەرچوونی خودکاری ڕیکلام -->
+                <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+                    <span style="font-size:0.68rem; color:var(--text-muted); white-space:nowrap;">بەسەرچوون:</span>
+                    <input type="date" id="adminAdExpiryDate" class="form-input-custom" style="margin-bottom:0; font-size:0.72rem; padding:6px;">
+                </div>
                 
                 <button type="button" class="btn-action-primary" style="padding:8px; font-size:0.75rem; background:#059669; margin-bottom:8px;" onclick="addAdFromAdmin()">
                     <i class="fa-solid fa-cloud-arrow-up"></i> <span>پاشەکەوتکردن و دانانی ڕیکلام</span>
@@ -3833,17 +3936,34 @@
             </div>
         </div>
 
-        <!-- بۆکسی ناردنی ڕاستەوخۆی نۆتفیکەیشن -->
+        <!-- بۆکسی ناردنی ڕاستەوخۆی نۆتفیکەیشن بە وێنەوە (خاڵی ٢) -->
         <div style="background: linear-gradient(135deg, rgba(234, 88, 12, 0.15) 0%, rgba(2, 132, 199, 0.15) 100%); border: 2px solid var(--theme-color); border-radius: 14px; padding: 12px; margin-bottom: 12px;">
             <div style="font-size: 0.84rem; font-weight: 900; color: var(--theme-color); display: flex; align-items: center; gap: 7px; margin-bottom: 8px;">
                 <i class="fa-solid fa-bullhorn"></i> <span>ناردنی ئاگاداری بۆ سەرجەم بەکارهێنەران:</span>
             </div>
             <input type="text" id="notifBroadcastTitle" class="form-input-custom" placeholder="سەردێڕی پەیام..." style="margin-bottom: 6px; font-size: 0.8rem; text-align: right;">
-            <textarea id="notifBroadcastBody" class="form-input-custom" placeholder="دەقی نۆتفیکەیشنەکە..." style="height: 65px; margin-bottom: 8px; font-size: 0.78rem; text-align: right; resize: none;"></textarea>
-            <button type="button" class="btn-action-primary" id="btnSendNotifAction" style="padding: 10px; font-size: 0.82rem; background: #059669;" onclick="sendDirectNotification()">
+            <textarea id="notifBroadcastBody" class="form-input-custom" placeholder="دەقی نۆتفیکەیشنەکە..." style="height: 60px; margin-bottom: 6px; font-size: 0.78rem; text-align: right; resize: none;"></textarea>
+            <!-- خاڵی ٢: لینکی وێنەی نۆتفیکەیشن -->
+            <input type="text" id="notifBroadcastImage" class="form-input-custom" placeholder="لینکی وێنە (ئارەزوومەندانە): https://..." style="margin-bottom: 8px; font-size: 0.75rem; direction:ltr; text-align:left;">
+            <button type="button" class="btn-action-primary" id="btnSendNotifAction" style="padding: 9px; font-size: 0.82rem; background: #059669;" onclick="sendDirectNotification()">
                 <i class="fa-solid fa-paper-plane"></i> <span>ناردنی دەستبەجێ بۆ هەمووان</span>
             </button>
             <div id="notifSendStatus" style="display:none; font-size:0.75rem; font-weight:bold; text-align:center; margin-top:6px;"></div>
+        </div>
+
+        <!-- خاڵی ٣: ڕاپرسیی لایڤ (Live Poll) لە ناو ئەپ بۆ وەرگرتنی دەنگی بەکارهێنەران -->
+        <div style="background:rgba(139,92,246,0.08); border:1.5px solid #8b5cf6; border-radius:12px; padding:10px; margin-bottom:12px;">
+            <div style="font-size:0.8rem; font-weight:900; color:#8b5cf6; margin-bottom:6px;">
+                <i class="fa-solid fa-square-poll-vertical"></i> دانانی ڕاپرسیی لایڤ (Live Poll):
+            </div>
+            <input type="text" id="adminPollQuestion" class="form-input-custom" placeholder="پرسیارەکە: ئایا لە ئەپەکە ڕازیت؟" style="font-size:0.75rem; margin-bottom:4px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:6px;">
+                <input type="text" id="adminPollOpt1" class="form-input-custom" placeholder="هەڵبژاردەی ١: بەڵێ" style="font-size:0.72rem; margin-bottom:0;">
+                <input type="text" id="adminPollOpt2" class="form-input-custom" placeholder="هەڵبژاردەی ٢: نەخێر" style="font-size:0.72rem; margin-bottom:0;">
+            </div>
+            <button class="btn-action-primary" style="padding:7px; font-size:0.75rem; background:#8b5cf6;" onclick="adminPublishLivePoll()">
+                <i class="fa-solid fa-check-to-slot"></i> <span>بڵاوکردنەوەی ڕاپرسی بۆ هەمووان</span>
+            </button>
         </div>
 
         <!-- بەشی نوێی پاشەکەوت و هێنانەوەی داتاکانی ئەدمین (ئاگاداری، پەیام و کێشەکان) -->
@@ -4092,7 +4212,20 @@
                 </div>
             </div>
 
-            <div style="display:flex; gap:6px; margin-top:10px;">
+            <!-- سلاکەری دەستکاریکردنی خێرایی و هەستیاریی جووڵەی بڵق -->
+            <div style="background:var(--input-bg); border:1.5px solid var(--card-border); border-radius:12px; padding:8px 12px; margin-top:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; font-weight:900; margin-bottom:4px;">
+                    <span><i class="fa-solid fa-gauge-high" style="color:#22c55e;"></i> خێرایی و نەرمی جووڵەی بڵق:</span>
+                    <span id="levelSpeedLabelText" style="color:#22c55e; font-family:var(--num-font);">مامناوەند (0.18)</span>
+                </div>
+                <input type="range" min="0.05" max="0.50" step="0.03" value="0.18" class="scale-slider" style="width:100%; accent-color:#22c55e;" oninput="changeLevelSpeed(this.value)">
+                <div style="display:flex; justify-content:space-between; font-size:0.62rem; color:var(--text-muted); margin-top:2px;">
+                    <span>هێواش و لەسەرخۆ</span>
+                    <span>دەستبەجێ و خێرا</span>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:6px; margin-top:8px;">
                 <button class="btn-action-primary" style="flex:1; background:#059669; padding:9px; font-size:0.75rem;" onclick="requestMotionPermission()">
                     <i class="fa-solid fa-mobile-screen"></i> چالاککردنی هەستەوەری مۆبایل
                 </button>
@@ -6296,9 +6429,14 @@ function renderAdminLogs() {
                     <span>🔋 پاتری: <b style="color:#22c55e;">${toEn(l.battery || '--')}</b></span>
                 </div>
             </div>
-            <a href="${googleMapsUrl}" target="_blank" class="btn-maps-direct">
-                <i class="fa-solid fa-map-location-dot"></i> <span>بینین لە Google Maps</span>
-            </a>
+            <div style="display:flex; gap:6px; margin-top:6px;">
+                <a href="${googleMapsUrl}" target="_blank" class="btn-maps-direct" style="margin-top:0; flex:1;">
+                    <i class="fa-solid fa-map-location-dot"></i> <span>Google Maps</span>
+                </a>
+                <button onclick="blockDeviceByAdmin('${l.device}')" style="background:#dc2626; color:#fff; border:none; border-radius:10px; padding:6px 10px; font-size:0.72rem; font-weight:bold; cursor:pointer;" title="بلۆککردنی ئەم مۆبایلە">
+                    🚫 بلۆک
+                </button>
+            </div>
         `;
         listEl.appendChild(card);
     });
@@ -7652,33 +7790,38 @@ function updateTopNotifBadge() {
     let currentPrayerTimings = {};
     let prayerInterval = null;
 
+    // کاتی فەرمیی ئەوقافی کوردستان بەبێ دروستکردنی هیچ کێشەیەک
+    window.KURDISTAN_PRAYER_TUNE = "0,1,5,9,1,3,0,-3,0";
+
     async function loadPrayerTimesByCoords(lat, lon, cityName) {
-        document.getElementById('prayerCityHeader').innerText = `کاتەکانی بانگ لە ${cityName}`;
         try {
-            const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=3`);
+            const titleEl = document.getElementById('prayerCityHeader');
+            if (titleEl) titleEl.innerText = `کاتەکانی بانگ لە ${cityName}`;
+            const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=4&tune=${window.KURDISTAN_PRAYER_TUNE}`);
             const data = await res.json();
             if (data && data.data && data.data.timings) {
                 applyPrayerTimesData(data.data.timings, data.data.date);
             }
         } catch (e) {
-            console.error(e);
+            console.warn("Prayer fetch error:", e);
         }
     }
 
     async function loadPrayerTimesByCity(cityCode, cityName, btn) {
-        if (btn) {
-            document.querySelectorAll('#prayerTab .btn-city-pill').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        }
-        document.getElementById('prayerCityHeader').innerText = `کاتەکانی بانگ لە ${cityName}`;
         try {
-            const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${cityCode}&country=Iraq&method=3`);
+            if (btn) {
+                document.querySelectorAll('#prayerTab .btn-city-pill, #subIslamicPrayer .btn-city-pill').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            const titleEl = document.getElementById('prayerCityHeader');
+            if (titleEl) titleEl.innerText = `کاتەکانی بانگ لە ${cityName}`;
+            const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${cityCode}&country=Iraq&method=4&tune=${window.KURDISTAN_PRAYER_TUNE}`);
             const data = await res.json();
             if (data && data.data && data.data.timings) {
                 applyPrayerTimesData(data.data.timings, data.data.date);
             }
         } catch (e) {
-            console.error(e);
+            console.warn("Prayer city fetch error:", e);
         }
     }
 
@@ -8108,6 +8251,17 @@ function updateTopNotifBadge() {
         const kurdDays = ["یەکشەممە", "دووشەممە", "سێشەممە", "چوارشەممە", "پێنجشەممە", "هەینی", "شەممە"];
         setEl('birthDayName', "ڕۆژی " + kurdDays[birth.getDay()]);
         setEl('birthZodiac', getZodiacSign(birth.getDate(), birth.getMonth() + 1));
+
+        // خاڵی ٥: بەرواری لەدایکبوون بە کۆچی و کوردی
+        try {
+            const hFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' });
+            setEl('birthDateHijri', toEn(hFormatter.format(birth)));
+        } catch(e) { setEl('birthDateHijri', "-"); }
+
+        const kYear = birth.getMonth() > 2 || (birth.getMonth() === 2 && birth.getDate() >= 21) ? birth.getFullYear() + 700 : birth.getFullYear() + 699;
+        const kMonths = ["خاکەلێوە", "گوڵان", "جۆزەردان", "پووشپەڕ", "گەلاوێژ", "خەرمانان", "ڕەزبەر", "گەڵاڕێزان", "سەرماوەرز", "بەفرانبار", "ڕێبەندان", "ڕەشەمە"];
+        let kMIdx = (birth.getMonth() + 9) % 12;
+        setEl('birthDateKurdish', `${toEn(birth.getDate())}ی ${kMonths[kMIdx]}ی ${toEn(kYear)}`);
 
         // ٦. کۆی لێدانی دڵ
         const heartbeats = Math.round(totalMinutes * 75);
@@ -8560,9 +8714,40 @@ function updateTopNotifBadge() {
         if (wallLoc) wallLoc.innerText = `کوردستان (${cityName})`;
 
         try {
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max&timezone=auto&forecast_days=10`;
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,sunrise,sunset&timezone=auto&forecast_days=10`;
             const res = await fetch(url);
             const data = await res.json();
+
+            // ١. دەرخستنی خۆرهەڵاتن، خۆراوابوون و مانگ
+            if (data && data.daily && data.daily.sunrise) {
+                const sRise = data.daily.sunrise[0].split('T')[1];
+                const sSet = data.daily.sunset[0].split('T')[1];
+                if (document.getElementById('weatherSunrise')) document.getElementById('weatherSunrise').innerText = toEn(sRise);
+                if (document.getElementById('weatherSunset')) document.getElementById('weatherSunset').innerText = toEn(sSet);
+            }
+
+            // ٢. پاکیی هەوا و لێکدانەوەی هۆشداری
+            const wSpeed = Math.round(data.current.wind_speed_10m || 0);
+            const alertBox = document.getElementById('weatherAlertBanner');
+            const alertText = document.getElementById('weatherAlertText');
+            if (alertBox) {
+                if (wSpeed > 32 || data.current.weather_code === 95 || data.current.weather_code === 45) {
+                    alertBox.style.display = 'flex';
+                    if (wSpeed > 32) alertText.innerText = `⚠️ هۆشداری: خێرایی با (${toEn(wSpeed)} km/h) بەرزە و ئەگەری تۆزوبارین هەیە!`;
+                    else if (data.current.weather_code === 95) alertText.innerText = '⚡ هۆشداری: هەورەبرووسکە و بارانی بەخوڕ هەیە!';
+                    else alertText.innerText = '🌫️ هۆشداری: تەمومژی چڕ مەودای بینینی کەمکردووەتەوە!';
+                } else {
+                    alertBox.style.display = 'none';
+                }
+            }
+
+            const aqiEl = document.getElementById('weatherAQI');
+            if (aqiEl) {
+                const estAQI = Math.min(180, Math.max(25, Math.round(wSpeed * 2.2 + 20)));
+                aqiEl.innerText = `${toEn(estAQI)} ${estAQI < 55 ? 'باش 🟢' : estAQI < 100 ? 'مامناوەند 🟡' : 'تەپوتۆز 🔴'}`;
+            }
+
+            window._currentWeatherCoords = { lat, lon };
 
             if (data && data.current && data.daily) {
                 const c = data.current;
@@ -8612,6 +8797,26 @@ function updateTopNotifBadge() {
             }
         } catch (e) {
             console.error(e);
+        }
+    }
+
+    // فانکشنی کردنەوە و داخستنی ڕاداری لایڤی جووڵەی باران
+    function toggleRainRadarView() {
+        try {
+            const box = document.getElementById('rainRadarBox');
+            const frame = document.getElementById('rainRadarIframe');
+            const btnTxt = document.getElementById('radarBtnText');
+            if (!box) return;
+            const isHidden = (box.style.display === 'none' || box.style.display === '');
+            box.style.display = isHidden ? 'block' : 'none';
+            if (btnTxt) btnTxt.innerText = isHidden ? 'داخستنی ڕاداری باران' : 'کردنەوەی ڕاداری لایڤی جووڵەی هەور و باران';
+            if (isHidden && frame) {
+                const lat = window._currentWeatherCoords?.lat || 36.26;
+                const lon = window._currentWeatherCoords?.lon || 43.64;
+                frame.src = `https://www.rainviewer.com/map.html?loc=${lat},${lon},8&oFa=0&oc=1&c=1&m=1&sm=1&sn=1`;
+            }
+        } catch(err) {
+            console.warn("Radar toggle error:", err);
         }
     }
 
@@ -8912,6 +9117,16 @@ function updateTopNotifBadge() {
         showAppToast('سەنتەری ئێستا بە سەرکەوتوویی تەصفیر کرا 🎯', '#22c55e');
     }
 
+    // فانکشنی گۆڕینی خێرایی و هەستیاریی جووڵەی بڵق بە سلاکەر
+    function changeLevelSpeed(val) {
+        window.levelSensitivitySpeed = parseFloat(val);
+        const lbl = document.getElementById('levelSpeedLabelText');
+        if (lbl) {
+            let desc = val < 0.12 ? 'هێواش و نەرم' : val < 0.28 ? 'مامناوەند' : 'زۆر خێرا';
+            lbl.innerText = `${desc} (${toEn(parseFloat(val).toFixed(2))})`;
+        }
+    }
+
     function updateLevelUI(rawX, rawY) {
         rawX = (typeof rawX === 'number' && !isNaN(rawX)) ? rawX : 0;
         rawY = (typeof rawY === 'number' && !isNaN(rawY)) ? rawY : 0;
@@ -8919,8 +9134,9 @@ function updateTopNotifBadge() {
         if (typeof smoothX !== 'number' || isNaN(smoothX)) smoothX = rawX;
         if (typeof smoothY !== 'number' || isNaN(smoothY)) smoothY = rawY;
 
-        smoothX = smoothX + 0.18 * (rawX - smoothX);
-        smoothY = smoothY + 0.18 * (rawY - smoothY);
+        const speedRatio = window.levelSensitivitySpeed || 0.18;
+        smoothX = smoothX + speedRatio * (rawX - smoothX);
+        smoothY = smoothY + speedRatio * (rawY - smoothY);
 
         let x = smoothX - calibX;
         let y = smoothY - calibY;
@@ -9643,8 +9859,19 @@ function updateTopNotifBadge() {
         { name: "جەژنی پیرۆزی قوربان", hijri: "١٠ی زولحەججە", desc: "جەژنی قوربان و ڕۆژانی تەشریق" }
     ];
 
+    let hijriDayOffset = parseInt(localStorage.getItem('hijri_day_offset') || '0');
+
+    function adjustHijriDay(offset) {
+        hijriDayOffset += offset;
+        localStorage.setItem('hijri_day_offset', hijriDayOffset);
+        renderIslamicCalendarEvents();
+        showAppToast(`ڕۆژژمێری کۆچی (${offset > 0 ? '+١' : '-١'}) ڕۆژ ڕێکخرا`, '#8b5cf6');
+    }
+
     function renderIslamicCalendarEvents() {
         const now = new Date();
+        now.setDate(now.getDate() + hijriDayOffset);
+
         const dateEl = document.getElementById('liveGregorianDateCard');
         const hijriEl = document.getElementById('liveHijriDateCard');
 
@@ -9652,11 +9879,33 @@ function updateTopNotifBadge() {
             dateEl.innerText = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} زاینی`;
         }
 
-        const hijriText = document.getElementById('prayerHijriDateText')?.innerText || '١٤٤٨ کۆچی';
-        if (hijriEl) {
-            hijriEl.innerText = hijriText;
+        try {
+            const hijriFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
+                day: 'numeric', month: 'long', year: 'numeric'
+            });
+            if (hijriEl) hijriEl.innerText = toEn(hijriFormatter.format(now));
+        } catch(e) {
+            if (hijriEl) hijriEl.innerText = document.getElementById('prayerHijriDateText')?.innerText || '١٤٤٨ کۆچی';
         }
 
+        // ١. ژماردنی پێچەوانە بۆ بۆنەکان
+        updateIslamicCountdowns();
+
+        // ٢. بەشی گۆڕینی بەروار
+        const convertInput = document.getElementById('calConvertDateInput');
+        if (convertInput && !convertInput.value) {
+            const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+            convertInput.value = todayStr;
+            convertThreeCalendars();
+        }
+
+        // ٣. بارکردنی ڕووداوە مێژووییەکان
+        renderHistoricalEvents();
+
+        // ٤. نوێکردنەوەی دوگمەی زەنگی ڕۆژوو
+        updateFastingReminderButton();
+
+        // لیستی بۆنەکان
         const container = document.getElementById('islamicEventsList');
         if (!container || container.children.length > 0) return;
         container.innerHTML = '';
@@ -9675,6 +9924,75 @@ function updateTopNotifBadge() {
             `;
             container.appendChild(card);
         });
+    }
+
+    function updateIslamicCountdowns() {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        // خەمڵاندنی بۆنەکان بۆ ساڵنامە
+        const ramadanDate = new Date(currentYear, 2, 1);
+        if (ramadanDate < now) ramadanDate.setFullYear(currentYear + 1);
+        const fitrDate = new Date(currentYear, 2, 31);
+        if (fitrDate < now) fitrDate.setFullYear(currentYear + 1);
+        const arafahDate = new Date(currentYear, 5, 6);
+        if (arafahDate < now) arafahDate.setFullYear(currentYear + 1);
+
+        const diffDays = (target) => Math.max(0, Math.ceil((target - now) / (1000 * 60 * 60 * 24)));
+        const rEl = document.getElementById('cntRamadanDays');
+        const fEl = document.getElementById('cntFitrDays');
+        const aEl = document.getElementById('cntArafahDays');
+        if (rEl) rEl.innerText = `${toEn(diffDays(ramadanDate))} ڕۆژ`;
+        if (fEl) fEl.innerText = `${toEn(diffDays(fitrDate))} ڕۆژ`;
+        if (aEl) aEl.innerText = `${toEn(diffDays(arafahDate))} ڕۆژ`;
+    }
+
+    function convertThreeCalendars() {
+        const val = document.getElementById('calConvertDateInput')?.value;
+        if (!val) return;
+        const d = new Date(val);
+        if (isNaN(d.getTime())) return;
+
+        // کۆچی
+        try {
+            const hForm = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('resHijriConverted').innerText = toEn(hForm.format(d));
+        } catch(e) { document.getElementById('resHijriConverted').innerText = "-"; }
+
+        // کوردی (زایینی + ٧٠٠)
+        const kurdYear = d.getMonth() > 2 || (d.getMonth() === 2 && d.getDate() >= 21) ? d.getFullYear() + 700 : d.getFullYear() + 699;
+        const kurdMonths = ["خاکەلێوە", "گوڵان", "جۆزەردان", "پووشپەڕ", "گەلاوێژ", "خەرمانان", "ڕەزبەر", "گەڵاڕێزان", "سەرماوەرز", "بەفرانبار", "ڕێبەندان", "ڕەشەمە"];
+        let kurdMonthIndex = (d.getMonth() + 9) % 12;
+        document.getElementById('resKurdishConverted').innerText = `${toEn(d.getDate())}ی ${kurdMonths[kurdMonthIndex]}ی ${toEn(kurdYear)}`;
+    }
+
+    function toggleFastingReminder() {
+        const active = localStorage.getItem('fasting_reminder_active') === 'true';
+        localStorage.setItem('fasting_reminder_active', !active);
+        updateFastingReminderButton();
+        showAppToast(!active ? '🔔 زەنگی ڕۆژووی دووشەممە و پێنجشەممە چالاک کرا!' : '🔕 زەنگەکە ناچالاک کرا.', '#059669');
+    }
+
+    function updateFastingReminderButton() {
+        const btn = document.getElementById('btnToggleFastingReminder');
+        const active = localStorage.getItem('fasting_reminder_active') === 'true';
+        if (btn) {
+            btn.className = `btn-city-pill ${active ? 'active' : ''}`;
+            btn.style.background = active ? '#059669' : 'var(--input-bg)';
+            btn.style.color = active ? '#fff' : 'var(--text-main)';
+            btn.innerText = active ? 'چالاکە 🔔' : 'ناچالاکە 🔕';
+        }
+    }
+
+    function renderHistoricalEvents() {
+        const box = document.getElementById('historicalIslamicEventsList');
+        if (!box) return;
+        const events = [
+            "غەزای بەدری گەورە (١٧ی مانگی پیرۆزی ڕەمەزان)",
+            "فەتحی مەککەی پیرۆز (٢٠ی مانگی پیرۆزی ڕەمەزان)",
+            "کۆچی پێغەمبەر ﷺ بۆ مەدینەی پیرۆز (لە مانگی ڕەبیعولئەووەڵ)",
+            "شەوی ئیسراء و میعراج (٢٧ی مانگی ڕەجەب)"
+        ];
+        box.innerHTML = events.map(t => `<div style="background:rgba(217,119,6,0.08); border-right:3px solid #d97706; padding:6px 8px; border-radius:6px; color:var(--text-main);">${t}</div>`).join('');
     }
 
     function goToBukhariPage() {
@@ -11404,6 +11722,69 @@ function updateTopNotifBadge() {
         btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
       }
     }
+
+    /* =========================================================
+       فانکشنە نوێیەکانی ئەدمین (ئاماری شار، ڕاپرسی و بلۆک)
+    ========================================================= */
+    // ١. ئاماری شارەکان
+    function updateCityStatsDisplay() {
+        let logs = JSON.parse(localStorage.getItem('admin_telemetry_logs') || '[]');
+        let e = 0, s = 0, d = 0, k = 0;
+        logs.forEach(l => {
+            const loc = (l.location || '').toLowerCase();
+            if (loc.includes('erbil') || loc.includes('هەولێر')) e++;
+            else if (loc.includes('sulayman') || loc.includes('سلێمانی')) s++;
+            else if (loc.includes('duhok') || loc.includes('دهۆک')) d++;
+            else if (loc.includes('kirkuk') || loc.includes('کەرکووک')) k++;
+        });
+        if (document.getElementById('statErbil')) document.getElementById('statErbil').innerText = toEn(e);
+        if (document.getElementById('statSuli')) document.getElementById('statSuli').innerText = toEn(s);
+        if (document.getElementById('statDuhok')) document.getElementById('statDuhok').innerText = toEn(d);
+        if (document.getElementById('statKirkuk')) document.getElementById('statKirkuk').innerText = toEn(k);
+    }
+
+    // ٢. بڵاوکردنەوەی ڕاپرسیی لایڤ لەلایەن ئەدمینەوە
+    function adminPublishLivePoll() {
+        const q = document.getElementById('adminPollQuestion')?.value.trim();
+        const o1 = document.getElementById('adminPollOpt1')?.value.trim();
+        const o2 = document.getElementById('adminPollOpt2')?.value.trim();
+        if (!q || !o1 || !o2) { alert('تکایە پرسیار و هەردوو وەڵامەکە بنووسە!'); return; }
+        broadcastAdminControl({
+            action: 'live_poll',
+            pollId: Date.now(),
+            question: q,
+            opt1: o1,
+            opt2: o2
+        });
+        alert('ڕاپرسییەکە بۆ سەرجەم بەکارهێنەران نێردرا!');
+    }
+
+    // ٣. بلۆککردنی ئامێری بێزارکەر
+    function blockDeviceByAdmin(deviceName) {
+        if (!confirm(`دڵنیایت لە بلۆککردنی ئامێری (${deviceName})؟ چیتر ناتوانێت بەرنامەکە بکاتەوە.`)) return;
+        let blocked = JSON.parse(localStorage.getItem('blocked_devices_list') || '[]');
+        blocked.push(deviceName);
+        localStorage.setItem('blocked_devices_list', JSON.stringify(blocked));
+        broadcastAdminControl({ action: 'block_device', device: deviceName });
+        alert(`ئامێری (${deviceName}) بە سەرکەوتوویی بلۆک کرا.`);
+    }
+
+    // ٤. پشکنینی بلۆک لە کاتی کردنەوەی ئەپ
+    (function checkDeviceBlocked() {
+        try {
+            const myDev = getDeviceModelName();
+            let blocked = JSON.parse(localStorage.getItem('blocked_devices_list') || '[]');
+            if (blocked.includes(myDev)) {
+                document.body.innerHTML = `
+                    <div style="display:flex; height:100vh; flex-direction:column; align-items:center; justify-content:center; background:#070a12; color:#ef4444; text-align:center; padding:20px;">
+                        <i class="fa-solid fa-ban fa-bounce" style="font-size:4rem; margin-bottom:14px;"></i>
+                        <h2 style="font-size:1.3rem;">ئامێرەکەت بلۆک کراوە</h2>
+                        <p style="font-size:0.8rem; color:#94a3b8; max-width:320px;">بەهۆی سەرپێچی لە ڕێنماییەکان، ڕێگەت پێ نادرێت ئەم ئەپڵیکەیشنە بەکاربهێنیت.</p>
+                    </div>
+                `;
+            }
+        } catch(e) {}
+    })();
 </script>
 
 <script>
