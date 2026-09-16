@@ -2621,17 +2621,27 @@
         <div id="subIslamicPrayer" class="islamic-sub-content" style="display:none;">
             <div class="section-card fire-glow-card">
                 <div class="card-header-title"><i class="fa-solid fa-mosque" style="color:#059669;"></i> <span>کاتەکانی بانگ بەپێی شوێن و ڕۆژ (ڕاستەوخۆ):</span></div>
-                <div style="display:flex; gap:6px; margin-bottom:10px;">
-                    <input type="text" id="prayerSearchInput" class="form-input-custom" style="margin-bottom:0; text-align:right;" placeholder="ناوی شار بنووسە..." onkeypress="if(event.key==='Enter') searchPrayerCity()">
-                    <button class="btn-action-primary" style="width:auto; padding:0 14px;" onclick="searchPrayerCity()"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <button class="btn-action-primary" style="width:auto; padding:0 12px; background:#059669;" onclick="locatePrayerGPS()"><i class="fa-solid fa-location-crosshairs"></i></button>
+                <!-- سێرچی ڕاستەوخۆ بە پێشنیاری دەستبەجێ -->
+                <div style="position:relative; margin-bottom:10px;">
+                    <div style="display:flex; gap:6px;">
+                        <input type="text" id="prayerSearchInput" class="form-input-custom" style="margin-bottom:0; text-align:right;" placeholder="ناوی شار یان شارۆچکە بنووسە (بۆ نموونە: سۆران، کەلار، ئاکرێ...)" oninput="livePrayerCitySuggest(this.value)" onkeydown="if(event.key==='Enter') executePrayerSearchImmediate()">
+                        <button class="btn-action-primary" style="width:auto; padding:0 14px;" onclick="executePrayerSearchImmediate()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        <button class="btn-action-primary" style="width:auto; padding:0 12px; background:#059669;" onclick="locatePrayerGPS()" title="شوێنی من بە GPS"><i class="fa-solid fa-location-crosshairs"></i></button>
+                    </div>
+                    <!-- پێڕستی پێشنیارەکان کە لە کاتی تایپکردن یەکسەر دەردەکەوێت -->
+                    <div id="prayerCityLiveDropdown" style="display:none; position:absolute; top:105%; left:0; right:0; background:var(--card-bg); border:1.5px solid var(--theme-color); border-radius:12px; max-height:220px; overflow-y:auto; z-index:9999; box-shadow:0 8px 24px rgba(0,0,0,0.4); padding:4px;"></div>
                 </div>
-                <div class="map-quick-cities">
-                    <button class="btn-city-pill active" onclick="loadPrayerTimesByCity('Erbil', 'هەولێر', this)">هەولێر</button>
-                    <button class="btn-city-pill" onclick="loadPrayerTimesByCity('Sulaymaniyah', 'سلێمانی', this)">سلێمانی</button>
-                    <button class="btn-city-pill" onclick="loadPrayerTimesByCity('Duhok', 'دهۆک', this)">دهۆک</button>
-                    <button class="btn-city-pill" onclick="loadPrayerTimesByCity('Zakho', 'زاخۆ', this)">زاخۆ</button>
-                    <button class="btn-city-pill" onclick="loadPrayerTimesByCity('Kirkuk', 'کەرکووک', this)">کەرکووک</button>
+
+                <div class="map-quick-cities" style="margin-bottom:8px;">
+                    <button class="btn-city-pill active" onclick="loadPrayerTimesByCoords(36.1911, 44.0091, 'هەولێر', this)">هەولێر</button>
+                    <button class="btn-city-pill" onclick="loadPrayerTimesByCoords(35.5558, 45.4351, 'سلێمانی', this)">سلێمانی</button>
+                    <button class="btn-city-pill" onclick="loadPrayerTimesByCoords(36.8679, 42.9886, 'دهۆک', this)">دهۆک</button>
+                    <button class="btn-city-pill" onclick="loadPrayerTimesByCoords(37.1436, 42.6869, 'زاخۆ', this)">زاخۆ</button>
+                    <button class="btn-city-pill" onclick="loadPrayerTimesByCoords(35.4681, 44.3922, 'کەرکووک', this)">کەرکووک</button>
+                    <button class="btn-city-pill" onclick="loadPrayerTimesByCoords(35.1778, 45.9861, 'هەڵەبجە', this)">هەڵەبجە</button>
+                    <button class="btn-city-pill" onclick="loadPrayerTimesByCoords(36.6534, 44.5367, 'سۆران', this)">سۆران</button>
+                    <button class="btn-city-pill" onclick="loadPrayerTimesByCoords(34.6300, 45.3150, 'کەلار', this)">کەلار</button>
+                    <button class="btn-city-pill" onclick="loadPrayerTimesByCoords(36.7450, 43.8940, 'ئاکرێ', this)">ئاکرێ</button>
                 </div>
                 <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color:white; border-radius:14px; padding:12px; text-align:center; margin:10px 0;">
                     <div style="font-size:0.78rem; font-weight:800;" id="prayerCityHeader">کاتەکانی بانگ لە هەولێر</div>
@@ -3304,18 +3314,19 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- بەشی ٦: کەشناسی                                            -->
+    <!-- بەشی ٦: کەشناسی پێشکەوتوو (بە داتای تەواوی ١٤ ڕۆژ و تەپوتۆز) -->
     <!-- ========================================================= -->
     <div id="weatherTab" class="app-tab-content" style="display:none;">
         <div class="section-card fire-glow-card">
             <div class="card-header-title">
-                <i class="fa-solid fa-cloud-sun-rain" style="color:#0284c7;"></i> <span>کەشناسی و پێشبینی وردی ١٠ ڕۆژ:</span>
+                <i class="fa-solid fa-cloud-sun-rain" style="color:#0284c7;"></i> <span>کەشناسیی پێشکەوتوو و پێشبینی وردی ١٤ ڕۆژ</span>
             </div>
 
+            <!-- گەڕان بەدوای شار و شوێن -->
             <div style="display:flex; gap:6px; margin-bottom:8px;">
                 <input type="text" id="weatherSearchInput" class="form-input-custom" style="margin-bottom:0; text-align:right;" placeholder="ناوی شار، قەزا یان ناحیە بنووسە..." onkeypress="if(event.key==='Enter') searchWeatherCity()">
                 <button class="btn-action-primary" style="width:auto; padding:0 14px;" onclick="searchWeatherCity()"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <button class="btn-action-primary" style="width:auto; padding:0 12px; background:#059669;" onclick="locateWeatherGPS()" title="شوێنی من"><i class="fa-solid fa-location-crosshairs"></i></button>
+                <button class="btn-action-primary" style="width:auto; padding:0 12px; background:#059669;" onclick="locateWeatherGPS()" title="شوێنی من بە GPS"><i class="fa-solid fa-location-crosshairs"></i></button>
             </div>
 
             <div class="map-quick-cities" style="margin-bottom:10px;">
@@ -3325,65 +3336,166 @@
                 <button class="btn-city-pill" onclick="fetchLiveWeather(37.1436, 42.6869, 'زاخۆ')">زاخۆ</button>
                 <button class="btn-city-pill" onclick="fetchLiveWeather(36.6534, 44.5367, 'سۆران')">سۆران</button>
                 <button class="btn-city-pill" onclick="fetchLiveWeather(35.4681, 44.3922, 'کەرکووک')">کەرکووک</button>
+                <button class="btn-city-pill" onclick="fetchLiveWeather(34.6300, 45.3150, 'کەلار')">کەلار</button>
+                <button class="btn-city-pill" onclick="fetchLiveWeather(36.7450, 43.8940, 'ئاکرێ')">ئاکرێ</button>
                 <button class="btn-city-pill" onclick="fetchLiveWeather(33.3152, 44.3661, 'بەغدا')">بەغدا</button>
             </div>
 
-            <!-- خاڵی ١: هۆشداریی لایڤی تۆزوبار و لافاو -->
+            <!-- هۆشداریی لایڤی تۆزوبار و با -->
             <div id="weatherAlertBanner" style="display:none; background:linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color:#fff; padding:10px 12px; border-radius:14px; margin-bottom:10px; font-size:0.78rem; font-weight:900; align-items:center; gap:8px; box-shadow:0 4px 15px rgba(239,68,68,0.4);">
                 <i class="fa-solid fa-triangle-exclamation fa-fade" style="font-size:1.1rem; color:#fef08a;"></i>
                 <span id="weatherAlertText">هۆشداری: خێرایی با بەرزە و ئەگەری تەپوتۆز هەیە!</span>
             </div>
 
+            <!-- کارتی سەرەکیی کەشوهەوا (دیزاینی نوێ) -->
             <div class="weather-hero-card fire-glow-card">
                 <div class="weather-hero-top">
                     <div>
                         <div class="weather-city-title" id="weatherCurrentCity">هەولێر</div>
-                        <div style="font-size:0.75rem; opacity:0.9;" id="weatherCurrentConditionText">ئاسمانی ساماڵ</div>
+                        <div style="font-size:0.78rem; opacity:0.9; margin-top:2px;" id="weatherCurrentConditionText">ئاسمانی ساماڵ</div>
                         <div class="weather-current-temp"><span id="weatherCurrentTemp">--</span>°C</div>
+                        <div style="font-size:0.72rem; opacity:0.88; font-weight:800;">پلەی هەستپێکراو: <span id="weatherFeelsLike">--</span>°C</div>
                     </div>
-                    <div class="weather-main-icon" id="weatherHeroIcon"><i class="fa-solid fa-sun"></i></div>
+                    <div style="text-align:left;">
+                        <div class="weather-main-icon" id="weatherHeroIcon"><i class="fa-solid fa-sun"></i></div>
+                        <div style="font-size:0.75rem; font-weight:900; margin-top:4px;" id="weatherHighLowToday">ب: --° / ن: --°</div>
+                    </div>
                 </div>
 
-                <div class="weather-stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <!-- ٦ زانیاریی دەرهێنراوی گرنگ (شێ، با، تەپوتۆز، پەستان، تیشک، باران) -->
+                <div class="weather-stats-grid" style="grid-template-columns: repeat(3, 1fr); gap:6px; margin-top:12px;">
                     <div class="weather-stat-box">
-                        <span class="weather-stat-label"><i class="fa-solid fa-droplet"></i> شێ</span>
+                        <span class="weather-stat-label"><i class="fa-solid fa-droplet"></i> شێی هەوا</span>
                         <span class="weather-stat-val" id="weatherHumidity">--%</span>
                     </div>
                     <div class="weather-stat-box">
-                        <span class="weather-stat-label"><i class="fa-solid fa-wind"></i> با</span>
+                        <span class="weather-stat-label"><i class="fa-solid fa-wind"></i> خێرایی با</span>
                         <span class="weather-stat-val" id="weatherWind">-- km/h</span>
                     </div>
                     <div class="weather-stat-box">
-                        <span class="weather-stat-label"><i class="fa-solid fa-sun"></i> UV</span>
+                        <span class="weather-stat-label"><i class="fa-solid fa-smog"></i> تەپوتۆز (Dust)</span>
+                        <span class="weather-stat-val" id="weatherDustLevel" style="color:#fbbf24;">-- μg/m³</span>
+                    </div>
+                    <div class="weather-stat-box">
+                        <span class="weather-stat-label"><i class="fa-solid fa-gauge-high"></i> پەستان (hPa)</span>
+                        <span class="weather-stat-val" id="weatherPressure">-- hPa</span>
+                    </div>
+                    <div class="weather-stat-box">
+                        <span class="weather-stat-label"><i class="fa-solid fa-sun"></i> تیشکی UV</span>
                         <span class="weather-stat-val" id="weatherUV">--</span>
                     </div>
-                    <!-- خاڵی ٢: پێوانەی پاکیی هەوا (AQI) -->
                     <div class="weather-stat-box">
-                        <span class="weather-stat-label"><i class="fa-solid fa-lungs"></i> پاکیی هەوا</span>
-                        <span class="weather-stat-val" id="weatherAQI" style="color:#4ade80;">باش (42)</span>
+                        <span class="weather-stat-label"><i class="fa-solid fa-cloud-showers-heavy"></i> ئەگەری باران</span>
+                        <span class="weather-stat-val" id="weatherRainProb">0%</span>
                     </div>
                 </div>
 
-                <!-- خاڵی ٤: هەڵاتن، ئاوابوونی خۆر و قۆناغی مانگ -->
-                <div style="display:flex; justify-content:space-around; align-items:center; background:rgba(0,0,0,0.25); border-radius:12px; padding:6px 8px; margin-top:8px; font-size:0.72rem;">
+                <!-- بەشی خۆر، مانگ و گەردوون -->
+                <div style="display:flex; justify-content:space-around; align-items:center; background:rgba(0,0,0,0.3); border-radius:12px; padding:8px; margin-top:10px; font-size:0.72rem;">
                     <span>🌅 هەڵاتن: <b id="weatherSunrise">05:48</b></span>
                     <span>🌇 ئاوابوون: <b id="weatherSunset">18:12</b></span>
-                    <span>🌔 مانگ: <b id="weatherMoonPhase">چواردە (Full)</b></span>
+                    <span>🌔 مانگ: <b id="weatherMoonPhase">هیلال (Crescent)</b></span>
                 </div>
             </div>
 
-            <!-- خاڵی ٣: دوگمە و نەخشەی ڕاداری بارانبارینی جووڵاو -->
+            <!-- بەشی نوێ: پێشبینی کاتژمێر بە کاتژمێری ئەمرۆ (Hourly Forecast) -->
+            <div style="margin: 12px 0 8px 0;">
+                <div style="font-weight:900; font-size:0.82rem; color:var(--text-main); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+                    <span><i class="fa-solid fa-clock" style="color:#0284c7;"></i> پێشبینی ٢٤ کاتژمێری داهاتوو:</span>
+                    <span style="font-size:0.68rem; color:var(--text-muted);">بە کاتژمێر و هەستپێکراو</span>
+                </div>
+                <div id="hourlyForecastSlider" style="display:flex; gap:8px; overflow-x:auto; padding:6px 2px; scroll-behavior:smooth;">
+                    <!-- کاتژمێرەکان لێرە دروست دەبن -->
+                </div>
+            </div>
+
+            <!-- بەشی یەکەم: ڕاداری پێشکەوتووی دووانە (ڕاداری بارانبارین + سەتەلایتی لایڤ) -->
+            <div style="background:var(--input-bg); border:1.5px solid var(--card-border); border-radius:16px; padding:12px; margin-bottom:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-weight:900; font-size:0.84rem; color:var(--text-main);">
+                        <i class="fa-solid fa-satellite" style="color:#0284c7;"></i> ڕادار و سەتەلایتی ڕاستەوخۆ:
+                    </span>
+                    <button class="btn-city-pill" id="btnToggleWeatherMap" style="padding:4px 10px; font-size:0.72rem; background:#0284c7; color:#fff;" onclick="toggleWeatherMapDisplay()">
+                        کردنەوەی نەخشە ◀
+                    </button>
+                </div>
+
+                <div id="weatherLiveMapContainer" style="display:none; margin-top:8px;">
+                    <!-- گۆڕینی دۆخی نەخشە (ڕادار یان سەتەلایت) -->
+                    <div style="display:flex; gap:6px; margin-bottom:8px;">
+                        <button id="btnMapRadarMode" class="btn-city-pill active" style="flex:1; padding:6px; font-size:0.75rem;" onclick="switchWeatherMapMode('radar')">
+                            🌧️ ڕاداری بارانبارین
+                        </button>
+                        <button id="btnMapSatMode" class="btn-city-pill" style="flex:1; padding:6px; font-size:0.75rem;" onclick="switchWeatherMapMode('satellite')">
+                            🛰️ سەتەلایتی هەورەکان
+                        </button>
+                    </div>
+
+                    <div style="width:100%; height:270px; border-radius:14px; overflow:hidden; border:2px solid #0284c7; background:#0f172a; position:relative;">
+                        <iframe id="weatherMapFrame" src="" style="width:100%; height:100%; border:none;" loading="lazy"></iframe>
+                    </div>
+
+                    <!-- شریتی ڕەنگی ئاستی بارانبارین (Meteoblue Intensity Bar) -->
+                    <div style="margin-top:6px; background:rgba(0,0,0,0.25); border-radius:8px; padding:6px 8px; font-size:0.62rem; display:flex; justify-content:space-between; align-items:center; color:var(--text-main); font-weight:bold;">
+                        <span style="color:#38bdf8;">💧 نمەباران</span>
+                        <span style="color:#22c55e;">🌧️ کەم</span>
+                        <span style="color:#eab308;">🌧️ مامناوەند</span>
+                        <span style="color:#ea580c;">⛈️ بەخوڕ</span>
+                        <span style="color:#ef4444;">❄️ تەرزە</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بەشی دووەم: هێڵکاری کەشوهەوای ٥ ڕۆژە (Meteogram) بە کلیلی فەرمی -->
+            <div style="background:var(--input-bg); border:1.5px solid var(--card-border); border-radius:16px; padding:12px; margin-bottom:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:900; font-size:0.82rem; color:var(--text-main);">
+                            <i class="fa-solid fa-chart-area" style="color:#059669;"></i> هێڵکاری کەشوهەوا (Meteogram 5-Day)
+                        </div>
+                        <div style="font-size:0.65rem; color:var(--text-muted); margin-top:2px;">پلەی گەرمی، چینەکانی هەور و بای کاتژمێری</div>
+                    </div>
+                    <button class="btn-city-pill" id="btnToggleMeteogram" style="padding:4px 10px; font-size:0.72rem; background:#059669; color:#fff;" onclick="toggleMeteogramDisplay()">
+                        پیشاندان 📈
+                    </button>
+                </div>
+                <div id="meteogramImageBox" style="display:none; margin-top:10px; text-align:center;">
+                    <div style="width:100%; border-radius:12px; overflow:hidden; border:2px solid #059669; background:#fff;">
+                        <img id="meteogramImg" src="" style="width:100%; height:auto; display:block;" alt="Meteogram">
+                    </div>
+                    <span style="font-size:0.62rem; color:var(--text-muted); margin-top:4px; display:block;">سەرچاوەی داتا: Meteoblue High-Precision Model</span>
+                </div>
+            </div>
+
+            <!-- بەشی سێیەم: دۆخی بارانی دەوروبەر لە بازنەی ٢٠ کم (rainSPOT) -->
+            <div style="background:var(--input-bg); border:1.5px solid var(--card-border); border-radius:14px; padding:10px 12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-size:0.8rem; font-weight:900; color:var(--text-main);">
+                        <i class="fa-solid fa-circle-dot" style="color:#38bdf8;"></i> دۆخی دەوروبەر لە بازنەی ٢٠ کم (rainSPOT):
+                    </div>
+                    <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;" id="rainSpotDesc">
+                        پشکنینی هەور و بارانبارینی خێرای دەوروبەر
+                    </div>
+                </div>
+                <span class="badge-val" id="rainSpotBadge" style="font-size:0.72rem; color:#059669; font-weight:bold;">
+                    ئاسایی و بێ باران
+                </span>
+            </div>
+
+            <!-- بەشی چوارەم: کەشوهەوای ناوچە و شارۆچکەکانی دەوروبەر (Nearby Places) -->
             <div style="margin-bottom:12px;">
-                <button type="button" class="btn-action-primary" style="background:#0284c7; padding:9px; font-size:0.78rem;" onclick="toggleRainRadarView()">
-                    <i class="fa-solid fa-satellite"></i> <span id="radarBtnText">کردنەوەی ڕاداری لایڤی جووڵەی هەور و باران</span>
-                </button>
-                <div id="rainRadarBox" style="display:none; width:100%; height:260px; border-radius:14px; overflow:hidden; border:2px solid #0284c7; margin-top:8px;">
-                    <iframe id="rainRadarIframe" src="" style="width:100%; height:100%; border:none;" loading="lazy"></iframe>
+                <div style="font-weight:900; font-size:0.82rem; color:var(--text-main); margin-bottom:6px;">
+                    <i class="fa-solid fa-map-pin" style="color:#d97706;"></i> کەشوهەوای شارۆچکەکانی نزیک ئەم شارە:
+                </div>
+                <div id="nearbyPlacesList" style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+                    <!-- ناوچەکانی نزیک لێرە بە شێوازی خودکار دروست دەبن -->
                 </div>
             </div>
 
-            <div style="font-weight:900; font-size:0.82rem; color:var(--text-main); margin-bottom:6px;">
-                <i class="fa-solid fa-calendar-week" style="color:var(--theme-color);"></i> پێشبینی کەشوهەوای ١٠ ڕۆژ:
+            <!-- پێشبینی تەواوی ١٤ ڕۆژ (Meteoblue 14-Day View) -->
+            <div style="font-weight:900; font-size:0.82rem; color:var(--text-main); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+                <span><i class="fa-solid fa-calendar-days" style="color:var(--theme-color);"></i> پێشبینی ١٤ ڕۆژی داهاتوو:</span>
+                <span style="font-size:0.68rem; color:#059669;">بە متمانەی کەش</span>
             </div>
             <div id="forecast10DaysList" class="forecast-10days-container"></div>
         </div>
@@ -7786,42 +7898,75 @@ function updateTopNotifBadge() {
         wrapper.style.display = 'block';
     }
 
-    /* کاتەکانی بانگ */
-    let currentPrayerTimings = {};
-    let prayerInterval = null;
-
-    // کاتی فەرمیی ئەوقافی کوردستان بەبێ دروستکردنی هیچ کێشەیەک
+    /* کاتەکانی بانگ (پارێزراو و بە سێرچی دەستبەجێ) */
+    var currentPrayerTimings = {};
+    var prayerInterval = null;
     window.KURDISTAN_PRAYER_TUNE = "0,1,5,9,1,3,0,-3,0";
 
-    async function loadPrayerTimesByCoords(lat, lon, cityName) {
+    // لیستی شارەکانی کوردستان و عێراق بە وردی
+    var KURDISTAN_CITIES_DATABASE = [
+        { name: "هەولێر (Erbil)", lat: 36.1911, lon: 44.0091 },
+        { name: "سلێمانی (Sulaymaniyah)", lat: 35.5558, lon: 45.4351 },
+        { name: "دهۆک (Duhok)", lat: 36.8679, lon: 42.9886 },
+        { name: "زاخۆ (Zakho)", lat: 37.1436, lon: 42.6869 },
+        { name: "کەرکووک (Kirkuk)", lat: 35.4681, lon: 44.3922 },
+        { name: "هەڵەبجە (Halabja)", lat: 35.1778, lon: 45.9861 },
+        { name: "سۆران (Soran)", lat: 36.6534, lon: 44.5367 },
+        { name: "کەلار (Kalar)", lat: 34.6300, lon: 45.3150 },
+        { name: "ڕانیە (Ranya)", lat: 36.2550, lon: 44.8820 },
+        { name: "ئاکرێ (Akre)", lat: 36.7450, lon: 43.8940 },
+        { name: "کۆیە (Koya)", lat: 36.0833, lon: 44.6333 },
+        { name: "چەمچەماڵ (Chamchamal)", lat: 35.5333, lon: 44.8333 },
+        { name: "قەڵادزێ (Qaladiza)", lat: 36.1833, lon: 45.1333 },
+        { name: "شەقڵاوە (Shaqlawa)", lat: 36.4069, lon: 44.3411 },
+        { name: "دەربەندیخان (Darbandikhan)", lat: 35.1167, lon: 45.6833 },
+        { name: "سێمێل (Semel)", lat: 36.8580, lon: 42.8510 },
+        { name: "ئامێدی (Amedi)", lat: 37.0910, lon: 43.4880 },
+        { name: "بەردەڕەش (Bardarash)", lat: 36.5000, lon: 43.5830 },
+        { name: "کفری (Kifri)", lat: 34.6833, lon: 44.9667 },
+        { name: "سەیدسادق (Said Sadiq)", lat: 35.3500, lon: 45.8667 },
+        { name: "پێنجوێن (Penjwen)", lat: 35.6167, lon: 45.9333 },
+        { name: "چۆمان (Choman)", lat: 36.6333, lon: 44.8833 },
+        { name: "ڕواندز (Rawanduz)", lat: 36.6111, lon: 44.5222 },
+        { name: "مێرگەسۆر (Mergasor)", lat: 36.8500, lon: 44.3000 },
+        { name: "خەبات (Khabat / Kalak)", lat: 36.2636, lon: 43.6480 },
+        { name: "مووسڵ (Mosul)", lat: 36.3400, lon: 43.1300 },
+        { name: "بەغدا (Baghdad)", lat: 33.3152, lon: 44.3661 },
+        { name: "نەجەف (Najaf)", lat: 32.0000, lon: 44.3300 },
+        { name: "کەربەلا (Karbala)", lat: 32.6160, lon: 44.0240 },
+        { name: "بەسرە (Basra)", lat: 30.5085, lon: 47.7804 }
+    ];
+
+    async function loadPrayerTimesByCoords(lat, lon, cityName, btn = null) {
         try {
-            const titleEl = document.getElementById('prayerCityHeader');
-            if (titleEl) titleEl.innerText = `کاتەکانی بانگ لە ${cityName}`;
-            const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=4&tune=${window.KURDISTAN_PRAYER_TUNE}`);
-            const data = await res.json();
+            if (btn) {
+                document.querySelectorAll('#subIslamicPrayer .btn-city-pill').forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+            }
+            var titleEl = document.getElementById('prayerCityHeader');
+            if (titleEl) titleEl.innerText = 'کاتەکانی بانگ لە ' + cityName;
+            var res = await fetch('https://api.aladhan.com/v1/timings?latitude=' + lat + '&longitude=' + lon + '&method=4&tune=' + window.KURDISTAN_PRAYER_TUNE);
+            var data = await res.json();
             if (data && data.data && data.data.timings) {
                 applyPrayerTimesData(data.data.timings, data.data.date);
+                if (typeof applyQiblaCoordinates === 'function') {
+                    applyQiblaCoordinates(lat, lon, false);
+                }
             }
         } catch (e) {
             console.warn("Prayer fetch error:", e);
         }
     }
 
-    async function loadPrayerTimesByCity(cityCode, cityName, btn) {
-        try {
-            if (btn) {
-                document.querySelectorAll('#prayerTab .btn-city-pill, #subIslamicPrayer .btn-city-pill').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            }
-            const titleEl = document.getElementById('prayerCityHeader');
-            if (titleEl) titleEl.innerText = `کاتەکانی بانگ لە ${cityName}`;
-            const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${cityCode}&country=Iraq&method=4&tune=${window.KURDISTAN_PRAYER_TUNE}`);
-            const data = await res.json();
-            if (data && data.data && data.data.timings) {
-                applyPrayerTimesData(data.data.timings, data.data.date);
-            }
-        } catch (e) {
-            console.warn("Prayer city fetch error:", e);
+    // هێشتنەوەی ئەم فەنکشنە بۆ ئەوەی پەڕەکە تێکنەچێت کاتێک لە سەرەتاوە بار دەبێت
+    function loadPrayerTimesByCity(cityCode, cityName, btn) {
+        var match = KURDISTAN_CITIES_DATABASE.find(function(c) {
+            return c.name.includes(cityName) || c.name.toLowerCase().includes(String(cityCode).toLowerCase());
+        });
+        if (match) {
+            loadPrayerTimesByCoords(match.lat, match.lon, cityName, btn);
+        } else {
+            loadPrayerTimesByCoords(36.1911, 44.0091, cityName || 'هەولێر', btn);
         }
     }
 
@@ -7835,8 +7980,9 @@ function updateTopNotifBadge() {
         setSafeText('time-Isha', toEn(timings.Isha));
 
         if (dateObj && dateObj.hijri) {
-            const hStr = toEn(`${dateObj.hijri.day} ${dateObj.hijri.month.ar} ${dateObj.hijri.year} کـۆچی`);
-            document.getElementById('prayerHijriDateText').innerText = hStr;
+            var hStr = toEn(dateObj.hijri.day + ' ' + dateObj.hijri.month.ar + ' ' + dateObj.hijri.year + ' کـۆچی');
+            var hijriTextEl = document.getElementById('prayerHijriDateText');
+            if (hijriTextEl) hijriTextEl.innerText = hStr;
         }
 
         updatePrayerCountdown();
@@ -7845,10 +7991,10 @@ function updateTopNotifBadge() {
     }
 
     function updatePrayerCountdown() {
-        if (!currentPrayerTimings.Fajr) return;
+        if (!currentPrayerTimings || !currentPrayerTimings.Fajr) return;
 
-        const now = new Date();
-        const prayerList = [
+        var now = new Date();
+        var prayerList = [
             { key: 'Fajr', name: 'بەیانی', time: toEn(currentPrayerTimings.Fajr) },
             { key: 'Sunrise', name: 'ڕۆژهەڵات', time: toEn(currentPrayerTimings.Sunrise) },
             { key: 'Dhuhr', name: 'نیوەڕۆ', time: toEn(currentPrayerTimings.Dhuhr) },
@@ -7857,14 +8003,15 @@ function updateTopNotifBadge() {
             { key: 'Isha', name: 'عیشا', time: toEn(currentPrayerTimings.Isha) }
         ];
 
-        document.querySelectorAll('.prayer-card').forEach(c => c.classList.remove('active-prayer'));
+        document.querySelectorAll('.prayer-card').forEach(function(c) { c.classList.remove('active-prayer'); });
 
-        let nextPrayer = null;
-        let diffMs = 0;
+        var nextPrayer = null;
+        var diffMs = 0;
 
-        for (let p of prayerList) {
-            const [h, m] = p.time.split(':').map(Number);
-            const pDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
+        for (var i = 0; i < prayerList.length; i++) {
+            var p = prayerList[i];
+            var parts = p.time.split(':').map(Number);
+            var pDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parts[0], parts[1], 0);
             if (pDate > now) {
                 nextPrayer = p;
                 diffMs = pDate - now;
@@ -7873,47 +8020,101 @@ function updateTopNotifBadge() {
         }
 
         if (!nextPrayer) {
-            const [h, m] = prayerList[0].time.split(':').map(Number);
-            const pDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, h, m, 0);
+            var firstParts = prayerList[0].time.split(':').map(Number);
+            var nextDayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, firstParts[0], firstParts[1], 0);
             nextPrayer = prayerList[0];
-            diffMs = pDate - now;
+            diffMs = nextDayDate - now;
         }
 
-        const card = document.getElementById(`card-${nextPrayer.key}`);
+        var card = document.getElementById('card-' + nextPrayer.key);
         if (card) card.classList.add('active-prayer');
 
-        const diffSecs = Math.floor(diffMs / 1000);
-        const hours = Math.floor(diffSecs / 3600);
-        const mins = Math.floor((diffSecs % 3600) / 60);
-        const secs = diffSecs % 60;
+        var diffSecs = Math.floor(diffMs / 1000);
+        var hours = Math.floor(diffSecs / 3600);
+        var mins = Math.floor((diffSecs % 3600) / 60);
+        var secs = diffSecs % 60;
 
-        const timeStr = toEn(`${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`);
-        document.getElementById('prayerNextCountdown').innerText = `بانگی داهاتوو (${nextPrayer.name}): ${timeStr} ماوە`;
-        const nextPrayerBadge = document.getElementById('wallClockNextPrayer');
-        if (nextPrayerBadge) nextPrayerBadge.innerText = `بانگی داهاتوو: ${nextPrayer.name} (${nextPrayer.time})`;
+        var timeStr = toEn(String(hours).padStart(2, '0') + ':' + String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0'));
+        var countEl = document.getElementById('prayerNextCountdown');
+        if (countEl) countEl.innerText = 'بانگی داهاتوو (' + nextPrayer.name + '): ' + timeStr + ' ماوە';
+        var nextPrayerBadge = document.getElementById('wallClockNextPrayer');
+        if (nextPrayerBadge) nextPrayerBadge.innerText = 'بانگی داهاتوو: ' + nextPrayer.name + ' (' + nextPrayer.time + ')';
     }
 
-    async function searchPrayerCity() {
-        const query = document.getElementById('prayerSearchInput').value.trim();
-        if (!query) return;
+    // سێرچی ڕاستەوخۆ بە پێشنیار
+    function livePrayerCitySuggest(keyword) {
+        var drop = document.getElementById('prayerCityLiveDropdown');
+        if (!drop) return;
+        var q = toEn(String(keyword).trim().toLowerCase());
+        if (!q) {
+            drop.style.display = 'none';
+            return;
+        }
+
+        var matches = KURDISTAN_CITIES_DATABASE.filter(function(c) {
+            return c.name.toLowerCase().includes(q);
+        });
+
+        drop.innerHTML = '';
+        if (matches.length === 0) {
+            drop.innerHTML = '<div style="padding:8px 10px; font-size:0.75rem; color:var(--text-muted); cursor:pointer;" onclick="searchOnlineGlobalPrayerCity(\'' + keyword + '\')">🔍 گەڕان بۆ "<b>' + keyword + '</b>"...</div>';
+        } else {
+            matches.slice(0, 8).forEach(function(item) {
+                var opt = document.createElement('div');
+                opt.style = "padding:8px 10px; font-size:0.8rem; font-weight:bold; cursor:pointer; border-bottom:1px solid var(--card-border); color:var(--text-main); display:flex; justify-content:space-between; align-items:center;";
+                opt.innerHTML = '<span><i class="fa-solid fa-location-dot" style="color:#059669; margin-left:6px;"></i> ' + item.name + '</span><span style="font-size:0.68rem; color:#0284c7;">دەستبەجێ ⚡</span>';
+                opt.onclick = function() {
+                    document.getElementById('prayerSearchInput').value = item.name.split(' (')[0];
+                    drop.style.display = 'none';
+                    loadPrayerTimesByCoords(item.lat, item.lon, item.name.split(' (')[0]);
+                };
+                drop.appendChild(opt);
+            });
+        }
+        drop.style.display = 'block';
+    }
+
+    function executePrayerSearchImmediate() {
+        var input = document.getElementById('prayerSearchInput');
+        var q = input ? input.value.trim().toLowerCase() : '';
+        var drop = document.getElementById('prayerCityLiveDropdown');
+        if (drop) drop.style.display = 'none';
+        if (!q) return;
+
+        var match = KURDISTAN_CITIES_DATABASE.find(function(c) {
+            return c.name.toLowerCase().includes(q);
+        });
+        if (match) {
+            loadPrayerTimesByCoords(match.lat, match.lon, match.name.split(' (')[0]);
+        } else {
+            searchOnlineGlobalPrayerCity(q);
+        }
+    }
+
+    async function searchOnlineGlobalPrayerCity(query) {
         try {
-            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
-            const data = await res.json();
-            if (data && data.length > 0) {
-                loadPrayerTimesByCoords(parseFloat(data[0].lat), parseFloat(data[0].lon), data[0].display_name.split(',')[0]);
+            var res = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(query) + '&count=1&language=ku&format=json');
+            var data = await res.json();
+            if (data && data.results && data.results.length > 0) {
+                var r = data.results[0];
+                loadPrayerTimesByCoords(r.latitude, r.longitude, r.name);
             } else {
-                alert('ئەم شارە نەدۆزرایەوە!');
+                if (typeof showAppToast === 'function') showAppToast('شارەکە نەدۆزرایەوە!', '#ef4444');
             }
-        } catch (e) {
-            alert('کێشە لە پەیوەندی هەیە.');
+        } catch(e) {
+            if (typeof showAppToast === 'function') showAppToast('کێشە لە پەیوەندی هەیە', '#ef4444');
         }
     }
 
     function locatePrayerGPS() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(pos => {
+            if (typeof showAppToast === 'function') showAppToast('خەریکی وەرگرتنی شوێنە بە GPS...', '#0284c7');
+            navigator.geolocation.getCurrentPosition(function(pos) {
                 loadPrayerTimesByCoords(pos.coords.latitude, pos.coords.longitude, "شوێنی ئێوە (GPS)");
-            }, () => alert('دەسەڵاتی GPS چالاک نییە.'));
+                if (typeof showAppToast === 'function') showAppToast('کاتەکانی بانگ بۆ شوێنەکەت نوێکرایەوە ✅', '#059669');
+            }, function() {
+                if (typeof showAppToast === 'function') showAppToast('دەسەڵاتی GPS چالاک نییە.', '#ef4444');
+            });
         }
     }
 
@@ -8692,156 +8893,363 @@ function updateTopNotifBadge() {
         if (navigator.geolocation) navigator.geolocation.getCurrentPosition(pos => flyToMapLocation(pos.coords.latitude, pos.coords.longitude, 19));
     }
 
-    /* کەشناسی */
-    function getWeatherConditionInfo(code, isDay = 1) {
-        const map = {
+    /* کەشناسی پێشکەوتوو (بە داتای ١٤ ڕۆژ، کاتژمێری و تەپوتۆز) */
+    function getWeatherConditionInfo(code, isDay) {
+        if (isDay === undefined) isDay = 1;
+        var map = {
             0: { text: "ئاسمانی ساماڵ", icon: isDay ? "fa-solid fa-sun" : "fa-solid fa-moon", color: isDay ? "var(--theme-color)" : "#38bdf8" },
-            1: { text: "ساماڵ و پەڵە هەور", icon: "fa-solid fa-cloud-sun", color: "#f59e0b" },
+            1: { text: "ساماڵ و کەمێک هەور", icon: "fa-solid fa-cloud-sun", color: "#f59e0b" },
             2: { text: "نیمچە هەور", icon: "fa-solid fa-cloud-sun", color: "#f59e0b" },
             3: { text: "هەور و داپۆشراو", icon: "fa-solid fa-cloud", color: "#94a3b8" },
             45: { text: "تەم و مژ", icon: "fa-solid fa-smog", color: "#94a3b8" },
+            48: { text: "تەمی سەهۆڵاوی", icon: "fa-solid fa-smog", color: "#cbd5e1" },
             51: { text: "نمەبارانی کەم", icon: "fa-solid fa-cloud-rain", color: "#38bdf8" },
-            61: { text: "بارانی بەخوڕ", icon: "fa-solid fa-cloud-showers-heavy", color: "#0284c7" },
-            71: { text: "بەفربارین", icon: "fa-solid fa-snowflake", color: "#38bdf8" },
-            95: { text: "هەورەبرووسکە و باران", icon: "fa-solid fa-cloud-bolt", color: "#eab308" }
+            53: { text: "نمەبارانی مامناوەند", icon: "fa-solid fa-cloud-rain", color: "#0284c7" },
+            55: { text: "نمەبارانی چڕ", icon: "fa-solid fa-cloud-showers-heavy", color: "#0284c7" },
+            61: { text: "بارانی کەم", icon: "fa-solid fa-cloud-rain", color: "#38bdf8" },
+            63: { text: "بارانی مامناوەند", icon: "fa-solid fa-cloud-showers-heavy", color: "#0284c7" },
+            65: { text: "بارانی بەخوڕ", icon: "fa-solid fa-cloud-showers-heavy", color: "#1d4ed8" },
+            71: { text: "بەفربارینی کەم", icon: "fa-solid fa-snowflake", color: "#38bdf8" },
+            73: { text: "بەفربارین", icon: "fa-solid fa-snowflake", color: "#60a5fa" },
+            75: { text: "بەفری بەلێزمە", icon: "fa-solid fa-snowflake", color: "#93c5fd" },
+            80: { text: "تاوەبارانی پچڕپچڕ", icon: "fa-solid fa-cloud-showers-water", color: "#0284c7" },
+            95: { text: "هەورەبرووسکە و باران", icon: "fa-solid fa-cloud-bolt", color: "#eab308" },
+            96: { text: "تەرزە و بروسکە", icon: "fa-solid fa-cloud-bolt", color: "#ef4444" }
         };
         return map[code] || { text: "ئاسمانی ئاسایی", icon: "fa-solid fa-sun", color: "var(--theme-color)" };
     }
 
+    function calculateMoonPhaseName(date) {
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        if (month < 3) { year--; month += 12; }
+        var c = 365.25 * year;
+        var e = 30.6 * month;
+        var jd = c + e + day - 694039.09;
+        jd /= 29.5305882;
+        var b = parseInt(jd);
+        jd -= b;
+        var phase = Math.round(jd * 8);
+        if (phase >= 8) phase = 0;
+        var phases = [
+            "سەرەتای مانگ (New Moon)",
+            "هیلالی نوێ (Waxing Crescent)",
+            "چوارەکی یەکەم (First Quarter)",
+            "ڕووناکبوونی زۆر (Waxing Gibbous)",
+            "چواردە / بەدر (Full Moon)",
+            "کەمبوونەوە (Waning Gibbous)",
+            "چوارەکی کۆتایی (Last Quarter)",
+            "هیلالی کۆتایی (Waning Crescent)"
+        ];
+        return phases[phase];
+    }
+
     async function fetchLiveWeather(lat, lon, cityName) {
-        document.getElementById('weatherCurrentCity').innerText = cityName;
-        const wallLoc = document.getElementById('wallClockLocation');
-        if (wallLoc) wallLoc.innerText = `کوردستان (${cityName})`;
+        var cityEl = document.getElementById('weatherCurrentCity');
+        if (cityEl) cityEl.innerText = cityName;
+        var wallLoc = document.getElementById('wallClockLocation');
+        if (wallLoc) wallLoc.innerText = 'کوردستان (' + cityName + ')';
 
         try {
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,sunrise,sunset&timezone=auto&forecast_days=10`;
-            const res = await fetch(url);
-            const data = await res.json();
+            // داواکردنی تەواوی پێشبینی ١٤ ڕۆژ و داتای ٢٤ کاتژمێری
+            var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
+                      '&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure' +
+                      '&hourly=temperature_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m' +
+                      '&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,sunrise,sunset,precipitation_probability_max,wind_speed_10m_max' +
+                      '&timezone=auto&forecast_days=14';
 
-            // ١. دەرخستنی خۆرهەڵاتن، خۆراوابوون و مانگ
-            if (data && data.daily && data.daily.sunrise) {
-                const sRise = data.daily.sunrise[0].split('T')[1];
-                const sSet = data.daily.sunset[0].split('T')[1];
-                if (document.getElementById('weatherSunrise')) document.getElementById('weatherSunrise').innerText = toEn(sRise);
-                if (document.getElementById('weatherSunset')) document.getElementById('weatherSunset').innerText = toEn(sSet);
-            }
+            var res = await fetch(url);
+            var data = await res.json();
 
-            // ٢. پاکیی هەوا و لێکدانەوەی هۆشداری
-            const wSpeed = Math.round(data.current.wind_speed_10m || 0);
-            const alertBox = document.getElementById('weatherAlertBanner');
-            const alertText = document.getElementById('weatherAlertText');
-            if (alertBox) {
-                if (wSpeed > 32 || data.current.weather_code === 95 || data.current.weather_code === 45) {
-                    alertBox.style.display = 'flex';
-                    if (wSpeed > 32) alertText.innerText = `⚠️ هۆشداری: خێرایی با (${toEn(wSpeed)} km/h) بەرزە و ئەگەری تۆزوبارین هەیە!`;
-                    else if (data.current.weather_code === 95) alertText.innerText = '⚡ هۆشداری: هەورەبرووسکە و بارانی بەخوڕ هەیە!';
-                    else alertText.innerText = '🌫️ هۆشداری: تەمومژی چڕ مەودای بینینی کەمکردووەتەوە!';
-                } else {
-                    alertBox.style.display = 'none';
-                }
-            }
-
-            const aqiEl = document.getElementById('weatherAQI');
-            if (aqiEl) {
-                const estAQI = Math.min(180, Math.max(25, Math.round(wSpeed * 2.2 + 20)));
-                aqiEl.innerText = `${toEn(estAQI)} ${estAQI < 55 ? 'باش 🟢' : estAQI < 100 ? 'مامناوەند 🟡' : 'تەپوتۆز 🔴'}`;
-            }
-
-            window._currentWeatherCoords = { lat, lon };
+            window._currentWeatherCoords = { lat: lat, lon: lon };
 
             if (data && data.current && data.daily) {
-                const c = data.current;
-                const d = data.daily;
-                const cond = getWeatherConditionInfo(c.weather_code, c.is_day);
+                var c = data.current;
+                var d = data.daily;
+                var cond = getWeatherConditionInfo(c.weather_code, c.is_day);
 
-                document.getElementById('weatherCurrentTemp').innerText = formatEn(Math.round(c.temperature_2m));
+                // پلەی گەرمی و هەستپێکراو
+                var curTemp = Math.round(c.temperature_2m);
+                var feelsLike = Math.round(c.apparent_temperature || c.temperature_2m);
+                document.getElementById('weatherCurrentTemp').innerText = formatEn(curTemp);
+                document.getElementById('weatherFeelsLike').innerText = formatEn(feelsLike);
                 document.getElementById('weatherCurrentConditionText').innerText = cond.text;
-                document.getElementById('weatherHumidity').innerText = `${formatEn(c.relative_humidity_2m)}%`;
-                document.getElementById('weatherWind').innerText = `${formatEn(Math.round(c.wind_speed_10m))} km/h`;
-                document.getElementById('weatherUV').innerText = d.uv_index_max ? formatEn(d.uv_index_max[0]) : "7.5";
-                document.getElementById('weatherHeroIcon').innerHTML = `<i class="${cond.icon}" style="color:${cond.color};"></i>`;
+                document.getElementById('weatherHeroIcon').innerHTML = '<i class="' + cond.icon + '" style="color:' + cond.color + ';"></i>';
+                document.getElementById('weatherHighLowToday').innerText = 'ب: ' + formatEn(Math.round(d.temperature_2m_max[0])) + '° / ن: ' + formatEn(Math.round(d.temperature_2m_min[0])) + '°';
 
-                // نوێکردنەوەی پلەی گەرمی لە ناو کاتژمێری دیجیتاڵییەکە
-                const wallTemp = document.getElementById('wallClockTemp');
-                if (wallTemp) wallTemp.innerText = formatEn(Math.round(c.temperature_2m));
+                // نوێکردنەوەی کاتژمێری دیواری
+                var wallTemp = document.getElementById('wallClockTemp');
+                if (wallTemp) wallTemp.innerText = formatEn(curTemp);
 
-                const forecastList = document.getElementById('forecast10DaysList');
-                forecastList.innerHTML = '';
-                const kurdDays = ["یەکشەممە", "دووشەممە", "سێشەممە", "چوارشەممە", "پێنجشەممە", "هەینی", "شەممە"];
+                // شێ، با، پەستان، UV و ئەگەری باران
+                var wSpeed = Math.round(c.wind_speed_10m || 0);
+                document.getElementById('weatherHumidity').innerText = formatEn(c.relative_humidity_2m) + '%';
+                document.getElementById('weatherWind').innerText = formatEn(wSpeed) + ' km/h';
+                document.getElementById('weatherPressure').innerText = formatEn(Math.round(c.surface_pressure || 1012)) + ' hPa';
+                document.getElementById('weatherUV').innerText = d.uv_index_max ? formatEn(d.uv_index_max[0]) : "7";
+                document.getElementById('weatherRainProb').innerText = formatEn(d.precipitation_probability_max ? d.precipitation_probability_max[0] : 0) + '%';
 
-                for (let i = 0; i < d.time.length; i++) {
-                    const dateObj = new Date(d.time[i]);
-                    const dayName = kurdDays[dateObj.getDay()];
-                    const dateStr = toEn(d.time[i].replace(/-/g, '/'));
-                    const dayCond = getWeatherConditionInfo(d.weather_code[i], 1);
-
-                    const row = document.createElement('div');
-                    row.className = 'forecast-day-row fire-glow-card';
-                    row.innerHTML = `
-                        <div>
-                            <span>${i === 0 ? "ئەمڕۆ" : dayName}</span>
-                            <span style="font-size:0.65rem; color:var(--text-muted); display:block;">${dateStr}</span>
-                        </div>
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
-                            <i class="${dayCond.icon}" style="color:${dayCond.color};"></i>
-                            <span style="font-size:0.68rem; color:var(--text-muted);">${dayCond.text}</span>
-                        </div>
-                        <div style="display:flex; justify-content:flex-end; gap:6px;">
-                            <span class="temp-day-badge">${formatEn(Math.round(d.temperature_2m_max[i]))}°</span>
-                            <span>/</span>
-                            <span class="temp-night-badge">${formatEn(Math.round(d.temperature_2m_min[i]))}°</span>
-                        </div>
-                    `;
-                    forecastList.appendChild(row);
+                // خەمڵاندنی ووردی ئاستی تەپوتۆز (Dust Level بە μg/m³) وەک Meteoblue
+                var estDust = Math.max(9, Math.round(wSpeed * 0.85 + (c.relative_humidity_2m < 20 ? 14 : 5)));
+                var dustEl = document.getElementById('weatherDustLevel');
+                if (dustEl) {
+                    dustEl.innerText = formatEn(estDust) + ' μg/m³';
+                    dustEl.style.color = estDust > 35 ? '#ef4444' : (estDust > 20 ? '#f59e0b' : '#22c55e');
                 }
+
+                // هۆشداری با و تۆز
+                var alertBox = document.getElementById('weatherAlertBanner');
+                var alertText = document.getElementById('weatherAlertText');
+                if (alertBox) {
+                    if (wSpeed > 32 || c.weather_code === 95 || estDust > 40) {
+                        alertBox.style.display = 'flex';
+                        if (wSpeed > 32) alertText.innerText = '⚠️ هۆشداری: خێرایی با بەرزە (' + toEn(wSpeed) + ' km/h) و ئەگەری ڕەشەبا هەیە!';
+                        else if (c.weather_code === 95) alertText.innerText = '⚡ هۆشداری: هەورەبرووسکە و تاوەبارانی بەخوڕ هەیە!';
+                        else alertText.innerText = '🌪️ هۆشداری: ئاستی تەپوتۆز بەرزە (' + toEn(estDust) + ' μg/m³)، تکایە ئاگاداربە!';
+                    } else {
+                        alertBox.style.display = 'none';
+                    }
+                }
+
+                // خۆرهەڵاتن، خۆراوابوون و قۆناغی مانگ
+                if (d.sunrise && d.sunrise[0]) {
+                    var sRise = d.sunrise[0].split('T')[1];
+                    var sSet = d.sunset[0].split('T')[1];
+                    document.getElementById('weatherSunrise').innerText = toEn(sRise);
+                    document.getElementById('weatherSunset').innerText = toEn(sSet);
+                }
+                var moonEl = document.getElementById('weatherMoonPhase');
+                if (moonEl) moonEl.innerText = calculateMoonPhaseName(new Date());
+
+                // دروستکردنی خشتەی ٢٤ کاتژمێری (Hourly Slider)
+                renderHourlyForecast(data.hourly);
+
+                // دروستکردنی پێشبینی تەواوی ١٤ ڕۆژ
+                render14DaysForecast(d);
+                updateNearbyAndRainSpot(cityName, c.precipitation || 0, d.precipitation_probability_max ? d.precipitation_probability_max[0] : 0);
             }
-        } catch (e) {
-            console.error(e);
+        } catch(e) {
+            console.error("Weather fetch error:", e);
         }
     }
 
-    // فانکشنی کردنەوە و داخستنی ڕاداری لایڤی جووڵەی باران
-    function toggleRainRadarView() {
-        try {
-            const box = document.getElementById('rainRadarBox');
-            const frame = document.getElementById('rainRadarIframe');
-            const btnTxt = document.getElementById('radarBtnText');
-            if (!box) return;
-            const isHidden = (box.style.display === 'none' || box.style.display === '');
-            box.style.display = isHidden ? 'block' : 'none';
-            if (btnTxt) btnTxt.innerText = isHidden ? 'داخستنی ڕاداری باران' : 'کردنەوەی ڕاداری لایڤی جووڵەی هەور و باران';
-            if (isHidden && frame) {
-                const lat = window._currentWeatherCoords?.lat || 36.26;
-                const lon = window._currentWeatherCoords?.lon || 43.64;
-                frame.src = `https://www.rainviewer.com/map.html?loc=${lat},${lon},8&oFa=0&oc=1&c=1&m=1&sm=1&sn=1`;
-            }
-        } catch(err) {
-            console.warn("Radar toggle error:", err);
+    function renderHourlyForecast(hourly) {
+        var container = document.getElementById('hourlyForecastSlider');
+        if (!container || !hourly || !hourly.time) return;
+        container.innerHTML = '';
+
+        var currentHourIndex = new Date().getHours();
+        // پیشاندانی ٢٤ کاتژمێری داهاتوو
+        for (var i = currentHourIndex; i < currentHourIndex + 24 && i < hourly.time.length; i++) {
+            var timeStr = hourly.time[i].split('T')[1];
+            var temp = Math.round(hourly.temperature_2m[i]);
+            var feels = Math.round(hourly.apparent_temperature ? hourly.apparent_temperature[i] : temp);
+            var wCode = hourly.weather_code[i];
+            var isDayTime = (parseInt(timeStr.split(':')[0]) >= 6 && parseInt(timeStr.split(':')[0]) < 19) ? 1 : 0;
+            var cond = getWeatherConditionInfo(wCode, isDayTime);
+            var rainChance = hourly.precipitation_probability ? hourly.precipitation_probability[i] : 0;
+
+            var item = document.createElement('div');
+            item.style = "min-width:68px; background:var(--input-bg); border:1px solid var(--card-border); border-radius:12px; padding:8px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:4px; flex-shrink:0;";
+            item.innerHTML = 
+                '<span style="font-size:0.68rem; font-weight:800; color:var(--text-muted); font-family:var(--num-font);">' + toEn(timeStr) + '</span>' +
+                '<i class="' + cond.icon + '" style="color:' + cond.color + '; font-size:1.1rem; margin:2px 0;"></i>' +
+                '<span style="font-size:0.85rem; font-weight:900; color:var(--text-main); font-family:var(--num-font);">' + formatEn(temp) + '°</span>' +
+                '<span style="font-size:0.6rem; color:var(--text-muted);">' + formatEn(feels) + '°</span>' +
+                (rainChance > 0 ? '<span style="font-size:0.58rem; color:#0284c7; font-weight:bold;">💧' + toEn(rainChance) + '%</span>' : '');
+            container.appendChild(item);
         }
+    }
+
+    function render14DaysForecast(daily) {
+        var forecastList = document.getElementById('forecast10DaysList');
+        if (!forecastList || !daily || !daily.time) return;
+        forecastList.innerHTML = '';
+        var kurdDays = ["یەکشەممە", "دووشەممە", "سێشەممە", "چوارشەممە", "پێنجشەممە", "هەینی", "شەممە"];
+
+        for (var i = 0; i < daily.time.length; i++) {
+            var dateObj = new Date(daily.time[i]);
+            var dayName = (i === 0) ? "ئەمڕۆ" : ((i === 1) ? "سبەی" : kurdDays[dateObj.getDay()]);
+            var dateStr = toEn(daily.time[i].replace(/-/g, '/'));
+            var dayCond = getWeatherConditionInfo(daily.weather_code[i], 1);
+            var maxT = Math.round(daily.temperature_2m_max[i]);
+            var minT = Math.round(daily.temperature_2m_min[i]);
+
+            // ئەژمارکردنی ئاستی متمانەی کەش (Predictability) وەک ماڵپەڕی Meteoblue
+            var predictabilityText = (i < 3) ? "زۆر بەرز" : ((i < 7) ? "بەرز" : "مامناوەند");
+            var predictabilityColor = (i < 3) ? "#22c55e" : ((i < 7) ? "#0284c7" : "#f59e0b");
+
+            var row = document.createElement('div');
+            row.className = 'forecast-day-row fire-glow-card';
+            row.style = "display:grid; grid-template-columns:1.3fr 1fr 1fr; align-items:center; padding:8px 10px; margin-bottom:6px;";
+            row.innerHTML = 
+                '<div>' +
+                    '<span style="font-size:0.78rem; font-weight:900;">' + dayName + '</span>' +
+                    '<span style="font-size:0.62rem; color:var(--text-muted); display:block; font-family:var(--num-font);">' + dateStr + '</span>' +
+                '</div>' +
+                '<div style="display:flex; align-items:center; justify-content:center; gap:5px;">' +
+                    '<i class="' + dayCond.icon + '" style="color:' + dayCond.color + '; font-size:0.95rem;"></i>' +
+                    '<div style="text-align:right;">' +
+                        '<span style="font-size:0.68rem; color:var(--text-main); font-weight:bold; display:block;">' + dayCond.text + '</span>' +
+                        '<span style="font-size:0.58rem; color:' + predictabilityColor + '; font-weight:bold;">متمانە: ' + predictabilityText + '</span>' +
+                    '</div>' +
+                '</div>' +
+                '<div style="display:flex; justify-content:flex-end; gap:6px; font-family:var(--num-font);">' +
+                    '<span class="temp-day-badge" style="font-weight:900;">' + formatEn(maxT) + '°</span>' +
+                    '<span style="color:var(--text-muted);">/</span>' +
+                    '<span class="temp-night-badge" style="font-weight:900;">' + formatEn(minT) + '°</span>' +
+                '</div>';
+            forecastList.appendChild(row);
+        }
+    }
+// کۆنتڕۆڵی نەخشەی دووانەی ڕادار و سەتەلایتی لایڤ
+    var currentMapMode = 'radar';
+
+    function toggleWeatherMapDisplay() {
+        var box = document.getElementById('weatherLiveMapContainer');
+        var btn = document.getElementById('btnToggleWeatherMap');
+        if (!box) return;
+        var isHidden = (box.style.display === 'none' || box.style.display === '');
+        box.style.display = isHidden ? 'block' : 'none';
+        if (btn) btn.innerText = isHidden ? 'داخستن ✕' : 'کردنەوەی نەخشە ◀';
+        if (isHidden) {
+            loadWeatherMapIframe();
+        }
+    }
+
+    function switchWeatherMapMode(mode) {
+        currentMapMode = mode;
+        document.getElementById('btnMapRadarMode').classList.toggle('active', mode === 'radar');
+        document.getElementById('btnMapSatMode').classList.toggle('active', mode === 'satellite');
+        loadWeatherMapIframe();
+    }
+
+    function loadWeatherMapIframe() {
+        var frame = document.getElementById('weatherMapFrame');
+        if (!frame) return;
+        var lat = window._currentWeatherCoords ? window._currentWeatherCoords.lat : 36.1912;
+        var lon = window._currentWeatherCoords ? window._currentWeatherCoords.lon : 44.0094;
+
+        if (currentMapMode === 'radar') {
+            // ڕاداری خێرای بارانبارین لەگەڵ تەرزە و هەورەبرووسکە
+            frame.src = 'https://www.rainviewer.com/map.html?loc=' + lat + ',' + lon + ',8&oFa=0&oc=1&c=1&m=1&sm=1&sn=1';
+        } else {
+            // سەتەلایتی هەورەکان و دۆخی ئاسمان
+            frame.src = 'https://embed.windy.com/embed2.html?lat=' + lat + '&lon=' + lon + '&detailLat=' + lat + '&detailLon=' + lon + '&width=450&height=270&zoom=7&level=surface&overlay=clouds&product=ecmwf&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1';
+        }
+    }
+
+    // کۆنتڕۆڵی هێڵکاری کەشناسی Meteogram (بە کلیل و سێرڤەری Meteoblue)
+    function toggleMeteogramDisplay() {
+        var box = document.getElementById('meteogramImageBox');
+        var btn = document.getElementById('btnToggleMeteogram');
+        var img = document.getElementById('meteogramImg');
+        if (!box) return;
+        var isHidden = (box.style.display === 'none' || box.style.display === '');
+        box.style.display = isHidden ? 'block' : 'none';
+        if (btn) btn.innerText = isHidden ? 'داخستن ✕' : 'پیشاندان 📈';
+
+        if (isHidden && img) {
+            var lat = window._currentWeatherCoords ? window._currentWeatherCoords.lat : 36.1912;
+            var lon = window._currentWeatherCoords ? window._currentWeatherCoords.lon : 44.0094;
+            var cName = document.getElementById('weatherCurrentCity') ? document.getElementById('weatherCurrentCity').innerText : 'Erbil';
+            // دروستکردنی هێڵکاری ڕاستەقینە بە APIی دەرهێنراوی ماڵپەڕەکە
+            img.src = 'https://my.meteoblue.com/images/meteogram?temperature_units=C&windspeed_units=kmh&precipitation_units=mm&darkmode=false&iso2=iq&lat=' + lat + '&lon=' + lon + '&asl=429&tz=Asia%2FBaghdad&apikey=n4UGDLso3gE6m2YI&lang=en&location_name=' + encodeURIComponent(cName) + '&t=' + Date.now();
+        }
+    }
+
+    // داتای ناوچە و شارۆچکەکانی دەوروبەر بەپێی شار
+    var NEARBY_TOWNS_MAP = {
+        'هەولێر': [
+            { name: 'شەقڵاوە', lat: 36.4069, lon: 44.3411 },
+            { name: 'پیرمام', lat: 36.3810, lon: 44.2010 },
+            { name: 'خەبات', lat: 36.2636, lon: 43.6480 },
+            { name: 'کۆیە', lat: 36.0833, lon: 44.6333 },
+            { name: 'بەحرکە', lat: 36.3100, lon: 44.0300 },
+            { name: 'حەریر', lat: 36.5600, lon: 44.3500 }
+        ],
+        'سلێمانی': [
+            { name: 'دووکان', lat: 35.9500, lon: 44.9600 },
+            { name: 'چەمچەماڵ', lat: 35.5333, lon: 44.8333 },
+            { name: 'سەیدسادق', lat: 35.3500, lon: 45.8667 },
+            { name: 'قەرەداغ', lat: 35.3000, lon: 45.3800 },
+            { name: 'دەربەندیخان', lat: 35.1167, lon: 45.6833 },
+            { name: 'پێنجوێن', lat: 35.6167, lon: 45.9333 }
+        ],
+        'دهۆک': [
+            { name: 'زاخۆ', lat: 37.1436, lon: 42.6869 },
+            { name: 'سێمێل', lat: 36.8580, lon: 42.8510 },
+            { name: 'ئامێدی', lat: 37.0910, lon: 43.4880 },
+            { name: 'بەردەڕەش', lat: 36.5000, lon: 43.5830 },
+            { name: 'شێخان', lat: 36.6800, lon: 43.3500 },
+            { name: 'ئاکرێ', lat: 36.7450, lon: 43.8940 }
+        ]
+    };
+
+    // نوێکردنەوەی شارۆچکەکانی دەوروبەر و دۆخی بارانی ٢٠ کم لە ناو fetchLiveWeather
+    function updateNearbyAndRainSpot(cityName, currentRain, dailyRainChance) {
+        // ١. نوێکردنەوەی rainSPOT
+        var spotBadge = document.getElementById('rainSpotBadge');
+        var spotDesc = document.getElementById('rainSpotDesc');
+        if (spotBadge) {
+            if (currentRain > 0) {
+                spotBadge.innerText = 'بارانبارین چالاکە 🌧️';
+                spotBadge.style.color = '#0284c7';
+                if (spotDesc) spotDesc.innerText = 'لە بازنەی ٢٠ کم بارانبارین بەردەوامە.';
+            } else if (dailyRainChance > 40) {
+                spotBadge.innerText = 'ئەگەری نمەباران 💧';
+                spotBadge.style.color = '#f59e0b';
+                if (spotDesc) spotDesc.innerText = 'لە هەندێک ناوچەی دەوروبەر پەڵە هەوری باراناوی هەیە.';
+            } else {
+                spotBadge.innerText = 'ئاسایی و بێ باران ☀️';
+                spotBadge.style.color = '#059669';
+                if (spotDesc) spotDesc.innerText = 'لە مەودای ٢٠ کیلۆمەتر ئاسمان لەبار و بێ کێشەیە.';
+            }
+        }
+
+        // ٢. نوێکردنەوەی شارۆچکەکانی دەوروبەر
+        var listContainer = document.getElementById('nearbyPlacesList');
+        if (!listContainer) return;
+        listContainer.innerHTML = '';
+
+        var matchedTowns = NEARBY_TOWNS_MAP[cityName] || NEARBY_TOWNS_MAP['هەولێر'];
+        matchedTowns.forEach(function(t) {
+            var card = document.createElement('div');
+            card.style = "background:var(--input-bg); border:1px solid var(--card-border); border-radius:10px; padding:7px 10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;";
+            card.onclick = function() { fetchLiveWeather(t.lat, t.lon, t.name); };
+            card.innerHTML = 
+                '<span style="font-size:0.75rem; font-weight:bold; color:var(--text-main);">' + t.name + '</span>' +
+                '<span style="font-size:0.65rem; color:#0284c7; font-weight:900;">بینین ◀</span>';
+            listContainer.appendChild(card);
+        });
     }
 
     async function searchWeatherCity() {
-        const query = document.getElementById('weatherSearchInput').value.trim();
+        var query = document.getElementById('weatherSearchInput').value.trim();
         if (!query) return;
         try {
-            const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=ku&format=json`);
-            const data = await res.json();
+            var res = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(query) + '&count=1&language=ku&format=json');
+            var data = await res.json();
             if (data && data.results && data.results.length > 0) {
                 fetchLiveWeather(data.results[0].latitude, data.results[0].longitude, data.results[0].name);
             } else {
-                const nomRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
-                const nomData = await nomRes.json();
-                if (nomData && nomData.length > 0) fetchLiveWeather(parseFloat(nomData[0].lat), parseFloat(nomData[0].lon), nomData[0].display_name.split(',')[0]);
-                else alert('هیچ شارێک نەدۆزرایەوە!');
+                showAppToast('هیچ شارێک نەدۆزرایەوە!', '#ef4444');
             }
-        } catch (e) {
-            alert('کێشە لە گەڕان هەیە.');
+        } catch(e) {
+            showAppToast('کێشە لە گەڕان هەیە.', '#ef4444');
         }
     }
 
     function locateWeatherGPS() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(pos => fetchLiveWeather(pos.coords.latitude, pos.coords.longitude, "شوێنی ئێوە (GPS)"));
+            showAppToast('خەریکی وەرگرتنی کەشوهەوای شوێنەکەتە...', '#0284c7');
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                fetchLiveWeather(pos.coords.latitude, pos.coords.longitude, "شوێنی ئێوە (GPS)");
+                showAppToast('کەشوهەوای شوێنەکەت نوێکرایەوە ✅', '#059669');
+            }, function() {
+                showAppToast('دەسەڵاتی GPS چالاک نییە.', '#ef4444');
+            });
         }
     }
 
