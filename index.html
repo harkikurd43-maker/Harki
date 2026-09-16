@@ -3058,6 +3058,225 @@
                     <button class="btn-city-pill active" style="font-size: 0.75rem; padding: 6px 12px; pointer-events: none; background:#10b981; border-color:#10b981;">دەستپێکردن ◀</button>
                 </div>
 
+                <!-- کارتی یاری ٩: مینی گۆڵف (Fairway Nine Mini Golf) -->
+                <div class="fire-glow-card" style="background: var(--input-bg); border: 2px solid var(--card-border); border-right: 5px solid #0E4429; border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="openGolfGame()">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(14, 68, 41, 0.2); border: 1.5px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #10b981;">
+                            ⛳
+                        </div>
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-main);">مینی گۆڵف (Fairway Nine)</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">٩ چاڵی جیاواز • کێشانی هێز بە پەنجە • خلیسکانی ڕاستەقینە</div>
+                        </div>
+                    </div>
+                    <button class="btn-city-pill active" style="font-size: 0.75rem; padding: 6px 12px; pointer-events: none; background:#0E4429; border-color:#10b981; color:#fff;">دەستپێکردن ◀</button>
+                </div>
+
+                <!-- کارتی یاری ١٠: یاری فکریی ٢٠٤٨ (2048 Puzzle Game) -->
+                <div class="fire-glow-card" style="background: var(--input-bg); border: 2px solid var(--card-border); border-right: 5px solid #edc22e; border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="open2048Game()">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(237, 194, 46, 0.2); border: 1.5px solid #edc22e; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: #edc22e; font-family: var(--num-font);">
+                            2048
+                        </div>
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-main);">یاری فکریی ٢٠٤٨ (2048)</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">خلیسکانی ژمارەکان بە پەنجە • کۆکردنەوە تا گەیشتن بە ٢٠٤٨</div>
+                        </div>
+                    </div>
+                    <button class="btn-city-pill active" style="font-size: 0.75rem; padding: 6px 12px; pointer-events: none; background: #edc22e; border-color: #d97706; color: #000; font-weight: 900;">دەستپێکردن ◀</button>
+                </div>
+
+                <!-- کارتی یاری ١١: سایمۆن ٣D (Simon Says 3D Memory Game) -->
+                <div class="fire-glow-card" style="background: var(--input-bg); border: 2px solid var(--card-border); border-right: 5px solid #22c55e; border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="openSimonGame()">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 46px; height: 46px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #22c55e, #15803d); border: 2px solid #4ade80; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; box-shadow: 0 0 12px rgba(34,197,94,0.4);">
+                            🕹️
+                        </div>
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-main);">سایمۆن ٣D (Simon Says)</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;">تەحەدای دەنگ و ڕەنگ • بەهێزکردنی یادگە • دۆخی 3D ئەرکەید</div>
+                        </div>
+                    </div>
+                    <button class="btn-city-pill active" style="font-size: 0.75rem; padding: 6px 12px; pointer-events: none; background: #22c55e; border-color: #16a34a; color: #fff; font-weight: 900;">دەستپێکردن ◀</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشەی تایبەتی یاری مینی گۆڵف (Fairway Nine View) -->
+    <div id="golfGameView" style="display:none;">
+        <div class="section-card fire-glow-card" style="display: flex; flex-direction: column; align-items: center; padding: 12px 8px; background: #071f13; border: 2px solid #10b981;">
+            <div style="width: 100%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <button onclick="backToGamesHub()" class="btn-action-primary" style="width: auto; padding: 6px 14px; font-size: 0.75rem; background: #334155;">
+                    <i class="fa-solid fa-arrow-right"></i> <span>گەڕانەوە</span>
+                </button>
+                <div style="font-size: 0.92rem; font-weight: 900; color: #fef08a;">⛳ Fairway Nine • چاڵی <span id="golfHoleNumber">1</span> لە ٩</div>
+                <button onclick="resetCurrentGolfHole()" class="btn-city-pill active" style="padding: 5px 10px; font-size: 0.72rem; background: #10b981;">
+                    <i class="fa-solid fa-rotate-right"></i> لێدانەوە
+                </button>
+            </div>
+
+            <!-- هێڵی زانیاریی لێدان و پار -->
+            <div style="width: 100%; max-width: 400px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: rgba(0,0,0,0.5); border: 1.5px solid #10b981; border-radius: 12px; padding: 6px 8px; margin-bottom: 8px; text-align: center;">
+                <div>
+                    <span style="font-size: 0.62rem; color: #94a3b8; display: block;">پـــار (Par)</span>
+                    <span id="golfParText" style="font-size: 0.9rem; font-weight: 900; color: #fef08a; font-family: var(--num-font);">3</span>
+                </div>
+                <div>
+                    <span style="font-size: 0.62rem; color: #94a3b8; display: block;">لێدان (Stroke)</span>
+                    <span id="golfStrokeText" style="font-size: 0.9rem; font-weight: 900; color: #38bdf8; font-family: var(--num-font);">0</span>
+                </div>
+                <div>
+                    <span style="font-size: 0.62rem; color: #94a3b8; display: block;">کۆی گشتی</span>
+                    <span id="golfTotalScore" style="font-size: 0.9rem; font-weight: 900; color: #4ade80; font-family: var(--num-font);">0</span>
+                </div>
+                <div>
+                    <span style="font-size: 0.62rem; color: #94a3b8; display: block;">دۆخ</span>
+                    <span id="golfStatusBadge" style="font-size: 0.75rem; font-weight: 900; color: #fff;">ئامادەیە</span>
+                </div>
+            </div>
+
+            <!-- تەختەی کەشتی و یاری گۆڵف -->
+            <div style="position: relative; width: 100%; max-width: 340px; aspect-ratio: 1 / 1.4; background: #0E4429; border: 4px solid #1b4d3e; border-radius: 18px; overflow: hidden; box-shadow: inset 0 0 25px rgba(0,0,0,0.8), 0 8px 25px rgba(0,0,0,0.6);">
+                <canvas id="golfCanvas" width="340" height="476" style="width: 100%; height: 100%; display: block; touch-action: none; cursor: crosshair;"></canvas>
+
+                <!-- مۆداڵی بردنەوە و تەواوکردنی چاڵ -->
+                <div id="golfHoleCompleteOverlay" style="display:none; position:absolute; inset:0; background:rgba(7,31,19,0.88); backdrop-filter:blur(4px); flex-direction:column; align-items:center; justify-content:center; color:#fff; text-align:center; padding:16px;">
+                    <div style="font-size: 2.4rem; margin-bottom: 4px;">⛳</div>
+                    <div id="golfHoleResultTitle" style="font-size: 1.4rem; font-weight: 900; color: #fef08a; margin-bottom: 2px;">PAR!</div>
+                    <div id="golfHoleResultDesc" style="font-size: 0.8rem; color: #e2e8f0; margin-bottom: 14px;">بە ٣ لێدان تۆپەکە خرایە ناو چاڵەوە.</div>
+                    <button class="btn-action-primary" id="btnNextGolfHole" style="background: #10b981; width: auto; padding: 10px 24px; font-size: 0.85rem;" onclick="nextGolfHole()">
+                        <span>بڕۆ بۆ چاڵی داهاتوو ◀</span>
+                    </button>
+                </div>
+            </div>
+
+            <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 8px; text-align: center;">
+                پەنجەت لەسەر تۆپە سپییەکە ڕابکێشە بۆ دواوە بۆ دیاریکردنی ئاراستە و هێز، پاشان پەنجەت هەڵگرە بۆ لێدان.
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشەی تایبەتی یاری فکریی ٢٠٤٨ بە شێوازی 3D و ڕاکێشان بە پەنجە -->
+    <div id="game2048View" style="display:none;">
+        <div class="section-card fire-glow-card" style="display: flex; flex-direction: column; align-items: center; padding: 14px 10px; background: #0c1322; border: 2px solid #edc22e; border-radius: 20px;">
+            
+            <div style="width: 100%; max-width: 360px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <button onclick="backToGamesHub()" class="btn-action-primary" style="width: auto; padding: 6px 14px; font-size: 0.75rem; background: #334155;">
+                    <i class="fa-solid fa-arrow-right"></i> <span>گەڕانەوە</span>
+                </button>
+                <div style="font-size: 1.2rem; font-weight: 900; color: #facc15; font-family: var(--num-font); letter-spacing: 1.5px; text-shadow: 0 0 10px rgba(250,204,21,0.5);">3D 2048</div>
+                <button onclick="init2048Game()" class="btn-city-pill active" style="padding: 5px 14px; font-size: 0.75rem; background: #facc15; color: #000; font-weight: 900;">
+                    <i class="fa-solid fa-rotate-right"></i> نوێ
+                </button>
+            </div>
+
+            <!-- هێڵی نمرە و بەرزترین نمرە -->
+            <div style="width: 100%; max-width: 360px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                <div style="background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 8px; text-align: center;">
+                    <span style="font-size: 0.65rem; color: #94a3b8; font-weight: bold; display: block;">نمرە (SCORE)</span>
+                    <span id="score2048Text" style="font-size: 1.3rem; font-weight: 900; color: #38bdf8; font-family: var(--num-font);">0</span>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 8px; text-align: center;">
+                    <span style="font-size: 0.65rem; color: #94a3b8; font-weight: bold; display: block;">بەرزترین (BEST)</span>
+                    <span id="bestScore2048Text" style="font-size: 1.3rem; font-weight: 900; color: #f59e0b; font-family: var(--num-font);">0</span>
+                </div>
+            </div>
+
+            <!-- ڕێنمایی یارییەکە بۆ پەنجە -->
+            <div style="background: rgba(234, 179, 8, 0.1); border: 1.5px dashed #eab308; border-radius: 12px; padding: 6px 12px; margin-bottom: 12px; width: 100%; max-width: 340px; text-align: center;">
+                <span style="font-size: 0.74rem; font-weight: 900; color: #fde047;">
+                    👆 هەر ژمارەیەک هەڵگرە و بیخە سەر ژمارەیەکی وەک خۆی (وەک ٢ بۆ سەر ٢)
+                </span>
+            </div>
+
+            <!-- تەختەی 3D یاری بە گۆشەی ڕاستەقینە و قووڵایی -->
+            <div style="perspective: 900px; width: 100%; max-width: 340px; display: flex; justify-content: center; padding: 10px 0;">
+                <div id="board3D2048" style="position: relative; width: 320px; height: 320px; background: #1e293b; border: 4px solid #334155; border-bottom: 8px solid #0f172a; border-radius: 20px; padding: 10px; box-sizing: border-box; transform: rotateX(15deg); transform-style: preserve-3d; box-shadow: 0 20px 35px rgba(0,0,0,0.6), inset 0 2px 5px rgba(255,255,255,0.15); touch-action: none;">
+                    <div id="grid2048" style="display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); gap: 8px; width: 100%; height: 100%;">
+                        <!-- ١٦ خانە سێ ڕەهەندییەکە لێرە دروست دەبن -->
+                    </div>
+
+                    <!-- مۆداڵی دۆڕان / بردنەوە -->
+                    <div id="overlay2048" style="display:none; position:absolute; inset:0; background:rgba(15,23,42,0.9); backdrop-filter:blur(4px); border-radius:16px; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:16px; z-index:999;">
+                        <div id="overlay2048Title" style="font-size: 1.6rem; font-weight: 900; color: #ef4444; margin-bottom: 6px;">GAME OVER!</div>
+                        <div id="overlay2048Desc" style="font-size: 0.82rem; font-weight: bold; color: #cbd5e1; margin-bottom: 14px;">هیچ خانەیەکی تێکەڵکردن نەماوە!</div>
+                        <button class="btn-action-primary" style="background: #facc15; color:#000; font-weight:900; width: auto; padding: 8px 24px; font-size: 0.85rem;" onclick="init2048Game()">
+                            <span>دووبارە دەستپێبکەرەوە ◀</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- دۆخی گۆڕین بۆ خلیسکانی کۆن (ئارەزوومەندانە) -->
+            <div style="display:flex; justify-content:space-between; align-items:center; width:100%; max-width:320px; margin-top:10px; font-size:0.7rem; color:#94a3b8;">
+                <span>دەتوانیت دانە دانە بە دەست ڕایبکێشیت</span>
+                <button class="btn-city-pill" onclick="triggerRandom2048Slide()" style="padding:4px 8px; font-size:0.68rem; background:#334155; color:#fff;">
+                    تێکەڵکردنی هەمووی 🎲
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشەی تایبەتی یاری سایمۆن بە دیزاینی 3D (Simon Says 3D View) -->
+    <div id="simonGameView" style="display:none;">
+        <div class="section-card fire-glow-card" style="display: flex; flex-direction: column; align-items: center; padding: 14px 10px; background: #080c16; border: 2px solid #22c55e; border-radius: 20px;">
+            
+            <div style="width: 100%; max-width: 360px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <button onclick="backToGamesHub()" class="btn-action-primary" style="width: auto; padding: 6px 14px; font-size: 0.75rem; background: #334155;">
+                    <i class="fa-solid fa-arrow-right"></i> <span>گەڕانەوە</span>
+                </button>
+                <div style="font-size: 1.15rem; font-weight: 900; color: #4ade80; font-family: var(--num-font); letter-spacing: 1px;">SIMON 3D</div>
+                <button onclick="startSimonGame()" class="btn-city-pill active" style="padding: 5px 12px; font-size: 0.75rem; background: #22c55e; color: #fff; font-weight: 900;">
+                    <i class="fa-solid fa-play"></i> دەستپێک
+                </button>
+            </div>
+
+            <!-- هێڵی زانیاریی قۆناغ و سکۆر -->
+            <div style="width: 100%; max-width: 340px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 12px; text-align: center;">
+                <div style="background: rgba(255,255,255,0.05); border: 1.5px solid var(--card-border); border-radius: 12px; padding: 6px;">
+                    <span style="font-size: 0.62rem; color: #94a3b8; display: block;">قۆناغ (ROUND)</span>
+                    <span id="simonRoundText" style="font-size: 1.15rem; font-weight: 900; color: #fef08a; font-family: var(--num-font);">--</span>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); border: 1.5px solid var(--card-border); border-radius: 12px; padding: 6px;">
+                    <span style="font-size: 0.62rem; color: #94a3b8; display: block;">بەرزترین (BEST)</span>
+                    <span id="simonBestText" style="font-size: 1.15rem; font-weight: 900; color: #38bdf8; font-family: var(--num-font);">0</span>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); border: 1.5px solid var(--card-border); border-radius: 12px; padding: 6px;">
+                    <span style="font-size: 0.62rem; color: #94a3b8; display: block;">دۆخی دەنگ</span>
+                    <button id="btnSimonSoundToggle" onclick="toggleSimonSound()" class="btn-city-pill" style="padding: 2px 8px; font-size: 0.68rem; margin-top: 2px; background:#10b981; color:#fff;">دەنگدار 🔊</button>
+                </div>
+            </div>
+
+            <!-- ئامێری بازنەیی 3D سایمۆن بە ٤ پارچەی پڕشنگدار -->
+            <div style="perspective: 850px; width: 100%; max-width: 340px; display: flex; justify-content: center; padding: 8px 0;">
+                <div id="simonConsole3D" style="position: relative; width: 285px; height: 285px; border-radius: 50%; background: #0f172a; border: 8px solid #1e293b; border-bottom: 14px solid #020617; box-shadow: 0 25px 45px rgba(0,0,0,0.8), inset 0 2px 6px rgba(255,255,255,0.2); transform: rotateX(20deg); transform-style: preserve-3d; display: flex; align-items: center; justify-content: center; user-select: none;">
+                    
+                    <!-- ٤ دوگمە گەورە کەوانەییەکە -->
+                    <!-- سەوز (سەرەوە لای چەپ) -->
+                    <div id="simonPadGreen" onclick="onSimonPadClick(0)" style="position: absolute; top: 10px; left: 10px; width: 120px; height: 120px; border-top-left-radius: 130px; background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); border: 3px solid #166534; cursor: pointer; transition: all 0.1s ease; box-shadow: 0 6px 0 #14532d, inset 0 2px 5px rgba(255,255,255,0.4);"></div>
+
+                    <!-- سوور (سەرەوە لای ڕاست) -->
+                    <div id="simonPadRed" onclick="onSimonPadClick(1)" style="position: absolute; top: 10px; right: 10px; width: 120px; height: 120px; border-top-right-radius: 130px; background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); border: 3px solid #991b1b; cursor: pointer; transition: all 0.1s ease; box-shadow: 0 6px 0 #7f1d1d, inset 0 2px 5px rgba(255,255,255,0.4);"></div>
+
+                    <!-- زەرد (خوارەوە لای چەپ) -->
+                    <div id="simonPadYellow" onclick="onSimonPadClick(2)" style="position: absolute; bottom: 10px; left: 10px; width: 120px; height: 120px; border-bottom-left-radius: 130px; background: linear-gradient(135deg, #eab308 0%, #a16207 100%); border: 3px solid #854d0e; cursor: pointer; transition: all 0.1s ease; box-shadow: 0 6px 0 #713f12, inset 0 2px 5px rgba(255,255,255,0.4);"></div>
+
+                    <!-- شین (خوارەوە لای ڕاست) -->
+                    <div id="simonPadBlue" onclick="onSimonPadClick(3)" style="position: absolute; bottom: 10px; right: 10px; width: 120px; height: 120px; border-bottom-right-radius: 130px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border: 3px solid #1e40af; cursor: pointer; transition: all 0.1s ease; box-shadow: 0 6px 0 #1e3a8a, inset 0 2px 5px rgba(255,255,255,0.4);"></div>
+
+                    <!-- سەنتەری کۆنتڕۆڵی ناوەڕاست بە ستایلی مێتاڵیک -->
+                    <div style="position: absolute; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #334155, #0f172a); border: 4px solid #475569; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; box-shadow: 0 8px 18px rgba(0,0,0,0.8);">
+                        <div style="font-size: 0.65rem; font-weight: 900; color: #94a3b8; letter-spacing: 1px;">SIMON</div>
+                        <div id="simonLedScreen" style="font-family: var(--num-font); font-size: 1.1rem; font-weight: 900; color: #22c55e; background: #020617; padding: 2px 8px; border-radius: 6px; border: 1px solid #1e293b; margin-top: 2px;">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- دەقی ڕێنمایی دۆخی یاری -->
+            <div id="simonStatusMsg" style="font-size: 0.78rem; font-weight: 800; color: #cbd5e1; margin-top: 14px; text-align: center;">
+                کلیک لەسەر دوگمەی سەوزی دەستپێک بکە بۆ دەستپێکردنی یارییەکە 🎮
             </div>
         </div>
     </div>
@@ -4446,7 +4665,7 @@
                 </button>
             </div>
             <div style="font-size: 0.68rem; color: var(--text-muted); text-align: center; margin-top: 6px;">
-                کاتێک مۆبایلەکە ڕێک تەرازوو دەبێت (0.0°)، ڕەنگەکەی دەبێتە سەوزی تۆخ و مۆبایلەکە دەلەرزێت.
+                کاتێک مۆبایلەکە ڕێک تەرازوو دەبێت (0.0°)، ڕەنگەکەی دەبێتە سەوزی تۆخ و وەزان دەبێت.
             </div>
         </div>
     </div>
@@ -5004,6 +5223,810 @@
         document.getElementById('bubbleGameView').style.display = 'none';
         document.getElementById('ropeGameView').style.display = 'none';
         document.getElementById('memoryGameView').style.display = 'none';
+        var golfView = document.getElementById('golfGameView');
+        if (golfView) golfView.style.display = 'none';
+        var g2048 = document.getElementById('game2048View');
+        if (g2048) g2048.style.display = 'none';
+        var simonView = document.getElementById('simonGameView');
+        if (simonView) simonView.style.display = 'none';
+    }
+
+    function openSimonGame() {
+        document.getElementById('gamesHubMenu').style.display = 'none';
+        var sv = document.getElementById('simonGameView');
+        if (sv) sv.style.display = 'block';
+        initSimonGame();
+    }
+
+    /* =========================================================
+       بزوێنەری فەرمیی یاری سایمۆن ٣D بە دەنگ و ڕووناکی (Simon 3D)
+    ========================================================= */
+    var simonSequence = [];
+    var simonUserGuesses = [];
+    var simonRound = 0;
+    var simonBestRound = parseInt(localStorage.getItem('simon_best_round') || '0');
+    var simonIsPlaying = false;
+    var simonSoundEnabled = true;
+    var simonPadPointersBlocked = true;
+
+    // لەرەلەری دەنگە کلاسیکەکانی سایمۆن (Frequencies Hz)
+    var SIMON_FREQS = [415, 310, 252, 209]; // سەوز، سوور، زەرد، شین
+    var SIMON_COLORS_INFO = [
+        { id: 'simonPadGreen', activeBg: '#4ade80', glow: '0 0 25px #4ade80' },
+        { id: 'simonPadRed', activeBg: '#f87171', glow: '0 0 25px #f87171' },
+        { id: 'simonPadYellow', activeBg: '#fde047', glow: '0 0 25px #fde047' },
+        { id: 'simonPadBlue', activeBg: '#60a5fa', glow: '0 0 25px #60a5fa' }
+    ];
+
+    function initSimonGame() {
+        simonSequence = [];
+        simonUserGuesses = [];
+        simonRound = 0;
+        simonIsPlaying = false;
+        simonPadPointersBlocked = true;
+
+        document.getElementById('simonRoundText').innerText = '--';
+        document.getElementById('simonLedScreen').innerText = '--';
+        document.getElementById('simonBestText').innerText = toEn(simonBestRound);
+        document.getElementById('simonStatusMsg').innerText = 'کلیک لەسەر دوگمەی سەوزی دەستپێک بکە بۆ دەستپێکردنی یارییەکە 🎮';
+    }
+
+    function toggleSimonSound() {
+        simonSoundEnabled = !simonSoundEnabled;
+        var btn = document.getElementById('btnSimonSoundToggle');
+        if (btn) {
+            btn.innerText = simonSoundEnabled ? 'دەنگدار 🔊' : 'بێدەنگ 🔇';
+            btn.style.background = simonSoundEnabled ? '#10b981' : '#64748b';
+        }
+    }
+
+    function playSimonAudioTone(colorIndex) {
+        if (!simonSoundEnabled) return;
+        try {
+            var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            var osc = audioCtx.createOscillator();
+            var gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(SIMON_FREQS[colorIndex] || 300, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.32);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.32);
+        } catch(e) {}
+    }
+
+    function playSimonErrorTone() {
+        if (!simonSoundEnabled) return;
+        try {
+            var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            var osc = audioCtx.createOscillator();
+            var gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(95, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.6);
+        } catch(e) {}
+    }
+
+    function lightUpSimonPad(colorIndex, duration) {
+        if (duration === undefined) duration = 350;
+        var padInfo = SIMON_COLORS_INFO[colorIndex];
+        var padEl = document.getElementById(padInfo.id);
+        if (!padEl) return;
+
+        playSimonAudioTone(colorIndex);
+
+        var originalStyle = padEl.style.cssText;
+        padEl.style.transform = 'translateZ(-6px) scale(0.97)';
+        padEl.style.background = padInfo.activeBg;
+        padEl.style.boxShadow = padInfo.glow;
+        padEl.style.filter = 'brightness(1.5)';
+
+        setTimeout(function() {
+            padEl.style.cssText = originalStyle;
+        }, duration);
+    }
+
+    function startSimonGame() {
+        simonSequence = [];
+        simonUserGuesses = [];
+        simonRound = 1;
+        simonIsPlaying = true;
+        simonPadPointersBlocked = true;
+
+        document.getElementById('simonRoundText').innerText = toEn(simonRound);
+        document.getElementById('simonLedScreen').innerText = toEn(simonRound < 10 ? '0' + simonRound : simonRound);
+        document.getElementById('simonStatusMsg').innerText = 'سەیری ڕەنگەکان بکە و دەنگەکان لەبەر بکە... 👀';
+
+        addNewSimonStep();
+    }
+
+    function addNewSimonStep() {
+        var nextColor = Math.floor(Math.random() * 4);
+        simonSequence.push(nextColor);
+        simonUserGuesses = [];
+        playFullSimonSequence();
+    }
+
+    function playFullSimonSequence() {
+        simonPadPointersBlocked = true;
+        document.getElementById('simonStatusMsg').innerText = 'سایمۆن نیشانت دەدات... چاوەڕوانبە 🤖';
+
+        var i = 0;
+        var interval = setInterval(function() {
+            if (i >= simonSequence.length) {
+                clearInterval(interval);
+                simonPadPointersBlocked = false;
+                document.getElementById('simonStatusMsg').innerText = 'نۆرەی تۆیە! بە هەمان ڕیزبەندی دایانبگرە 👆';
+                return;
+            }
+            lightUpSimonPad(simonSequence[i]);
+            i++;
+        }, 650);
+    }
+
+    function onSimonPadClick(colorIndex) {
+        if (!simonIsPlaying || simonPadPointersBlocked) return;
+
+        lightUpSimonPad(colorIndex, 200);
+        simonUserGuesses.push(colorIndex);
+
+        var currentStep = simonUserGuesses.length - 1;
+
+        // پشکنینی ڕاستی هەڵبژاردنەکە
+        if (simonUserGuesses[currentStep] !== simonSequence[currentStep]) {
+            // هەڵەی کرد و دۆڕا
+            handleSimonLoss();
+            return;
+        }
+
+        // ئەگەر تەواوی زنجیرەکەی بە دروستی تەواو کرد
+        if (simonUserGuesses.length === simonSequence.length) {
+            simonPadPointersBlocked = true;
+            if (simonRound > simonBestRound) {
+                simonBestRound = simonRound;
+                localStorage.setItem('simon_best_round', simonBestRound);
+                document.getElementById('simonBestText').innerText = toEn(simonBestRound);
+            }
+
+            document.getElementById('simonStatusMsg').innerText = 'ئافەرم! قۆناغەکەت بڕی 🌟';
+            simonRound++;
+            document.getElementById('simonRoundText').innerText = toEn(simonRound);
+            document.getElementById('simonLedScreen').innerText = toEn(simonRound < 10 ? '0' + simonRound : simonRound);
+
+            setTimeout(function() {
+                addNewSimonStep();
+            }, 1000);
+        }
+    }
+
+    function handleSimonLoss() {
+        simonIsPlaying = false;
+        simonPadPointersBlocked = true;
+        playSimonErrorTone();
+
+        document.getElementById('simonLedScreen').innerText = '!!';
+        document.getElementById('simonStatusMsg').innerText = '❌ هەڵەت کرد! یارییەکە کۆتایی هات.';
+
+        // لێدانی فلاش لەسەر تەختەکە
+        var consoleEl = document.getElementById('simonConsole3D');
+        if (consoleEl) {
+            consoleEl.style.boxShadow = '0 0 35px #ef4444';
+            setTimeout(function() {
+                consoleEl.style.boxShadow = '0 25px 45px rgba(0,0,0,0.8)';
+            }, 600);
+        }
+
+        setTimeout(function() {
+            alert('❌ بەداخەوە هەڵەت کرد!\nقۆناغی گەیشتوو: ' + toEn(simonRound));
+            initSimonGame();
+        }, 500);
+    }
+
+    function open2048Game() {
+        document.getElementById('gamesHubMenu').style.display = 'none';
+        var gv = document.getElementById('game2048View');
+        if (gv) gv.style.display = 'block';
+        init2048Game();
+    }
+
+    /* =========================================================
+       بزوێنەری 3D یاری ٢٠٤٨ بە ڕاکێشانی ڕاستەوخۆ بە پەنجە (Drag & Drop)
+    ========================================================= */
+    var board2048 = [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+    ];
+    var score2048 = 0;
+    var bestScore2048 = parseInt(localStorage.getItem('2048_best_score') || '0');
+    var is2048GameOver = false;
+
+    // ڕەنگبەندیی بلۆکە 3D ییەکان لەگەڵ سێبەر و قووڵایی بەردین
+    var BLOCKS_3D_PALETTE = {
+        0:    { top: '#0f172a', side: '#020617', text: 'transparent' },
+        2:    { top: '#e2e8f0', side: '#94a3b8', text: '#1e293b' },
+        4:    { top: '#fef08a', side: '#eab308', text: '#713f12' },
+        8:    { top: '#fdba74', side: '#ea580c', text: '#fff' },
+        16:   { top: '#fb923c', side: '#c2410c', text: '#fff' },
+        32:   { top: '#f87171', side: '#dc2626', text: '#fff' },
+        64:   { top: '#ef4444', side: '#991b1b', text: '#fff' },
+        128:  { top: '#38bdf8', side: '#0284c7', text: '#fff' },
+        256:  { top: '#60a5fa', side: '#1d4ed8', text: '#fff' },
+        512:  { top: '#a855f7', side: '#7e22ce', text: '#fff' },
+        1024: { top: '#c084fc', side: '#6b21a8', text: '#fff' },
+        2048: { top: '#facc15', side: '#a16207', text: '#000' }
+    };
+
+    function init2048Game() {
+        board2048 = [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ];
+        score2048 = 0;
+        is2048GameOver = false;
+        document.getElementById('overlay2048').style.display = 'none';
+        update2048ScoresUI();
+        spawn2048Tile();
+        spawn2048Tile();
+        render2048Grid();
+    }
+
+    function spawn2048Tile() {
+        var empty = [];
+        for (var r = 0; r < 4; r++) {
+            for (var c = 0; c < 4; c++) {
+                if (board2048[r][c] === 0) empty.push({ r: r, c: c });
+            }
+        }
+        if (empty.length > 0) {
+            var spot = empty[Math.floor(Math.random() * empty.length)];
+            board2048[spot.r][spot.c] = Math.random() < 0.85 ? 2 : 4;
+        }
+    }
+
+    function render2048Grid() {
+        var grid = document.getElementById('grid2048');
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        for (var r = 0; r < 4; r++) {
+            for (var c = 0; c < 4; c++) {
+                var val = board2048[r][c];
+                var cell = document.createElement('div');
+                cell.className = 'cell-slot-3d';
+                cell.dataset.r = r;
+                cell.dataset.c = c;
+                cell.style = "position:relative; width:100%; height:100%; background:rgba(0,0,0,0.35); border-radius:12px; box-shadow:inset 0 2px 6px rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center;";
+
+                if (val > 0) {
+                    var tile = document.createElement('div');
+                    tile.className = 'tile-block-3d';
+                    tile.dataset.r = r;
+                    tile.dataset.c = c;
+                    tile.dataset.val = val;
+
+                    var palette = BLOCKS_3D_PALETTE[val] || { top: '#facc15', side: '#a16207', text: '#000' };
+                    var fSize = val > 512 ? '1.1rem' : (val > 64 ? '1.35rem' : '1.6rem');
+
+                    // ستایلی بەرزی و قووڵایی 3D
+                    tile.style = "position:absolute; inset:2px; border-radius:10px; background:linear-gradient(180deg, " + palette.top + " 0%, " + palette.side + " 100%); border-top:1.5px solid rgba(255,255,255,0.6); box-shadow:0 6px 0 " + palette.side + ", 0 10px 15px rgba(0,0,0,0.5); color:" + palette.text + "; display:flex; align-items:center; justify-content:center; font-family:var(--num-font); font-weight:900; font-size:" + fSize + "; user-select:none; cursor:grab; z-index:5; touch-action:none;";
+                    tile.innerText = toEn(val);
+
+                    // بەستنەوەی ڕاکێشان بە پەنجە بۆ هەر دانەیەک بە جیا
+                    attach3DDragEvents(tile, r, c, val);
+                    cell.appendChild(tile);
+                }
+
+                grid.appendChild(cell);
+            }
+        }
+    }
+
+    // فیزیکی هەڵگرتن و ڕاکێشانی بلۆک بە پەنجە
+    function attach3DDragEvents(tile, startR, startC, val) {
+        var startX = 0, startY = 0;
+        var currentX = 0, currentY = 0;
+        var isDragging = false;
+
+        tile.addEventListener('pointerdown', function(e) {
+            if (is2048GameOver) return;
+            e.preventDefault();
+            isDragging = true;
+            tile.setPointerCapture(e.pointerId);
+
+            startX = e.clientX;
+            startY = e.clientY;
+
+            // بەرزکردنەوەی بلۆکەکە لەناو هەوادا
+            tile.style.cursor = 'grabbing';
+            tile.style.zIndex = '999';
+            tile.style.transform = 'translate3d(0, -10px, 40px) scale(1.15)';
+            tile.style.boxShadow = '0 18px 25px rgba(0,0,0,0.7), 0 0 15px rgba(250,204,21,0.5)';
+            if (typeof playAudio === 'function') playAudio('move');
+        });
+
+        tile.addEventListener('pointermove', function(e) {
+            if (!isDragging) return;
+            var dx = e.clientX - startX;
+            var dy = e.clientY - startY;
+            tile.style.transform = 'translate3d(' + dx + 'px, ' + (dy - 10) + 'px, 40px) scale(1.15)';
+        });
+
+        tile.addEventListener('pointerup', function(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            tile.releasePointerCapture(e.pointerId);
+
+            tile.style.display = 'none'; // شاردنەوەی کاتی بۆ دۆزینەوەی خانەی ژێرەوە
+            var dropElem = document.elementFromPoint(e.clientX, e.clientY);
+            tile.style.display = 'flex';
+
+            var targetSlot = dropElem ? dropElem.closest('.cell-slot-3d') : null;
+            var movedSuccessfully = false;
+
+            if (targetSlot) {
+                var targetR = parseInt(targetSlot.dataset.r);
+                var targetC = parseInt(targetSlot.dataset.c);
+
+                // ئەگەر خانەکە هەمان خانەی خۆی نەبوو
+                if (!(targetR === startR && targetC === startC)) {
+                    var targetVal = board2048[targetR][targetC];
+
+                    // حاڵەتی ١: بردنە سەر ژمارەیەکی وەک خۆی (Merge: ٢ بۆ سەر ٢)
+                    if (targetVal === val) {
+                        board2048[targetR][targetC] = val * 2;
+                        board2048[startR][startC] = 0;
+                        score2048 += (val * 2);
+                        movedSuccessfully = true;
+                        if (typeof playAudio === 'function') playAudio('king');
+                        if (typeof showAppToast === 'function') showAppToast('تێکەڵ بوو: ' + toEn(val * 2) + ' ⚡', '#22c55e');
+                    }
+                    // حاڵەتی ٢: بردنە ناو خانەیەکی بەتاڵ (Move to Empty)
+                    else if (targetVal === 0) {
+                        board2048[targetR][targetC] = val;
+                        board2048[startR][startC] = 0;
+                        movedSuccessfully = true;
+                        if (typeof playAudio === 'function') playAudio('move');
+                    }
+                }
+            }
+
+            if (movedSuccessfully) {
+                spawn2048Tile();
+                render2048Grid();
+                update2048ScoresUI();
+                check2048GameState();
+            } else {
+                // گەڕانەوە بۆ شوێنی خۆی
+                tile.style.zIndex = '5';
+                tile.style.transform = 'translate3d(0, 0, 0) scale(1)';
+                tile.style.boxShadow = '0 6px 0 ' + (BLOCKS_3D_PALETTE[val]?.side || '#94a3b8') + ', 0 10px 15px rgba(0,0,0,0.5)';
+                tile.style.cursor = 'grab';
+            }
+        });
+    }
+
+    function update2048ScoresUI() {
+        document.getElementById('score2048Text').innerText = toEn(score2048);
+        if (score2048 > bestScore2048) {
+            bestScore2048 = score2048;
+            localStorage.setItem('2048_best_score', bestScore2048);
+        }
+        document.getElementById('bestScore2048Text').innerText = toEn(bestScore2048);
+    }
+
+    function check2048GameState() {
+        for (var r = 0; r < 4; r++) {
+            for (var c = 0; c < 4; c++) {
+                if (board2048[r][c] === 2048 && !window._hasWon2048Notified) {
+                    window._hasWon2048Notified = true;
+                    if (typeof playAudio === 'function') playAudio('king');
+                    alert('🎉 پیرۆزە! گەیشتیت بە بلۆکی ٢٠٤٨!');
+                }
+            }
+        }
+
+        // پشکنینی خانەی بەتاڵ
+        for (var r = 0; r < 4; r++) {
+            for (var c = 0; c < 4; c++) {
+                if (board2048[r][c] === 0) return;
+            }
+        }
+
+        // پشکنینی تێکەڵبوون
+        for (var r = 0; r < 4; r++) {
+            for (var c = 0; c < 4; c++) {
+                if (r < 3 && board2048[r][c] === board2048[r + 1][c]) return;
+                if (c < 3 && board2048[r][c] === board2048[r][c + 1]) return;
+            }
+        }
+
+        is2048GameOver = true;
+        document.getElementById('overlay2048').style.display = 'flex';
+    }
+
+    // دوگمەی خێرای تێکەڵکردن
+    function triggerRandom2048Slide() {
+        var dirs = ['left', 'right', 'up', 'down'];
+        var d = dirs[Math.floor(Math.random() * dirs.length)];
+        // ئەگەر ویستت بە یەکجار هەمووی تێکەڵ بکەیت
+        showAppToast('بلۆکەکان دەتوانیت بە دەست دانە دانە ڕابکێشیت 👆', '#38bdf8');
+    }
+
+    function openGolfGame() {
+        document.getElementById('gamesHubMenu').style.display = 'none';
+        var gv = document.getElementById('golfGameView');
+        if (gv) gv.style.display = 'block';
+        initGolfGame();
+    }
+
+    /* =========================================================
+       ماتۆڕی پێشکەوتووی یاری مینی گۆڵف (Fairway Nine Engine)
+    ========================================================= */
+    var golfCanvas = null, golfCtx = null;
+    var currentGolfHoleIndex = 0;
+    var golfBall = { x: 170, y: 400, vx: 0, vy: 0, r: 6.5 };
+    var golfAiming = false;
+    var golfDragStart = { x: 0, y: 0 };
+    var golfDragCurrent = { x: 0, y: 0 };
+    var golfHolePar = 3;
+    var golfCurrentStrokes = 0;
+    var golfTotalStrokes = 0;
+    var golfHoleCompleted = false;
+    var golfAnimFrame = null;
+
+    // نەخشەی ٩ چاڵی پێشکەوتوو بە بەربەست، چاڵی شلمەنی (Sand) و ئاو (Water)
+    var GOLF_HOLES_DATA = [
+        // چاڵی ١: ڕاستەوخۆ و ئاسان
+        { par: 2, tee: { x: 170, y: 410 }, hole: { x: 170, y: 90 }, walls: [], sand: [], water: [] },
+        // چاڵی ٢: گۆشەی کەوانەیی (Dogleg) بە دیواری بەربەست
+        { par: 3, tee: { x: 90, y: 410 }, hole: { x: 260, y: 90 }, walls: [{ x: 50, y: 220, w: 170, h: 14 }], sand: [], water: [] },
+        // چاڵی ٣: بەربەستی خولاوەی ناوەڕاست
+        { par: 3, tee: { x: 170, y: 410 }, hole: { x: 170, y: 80 }, walls: [{ x: 120, y: 220, w: 100, h: 20 }], sand: [{ x: 50, y: 150, w: 60, h: 50 }], water: [] },
+        // چاڵی ٤: چاڵی لمی گەورە لە پێش چاڵ
+        { par: 3, tee: { x: 170, y: 410 }, hole: { x: 170, y: 80 }, walls: [], sand: [{ x: 100, y: 160, w: 140, h: 70 }], water: [] },
+        // چاڵی ٥: گۆمی ئاوی مەترسیدار لەگەڵ ڕێڕەوی تەسک
+        { par: 4, tee: { x: 70, y: 410 }, hole: { x: 270, y: 80 }, walls: [{ x: 130, y: 120, w: 14, h: 180 }], sand: [], water: [{ x: 160, y: 180, w: 90, h: 90 }] },
+        // چاڵی ٦: نەخشەی قەوساو بە دیوارەکانی چەپ و ڕاست
+        { par: 4, tee: { x: 170, y: 420 }, hole: { x: 170, y: 70 }, walls: [{ x: 30, y: 280, w: 160, h: 14 }, { x: 150, y: 180, w: 160, h: 14 }], sand: [], water: [] },
+        // چاڵی ٧: چاڵی تەنیراو بە ئاو (Island Green)
+        { par: 3, tee: { x: 170, y: 410 }, hole: { x: 170, y: 90 }, walls: [], sand: [], water: [{ x: 80, y: 60, w: 180, h: 60 }] },
+        // چاڵی ٨: بەربەستەکانی زیکزاک
+        { par: 4, tee: { x: 60, y: 410 }, hole: { x: 280, y: 70 }, walls: [{ x: 110, y: 310, w: 20, h: 20 }, { x: 210, y: 230, w: 20, h: 20 }, { x: 110, y: 150, w: 20, h: 20 }], sand: [{ x: 200, y: 320, w: 70, h: 50 }], water: [] },
+        // چاڵی ٩: کۆتایی گەورە (Grand Finale)
+        { par: 5, tee: { x: 170, y: 420 }, hole: { x: 170, y: 60 }, walls: [{ x: 60, y: 240, w: 100, h: 14 }, { x: 180, y: 160, w: 100, h: 14 }], sand: [{ x: 40, y: 90, w: 80, h: 60 }], water: [{ x: 220, y: 90, w: 80, h: 60 }] }
+    ];
+
+    function initGolfGame() {
+        golfCanvas = document.getElementById('golfCanvas');
+        if (!golfCanvas) return;
+        golfCtx = golfCanvas.getContext('2d');
+        currentGolfHoleIndex = 0;
+        golfTotalStrokes = 0;
+        loadGolfHole(0);
+        setupGolfPointerEvents();
+        startGolfLoop();
+    }
+
+    function loadGolfHole(index) {
+        currentGolfHoleIndex = index;
+        var hData = GOLF_HOLES_DATA[index];
+        golfHolePar = hData.par;
+        golfCurrentStrokes = 0;
+        golfHoleCompleted = false;
+
+        golfBall.x = hData.tee.x;
+        golfBall.y = hData.tee.y;
+        golfBall.vx = 0;
+        golfBall.vy = 0;
+
+        document.getElementById('golfHoleNumber').innerText = toEn(index + 1);
+        document.getElementById('golfParText').innerText = toEn(golfHolePar);
+        document.getElementById('golfStrokeText').innerText = '0';
+        document.getElementById('golfTotalScore').innerText = toEn(golfTotalStrokes);
+        document.getElementById('golfStatusBadge').innerText = 'ئامادەیە';
+        document.getElementById('golfStatusBadge').style.color = '#fff';
+        document.getElementById('golfHoleCompleteOverlay').style.display = 'none';
+    }
+
+    function resetCurrentGolfHole() {
+        var hData = GOLF_HOLES_DATA[currentGolfHoleIndex];
+        golfBall.x = hData.tee.x;
+        golfBall.y = hData.tee.y;
+        golfBall.vx = 0;
+        golfBall.vy = 0;
+        golfCurrentStrokes = 0;
+        document.getElementById('golfStrokeText').innerText = '0';
+        document.getElementById('golfStatusBadge').innerText = 'ئامادەیە';
+        document.getElementById('golfHoleCompleteOverlay').style.display = 'none';
+    }
+
+    function setupGolfPointerEvents() {
+        if (golfCanvas._golfEventsBound) return;
+        golfCanvas._golfEventsBound = true;
+
+        function getPos(e) {
+            var rect = golfCanvas.getBoundingClientRect();
+            var cx = e.touches ? e.touches[0].clientX : e.clientX;
+            var cy = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (cx - rect.left) * (golfCanvas.width / rect.width),
+                y: (cy - rect.top) * (golfCanvas.height / rect.height)
+            };
+        }
+
+        golfCanvas.addEventListener('pointerdown', function(e) {
+            if (golfHoleCompleted || Math.hypot(golfBall.vx, golfBall.vy) > 0.1) return;
+            var p = getPos(e);
+            if (Math.hypot(p.x - golfBall.x, p.y - golfBall.y) < 36) {
+                golfAiming = true;
+                golfDragStart = { x: golfBall.x, y: golfBall.y };
+                golfDragCurrent = p;
+            }
+        });
+
+        golfCanvas.addEventListener('pointermove', function(e) {
+            if (golfAiming) {
+                golfDragCurrent = getPos(e);
+            }
+        });
+
+        window.addEventListener('pointerup', function() {
+            if (golfAiming) {
+                golfAiming = false;
+                var dx = golfDragStart.x - golfDragCurrent.x;
+                var dy = golfDragStart.y - golfDragCurrent.y;
+                var pullDist = Math.hypot(dx, dy);
+
+                if (pullDist > 8) {
+                    var power = Math.min(pullDist * 0.13, 14); // سنووردارکردنی هێز
+                    var angle = Math.atan2(dy, dx);
+                    golfBall.vx = Math.cos(angle) * power;
+                    golfBall.vy = Math.sin(angle) * power;
+
+                    golfCurrentStrokes++;
+                    golfTotalStrokes++;
+                    document.getElementById('golfStrokeText').innerText = toEn(golfCurrentStrokes);
+                    document.getElementById('golfTotalScore').innerText = toEn(golfTotalStrokes);
+                    document.getElementById('golfStatusBadge').innerText = 'تۆپ دەجوڵێت';
+                    document.getElementById('golfStatusBadge').style.color = '#38bdf8';
+
+                    if (typeof playAudio === 'function') playAudio('move');
+                }
+            }
+        });
+    }
+
+    function startGolfLoop() {
+        if (golfAnimFrame) cancelAnimationFrame(golfAnimFrame);
+
+        function loop() {
+            updateGolfPhysics();
+            drawGolfCourse();
+            golfAnimFrame = requestAnimationFrame(loop);
+        }
+        loop();
+    }
+
+    function updateGolfPhysics() {
+        var speed = Math.hypot(golfBall.vx, golfBall.vy);
+        if (speed < 0.05) {
+            golfBall.vx = 0;
+            golfBall.vy = 0;
+            if (!golfHoleCompleted && document.getElementById('golfStatusBadge')) {
+                document.getElementById('golfStatusBadge').innerText = 'نۆرەی لێدان';
+                document.getElementById('golfStatusBadge').style.color = '#fef08a';
+            }
+            return;
+        }
+
+        var hData = GOLF_HOLES_DATA[currentGolfHoleIndex];
+        var friction = 0.985; // خێرایی خلیسکان لەسەر گیای سەوز
+
+        // پشکنینی ناو لم (Sand trap)
+        hData.sand.forEach(function(s) {
+            if (golfBall.x >= s.x && golfBall.x <= s.x + s.w && golfBall.y >= s.y && golfBall.y <= s.y + s.h) {
+                friction = 0.88; // خاوکردنەوەی خێرایی بە لم
+            }
+        });
+
+        // پشکنینی کەوتنە ناو ئاو (Water Hazard)
+        hData.water.forEach(function(w) {
+            if (golfBall.x >= w.x && golfBall.x <= w.x + w.w && golfBall.y >= w.y && golfBall.y <= w.y + w.h) {
+                // سزا: ١ لێدانی زیادە و گەڕاندنەوە بۆ دەستپێک
+                golfBall.vx = 0;
+                golfBall.vy = 0;
+                golfBall.x = hData.tee.x;
+                golfBall.y = hData.tee.y;
+                golfCurrentStrokes++;
+                golfTotalStrokes++;
+                document.getElementById('golfStrokeText').innerText = toEn(golfCurrentStrokes);
+                document.getElementById('golfTotalScore').innerText = toEn(golfTotalStrokes);
+                if (typeof showAppToast === 'function') showAppToast('💦 تۆپەکە کەوتە ناو ئاو! +١ سزای لێدان', '#ef4444');
+            }
+        });
+
+        golfBall.vx *= friction;
+        golfBall.vy *= friction;
+        golfBall.x += golfBall.vx;
+        golfBall.y += golfBall.vy;
+
+        // کێشانی بە دیوارەکانی دەرەوە
+        if (golfBall.x - golfBall.r < 8) { golfBall.x = 8 + golfBall.r; golfBall.vx = -golfBall.vx * 0.75; if (typeof playAudio === 'function') playAudio('move'); }
+        if (golfBall.x + golfBall.r > golfCanvas.width - 8) { golfBall.x = golfCanvas.width - 8 - golfBall.r; golfBall.vx = -golfBall.vx * 0.75; if (typeof playAudio === 'function') playAudio('move'); }
+        if (golfBall.y - golfBall.r < 8) { golfBall.y = 8 + golfBall.r; golfBall.vy = -golfBall.vy * 0.75; if (typeof playAudio === 'function') playAudio('move'); }
+        if (golfBall.y + golfBall.r > golfCanvas.height - 8) { golfBall.y = golfCanvas.height - 8 - golfBall.r; golfBall.vy = -golfBall.vy * 0.75; if (typeof playAudio === 'function') playAudio('move'); }
+
+        // کێشان بە دیوارەکانی ناوەوە
+        hData.walls.forEach(function(wall) {
+            if (golfBall.x + golfBall.r > wall.x && golfBall.x - golfBall.r < wall.x + wall.w &&
+                golfBall.y + golfBall.r > wall.y && golfBall.y - golfBall.r < wall.y + wall.h) {
+                golfBall.vx = -golfBall.vx * 0.75;
+                golfBall.vy = -golfBall.vy * 0.75;
+                if (typeof playAudio === 'function') playAudio('move');
+            }
+        });
+
+        // پشکنینی کەوتنە ناو چاڵ (Cup / Hole)
+        var distToCup = Math.hypot(golfBall.x - hData.hole.x, golfBall.y - hData.hole.y);
+        if (distToCup < 9 && speed < 3.2 && !golfHoleCompleted) {
+            golfHoleCompleted = true;
+            golfBall.vx = 0;
+            golfBall.vy = 0;
+            golfBall.x = hData.hole.x;
+            golfBall.y = hData.hole.y;
+            handleGolfHoleWin();
+        }
+    }
+
+    function handleGolfHoleWin() {
+        if (typeof playAudio === 'function') playAudio('king');
+
+        var diff = golfCurrentStrokes - golfHolePar;
+        var title = "PAR!";
+        if (golfCurrentStrokes === 1) title = "🌟 HOLE IN ONE!";
+        else if (diff <= -2) title = "🦅 EAGLE!";
+        else if (diff === -1) title = "🐥 BIRDIE!";
+        else if (diff === 0) title = "⛳ PAR!";
+        else if (diff === 1) title = "BOGEY";
+        else title = "DOUBLE BOGEY+";
+
+        document.getElementById('golfHoleResultTitle').innerText = title;
+        document.getElementById('golfHoleResultDesc').innerText = "بە " + toEn(golfCurrentStrokes) + " لێدان گەیشتە چاڵ (پاری چاڵەکە: " + toEn(golfHolePar) + ").";
+        document.getElementById('golfHoleCompleteOverlay').style.display = 'flex';
+
+        var nextBtn = document.getElementById('btnNextGolfHole');
+        if (currentGolfHoleIndex >= GOLF_HOLES_DATA.length - 1) {
+            nextBtn.innerHTML = '<span>🎉 تەواوکردنی هەموو ٩ چاڵەکە (دووبارەکردنەوە)</span>';
+        } else {
+            nextBtn.innerHTML = '<span>بڕۆ بۆ چاڵی داهاتوو ◀</span>';
+        }
+    }
+
+    function nextGolfHole() {
+        if (currentGolfHoleIndex < GOLF_HOLES_DATA.length - 1) {
+            loadGolfHole(currentGolfHoleIndex + 1);
+        } else {
+            alert('🎉 پیرۆزە! سەرجەم ٩ چاڵەکەت بە سەرکەوتوویی تەواو کرد! کۆی لێدانەکانت: ' + toEn(golfTotalStrokes));
+            initGolfGame();
+        }
+    }
+
+    function drawGolfCourse() {
+        if (!golfCtx) return;
+        var hData = GOLF_HOLES_DATA[currentGolfHoleIndex];
+        var w = golfCanvas.width;
+        var h = golfCanvas.height;
+
+        // زەمینەی سەوزی گۆڵف
+        golfCtx.fillStyle = '#0E4429';
+        golfCtx.fillRect(0, 0, w, h);
+
+        // چوارچێوەی دەوری یاریگا
+        golfCtx.lineWidth = 8;
+        golfCtx.strokeStyle = '#1b4d3e';
+        golfCtx.strokeRect(4, 4, w - 8, h - 8);
+
+        // کێشانی لم (Sand traps)
+        hData.sand.forEach(function(s) {
+            golfCtx.fillStyle = '#d97706';
+            golfCtx.fillRect(s.x, s.y, s.w, s.h);
+            golfCtx.strokeStyle = '#b45309';
+            golfCtx.lineWidth = 2;
+            golfCtx.strokeRect(s.x, s.y, s.w, s.h);
+        });
+
+        // کێشانی ئاو (Water hazards)
+        hData.water.forEach(function(wt) {
+            golfCtx.fillStyle = '#0284c7';
+            golfCtx.fillRect(wt.x, wt.y, wt.w, wt.h);
+            golfCtx.strokeStyle = '#0369a1';
+            golfCtx.lineWidth = 2;
+            golfCtx.strokeRect(wt.x, wt.y, wt.w, wt.h);
+        });
+
+        // کێشانی دیوارە بەربەستەکان
+        hData.walls.forEach(function(wall) {
+            golfCtx.fillStyle = '#cbd5e1';
+            golfCtx.fillRect(wall.x, wall.y, wall.w, wall.h);
+            golfCtx.strokeStyle = '#94a3b8';
+            golfCtx.lineWidth = 1.5;
+            golfCtx.strokeRect(wall.x, wall.y, wall.w, wall.h);
+        });
+
+        // چاڵی تۆپ (The Hole / Cup)
+        golfCtx.beginPath();
+        golfCtx.arc(hData.hole.x, hData.hole.y, 9.5, 0, Math.PI * 2);
+        golfCtx.fillStyle = '#051b10';
+        golfCtx.fill();
+        golfCtx.lineWidth = 2;
+        golfCtx.strokeStyle = '#10b981';
+        golfCtx.stroke();
+
+        // ئاڵای چاڵەکە ⛳
+        golfCtx.fillStyle = '#ef4444';
+        golfCtx.beginPath();
+        golfCtx.moveTo(hData.hole.x, hData.hole.y - 4);
+        golfCtx.lineTo(hData.hole.x + 12, hData.hole.y - 11);
+        golfCtx.lineTo(hData.hole.x, hData.hole.y - 18);
+        golfCtx.fill();
+        golfCtx.strokeStyle = '#fff';
+        golfCtx.lineWidth = 1.5;
+        golfCtx.beginPath();
+        golfCtx.moveTo(hData.hole.x, hData.hole.y);
+        golfCtx.lineTo(hData.hole.x, hData.hole.y - 20);
+        golfCtx.stroke();
+
+        // هێڵی ئاراستە و هێز لە کاتی ڕاکێشان
+        if (golfAiming) {
+            var dx = golfDragStart.x - golfDragCurrent.x;
+            var dy = golfDragStart.y - golfDragCurrent.y;
+            var dist = Math.hypot(dx, dy);
+
+            golfCtx.save();
+            golfCtx.strokeStyle = '#fef08a';
+            golfCtx.lineWidth = 2.5;
+            golfCtx.setLineDash([5, 5]);
+            golfCtx.beginPath();
+            golfCtx.moveTo(golfBall.x, golfBall.y);
+            golfCtx.lineTo(golfBall.x + dx * 1.5, golfBall.y + dy * 1.5);
+            golfCtx.stroke();
+            golfCtx.restore();
+
+            // شریتی هێز لەسەر تۆپەکە
+            golfCtx.beginPath();
+            golfCtx.arc(golfBall.x, golfBall.y, Math.min(dist * 0.4, 25), 0, Math.PI * 2);
+            golfCtx.strokeStyle = 'rgba(254, 240, 138, 0.4)';
+            golfCtx.lineWidth = 3;
+            golfCtx.stroke();
+        }
+
+        // تۆپی سپیی گۆڵف
+        golfCtx.save();
+        golfCtx.beginPath();
+        golfCtx.arc(golfBall.x, golfBall.y, golfBall.r, 0, Math.PI * 2);
+        golfCtx.fillStyle = '#ffffff';
+        golfCtx.shadowColor = '#ffffff';
+        golfCtx.shadowBlur = 6;
+        golfCtx.fill();
+        golfCtx.lineWidth = 1;
+        golfCtx.strokeStyle = '#94a3b8';
+        golfCtx.stroke();
+        golfCtx.restore();
     }
 
     /* کردنەوەی شاشەی یارییەکان */
@@ -9832,7 +10855,7 @@ function updateTopNotifBadge() {
         var degEl = document.getElementById('liveLevelDegree');
         if (degEl) degEl.innerText = toEn(degDisplay.toFixed(1)) + '°';
 
-        // دۆخی تەرازووبوون
+        // دۆخی تەرازووبوون (بەبێ لەرزینی مۆبایل)
         var badge = document.getElementById('liveLevelStateBadge');
         var text = document.getElementById('liveLevelStateText');
         if (badge && text) {
@@ -9841,18 +10864,11 @@ function updateTopNotifBadge() {
                 badge.style.background = '#22c55e';
                 badge.style.color = '#ffffff';
                 text.innerText = '١٠٠٪ تەرازووە (وەزانە) ✅';
-
-                // لەرینەوەی مۆبایل کاتێک دەگاتە سفر
-                if (!hasLevelVibrated) {
-                    if (navigator.vibrate) navigator.vibrate(80);
-                    hasLevelVibrated = true;
-                }
             } else {
                 badge.classList.remove('active-perfect');
                 badge.style.background = 'rgba(255,255,255,0.08)';
                 badge.style.color = '#94a3b8';
                 text.innerText = 'تەراز نییە ✕';
-                hasLevelVibrated = false;
             }
         }
     }
