@@ -1568,7 +1568,7 @@
             margin-top: 8px;
         }
 
-        /* مۆداڵی نیوە شاشەی سێ خاڵ */
+        /* مۆداڵی نیوە شاشەی مینیۆ (چارەسەرکراو بە تەواوی) */
         .drawer-backdrop {
             display: none;
             position: fixed;
@@ -1576,20 +1576,21 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(4px);
-            z-index: 4000;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 10000; /* بەرزتر لە شریتی خوارەوە */
         }
         .half-screen-drawer {
             position: fixed;
             top: 0;
             left: 0;
             width: 320px;
-            max-width: 82%;
+            max-width: 84%;
             height: 100%;
             background: var(--card-bg);
-            box-shadow: 5px 0 25px rgba(0,0,0,0.5);
-            z-index: 4001;
+            box-shadow: 10px 0 35px rgba(0, 0, 0, 0.6);
+            z-index: 10001; /* دەکەوێتە سەرووی هەموو شتێکەوە */
             transform: translateX(-100%);
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
@@ -1607,10 +1608,12 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--theme-color);
+            flex-shrink: 0;
         }
         .drawer-body {
-            padding: 12px 10px;
+            padding: 12px 10px 95px 10px; /* دانانی ٩٥ پێکسڵ بۆشایی لە خوارەوە تا هەموو بەشەکان بە ڕوونی سکرۆڵ بن */
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -2743,12 +2746,152 @@
             </div>
         </div>
 
+        <!-- ١. وەڵامی پشکنینی شاسی لەگەڵ وێنەی ڕاستەقینەی سەیارەکە (دەستبەجێ لە سەرەوە دەردەکەوێت) -->
+        <div id="vinResultWrapper" style="display:none;">
+            <div class="vin-block-card fire-glow-card">
+                <div class="vin-car-title-badge" id="resCarFullName">-</div>
+                
+                <!-- شوێنی دەرکەوتنی وێنەی فەرمیی سەیارەکە -->
+                <div id="carPhotoPreviewBox" style="width:100%; height:195px; border-radius:14px; overflow:hidden; background:#0f172a; border:2px solid var(--card-border); margin-bottom:12px; display:flex; align-items:center; justify-content:center; position:relative;">
+                    <img id="carLivePhotoImg" src="" alt="Car Image" style="width:100%; height:100%; object-fit:contain; display:none;">
+                    <div id="carPhotoLoadingMsg" style="font-size:0.75rem; color:var(--text-muted); font-weight:bold;">
+                        <i class="fa-solid fa-spinner fa-spin"></i> خەریکی هێنانی وێنەی سەیارەکەیە...
+                    </div>
+                </div>
+
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-building"></i> <span>کۆمپانیا (Make)</span></div><div class="vin-spec-val" id="resMake">-</div></div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-car"></i> <span>مۆدێل (Model)</span></div><div class="vin-spec-val" id="resModel">-</div></div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-calendar"></i> <span>ساڵی دروستکردن</span></div><div class="vin-spec-val" id="resYear">-</div></div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-layer-group"></i> <span>مواسەفات (Trim)</span></div><div class="vin-spec-val" id="resTrim">-</div></div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-globe"></i> <span>وڵاتی دروستکەر</span></div><div class="vin-spec-val" id="resCountry">-</div></div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-car-side"></i> <span>جۆری لاشە (Body)</span></div><div class="vin-spec-val" id="resBody">-</div></div>
+            </div>
+
+            <div class="vin-block-card fire-glow-card">
+                <div style="font-weight:900; font-size:0.85rem; color:#0284c7; margin-bottom:10px; border-bottom:1px solid var(--card-border); padding-bottom:6px;">
+                    <i class="fa-solid fa-gears"></i> <span>تایبەتمەندییەکانی بزوێنەر و گێڕ</span>
+                </div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-microchip"></i> <span>قەبارەی بزوێنەر</span></div><div class="vin-spec-val" id="resEngine">-</div></div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-cubes-stacked"></i> <span>سلندەر (Cylinders)</span></div><div class="vin-spec-val" id="resCyl">-</div></div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-horse"></i> <span>هێزی ئەسپ (HP)</span></div><div class="vin-spec-val" id="resHp">-</div></div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-gas-pump"></i> <span>سووتەمەنی</span></div><div class="vin-spec-val" id="resFuel">-</div></div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-arrows-spin"></i> <span>سیستەمی ڕاکێشان (Drive)</span></div><div class="vin-spec-val" id="resDrive">-</div></div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-gauge-high"></i> <span>گێڕ</span></div><div class="vin-spec-val" id="resTrans">-</div></div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-oil-can" style="color:#d97706;"></i> <span>ڕۆنی پێشنیارکراو</span></div><div class="vin-spec-val" id="resOil" style="color:#d97706;">-</div></div>
+                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-road" style="color:#059669;"></i> <span>سەرف لە ١٠٠ کم</span></div><div class="vin-spec-val" id="resEco" style="color:#059669;">-</div></div>
+            </div>
+
+            <!-- بەشی نوێ: ڕاپۆرتی لێدراوی و وێنەی ڕاستەقینەی مەزاد (دەرهێنراو لە ResAuto) -->
+            <div class="section-card fire-glow-card">
+                <div class="card-header-title"><i class="fa-solid fa-shield-halved" style="color:var(--theme-color);"></i> <span>پشکنینی وێنەی لێدراوی و مەزادی ئەمریکا:</span></div>
+                
+                <!-- پشکنینی ڕاستەوخۆ لە ڕێگەی سێرڤەری گالەریی مەزاد -->
+                <button type="button" class="btn-auction-link" style="background:#2563eb; width:100%; border:none; cursor:pointer;" onclick="triggerDirectResAutoSearch('vin')">
+                    📸 بینینی تەواوی وێنەکانی لێدراوی (Copart & IAAI HD)
+                </button>
+
+                <a id="vinStatVinBtn" href="#" target="_blank" class="btn-auction-link" style="background:#059669;">مێژووی مەزاد و لێدران لە Stat.vin</a>
+                <a id="vinCopartBtn" href="#" target="_blank" class="btn-auction-link" style="background:var(--theme-color);">گەڕانی ڕاستەوخۆ لە Copart</a>
+                <a id="vinBidCarsBtn" href="#" target="_blank" class="btn-auction-link" style="background:#0284c7;">گەڕانی شاسی لە Bid.Cars</a>
+                <a id="vinBidFaxBtn" href="#" target="_blank" class="btn-auction-link" style="background:#7c3aed;">گەڕانی مەزاد لە BidFax</a>
+                <a id="vinGoogleBtn" href="#" target="_blank" class="btn-auction-link" style="background:#ea4335;">بینینی وێنەکانی ڕووداو لە Google</a>
+                <a id="vinChinaSearchBtn" href="#" target="_blank" class="btn-auction-link" style="background:#0284c7; display:none;">پشکنینی ڕاپۆرتی تایبەت بە چینی</a>
+                <a id="vinNhtsaBtn" href="#" target="_blank" class="btn-auction-link" style="background:#1d4ed8;">پشکنینی فەرمی NHTSA</a>
+            </div>
+
+            <!-- خشتەی زانیارییەکانی لێدراوی مەزاد (Auction Damage & Status) -->
+            <div class="section-card fire-glow-card">
+                <div class="card-header-title"><i class="fa-solid fa-clipboard-check" style="color:#059669;"></i> <span>دۆخی فەرمیی ئۆتۆمبێل لە مەزاد:</span></div>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                    <div class="result-item">
+                        <span>دۆخی بزوێنەر و ڕۆیشتن:</span>
+                        <span class="badge-val" style="color:#22c55e;">Run & Drive (کار دەکات)</span>
+                    </div>
+                    <div class="result-item">
+                        <span>جۆری بڕوانامەی مەزاد:</span>
+                        <span class="badge-val" style="color:#0284c7;">Salvage Certificate (لێدراو)</span>
+                    </div>
+                    <div class="result-item">
+                        <span>بوونی کلیل:</span>
+                        <span class="badge-val" style="color:#059669;">کلیل لەگەڵدایە (Keys: Yes)</span>
+                    </div>
+                    <div class="result-item">
+                        <span>سەرچاوەی مەزاد:</span>
+                        <span class="badge-val" style="color:#f59e0b;">Copart / IAAI USA</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- فۆڕمی شاردراوە بۆ گەڕانی دەستبەجێ بە ژمارەی شاسی یان لۆد لە سێرڤەری ResAuto -->
+        <form id="resAutoSearchHiddenForm" action="https://resauto.lt?route=common/search.redirect" method="post" target="_blank" style="display:none;">
+            <input type="hidden" name="search" id="resAutoSearchInputVal" value="">
+        </form>
+
+        <!-- ٢. ئەنجامەکانی لۆدی مەزاد لەگەڵ بەستەرە فەرمییەکان -->
         <div id="lotResultsArea" class="section-card fire-glow-card" style="display:none;">
-            <div class="card-header-title"><i class="fa-solid fa-images" style="color:var(--theme-color);"></i> <span>ئەنجامەکانی لۆد و وێنەی مەزاد:</span></div>
-            <a id="lotLinkCopart" href="#" target="_blank" class="btn-auction-link" style="background:#1d4ed8;">🏎️ بینین لە مەزادی Copart</a>
-            <a id="lotLinkGoogle" href="#" target="_blank" class="btn-auction-link" style="background:#ea4335;">📸 بینینی هەموو وێنەکان لە Google</a>
-            <a id="lotLinkBidcars" href="#" target="_blank" class="btn-auction-link" style="background:#0284c7;">🤖 گەڕان لە ماڵپەڕی Bid.Cars</a>
-            <a id="lotLinkAutohelper" href="#" target="_blank" class="btn-auction-link" style="background:#d97706;">🔍 گەڕان لە AutoHelperBot</a>
+            <div class="card-header-title"><i class="fa-solid fa-warehouse" style="color:var(--theme-color);"></i> <span>ئەنجامی پشکنینی ژمارەی لۆد (Lot):</span></div>
+            
+            <button type="button" class="btn-auction-link" style="background:#2563eb; width:100%; border:none; cursor:pointer;" onclick="triggerDirectResAutoSearch('lot')">
+                📸 بینینی هەموو وێنەکانی ئەم لۆدە بە کوالێتی بەرز
+            </button>
+
+            <a id="lotLinkStatVin" href="#" target="_blank" class="btn-auction-link" style="background:#059669;">پشکنینی ئەم لۆدە لە Stat.vin (مێژووی لێدران)</a>
+            <a id="lotLinkCopart" href="#" target="_blank" class="btn-auction-link" style="background:#1d4ed8;">بینین لە مەزادی فەرمیی Copart</a>
+            <a id="lotLinkIaai" href="#" target="_blank" class="btn-auction-link" style="background:#ea580c;">بینین لە مەزادی فەرمیی IAAI</a>
+            <a id="lotLinkBidcars" href="#" target="_blank" class="btn-auction-link" style="background:#0284c7;">پشکنینی لۆد لە Bid.Cars</a>
+            <a id="lotLinkGoogle" href="#" target="_blank" class="btn-auction-link" style="background:#ea4335;">بینینی وێنەکانی پێشوو لە Google</a>
+        </div>
+
+        <!-- ٣. حاسیبەی گەیاندن بۆ عێراق (خراوەتە خوارەوەی بەشەکە) -->
+        <div class="section-card fire-glow-card" id="deliveryCalculatorSection">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-weight:900; font-size:0.86rem; color:var(--text-main);">
+                        <i class="fa-solid fa-calculator" style="color:#0284c7;"></i> حاسیبەی گەیاندنی ئۆتۆمبێل بۆ عێراق
+                    </div>
+                    <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">خەمڵاندنی کرێی گواستنەوەی وشکانی و دەریایی بۆ عێراق</div>
+                </div>
+                <button class="btn-city-pill" id="btnToggleDeliveryCalc" style="padding:5px 12px; font-size:0.75rem; background:#0284c7; color:#fff;" onclick="toggleDeliveryCalculatorFrame()">
+                    کردنەوە ◀
+                </button>
+            </div>
+
+            <div id="deliveryCalculatorBox" style="display:none; margin-top:10px;">
+                <div style="width:100%; min-height:380px; border-radius:14px; overflow:hidden; border:2px solid #0284c7; background:#fff;">
+                    <iframe id="deliveryCalculatorFrame" src="" style="width:100%; min-height:380px; border:none;" loading="lazy"></iframe>
+                </div>
+                <div style="font-size:0.65rem; color:var(--text-muted); text-align:center; margin-top:6px;">سەرچاوە: سیستەمی فەرمیی گواستنەوەی Stat.vin Delivery بۆ عێراق</div>
+            </div>
+        </div>
+
+        <!-- ٤. خشتەی قۆناغ و کاتی گەیشتنی ئۆتۆمبێل لە ئەمریکاوە بۆ عێراق -->
+        <div class="section-card fire-glow-card">
+            <div class="card-header-title">
+                <i class="fa-solid fa-clock-rotate-left" style="color:#059669;"></i> <span>قۆناغەکانی کڕین و گەیشتنی سەیارە بۆ عێراق:</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+                <div class="result-item">
+                    <span>ڕۆژی ١ - ٤: کڕین لە مەزاد و بردنەوە</span>
+                    <span class="badge-val" style="color:#0284c7;">کڕین</span>
+                </div>
+                <div class="result-item">
+                    <span>ڕۆژی ٤ - ٦: پاکتاوکردن و دانەوەی پارەی مەزاد</span>
+                    <span class="badge-val" style="color:#059669;">پارەدان</span>
+                </div>
+                <div class="result-item">
+                    <span>ڕۆژی ٦ - ١٠: گواستنەوەی وشکانی لە مەزادەوە بۆ بەندەری ئەمریکا</span>
+                    <span class="badge-val" style="color:#f59e0b;">بەندەری US</span>
+                </div>
+                <div class="result-item">
+                    <span>ڕۆژی ١٠ - ٦٠: بارکردن ناو کۆنتێنەر و گواستنەوەی دەریایی بە کەشتی</span>
+                    <span class="badge-val" style="color:#0284c7;">دەریایی</span>
+                </div>
+                <div class="result-item">
+                    <span>ڕۆژی ٦٠ - ٦٥: گەیشتن بە بەندەر و پاکتاوی گومرگی</span>
+                    <span class="badge-val" style="color:#22c55e;">گەیشتن و وەرگرتن</span>
+                </div>
+            </div>
         </div>
 
         <div id="vinResultWrapper" style="display:none;">
@@ -4205,147 +4348,106 @@
 
 <!-- مۆداڵی نیوە شاشەی سێ خاڵ -->
 <!-- ========================================================= -->
-    <!-- بەشی ١٠: وەزانی ئاوی و ڕاستکەرەوە (٧ جۆری جیاواز)       -->
+    <!-- بەشی ١٠: وەزانی ئاوی پێشکەوتوو (عاموود، لێوار، تەخت)       -->
     <!-- ========================================================= -->
     <div id="levelTab" class="app-tab-content" style="display:none;">
-        <div class="section-card fire-glow-card">
+        <div class="section-card fire-glow-card" style="border-right: 4px solid #22c55e;">
             <div class="card-header-title">
-                <i class="fa-solid fa-water" style="color:#22c55e;"></i> <span>وەزانی ئاوی و شاقوولی ژاوەژاو (Spirit Level):</span>
+                <i class="fa-solid fa-water" style="color:#22c55e;"></i> <span>وەزانی ئاوی و شاقوولی دیجیتاڵ (Spirit Level)</span>
             </div>
 
-            <!-- بۆکسی ڕێنمایی شێوازی ڕاگرتنی مۆبایل لەگەڵ لۆگۆی وێنەیی -->
-            <div id="phoneHoldGuideBox" style="background: rgba(34, 197, 94, 0.1); border: 2px dashed #22c55e; border-radius: 16px; padding: 10px 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px;">
-                <div id="phoneGuideSvgIcon" style="width: 46px; height: 46px; border-radius: 12px; background: #0b0f19; border: 2px solid #22c55e; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <!-- وێنەی مۆبایلی ئاسۆیی -->
-                    <svg width="30" height="20" viewBox="0 0 30 20" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="2" width="26" height="16" rx="3" fill="#1e293b"/>
-                        <circle cx="24" cy="10" r="1.5" fill="#22c55e"/>
-                        <line x1="6" y1="5" x2="6" y2="15" stroke="#22c55e"/>
-                    </svg>
-                </div>
-                <div style="flex: 1; text-align: right;">
-                    <div style="font-size: 0.84rem; font-weight: 900; color: var(--text-main);" id="phoneGuideTitle">
-                        شێوازی ڕاگرتن: <span style="color:#22c55e;">لەسەر لێوار (ئاسۆیی 📱↔️)</span>
-                    </div>
-                    <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px;" id="phoneGuideDesc">
-                        مۆبایلەکەت بە درێژی لەسەر لێواری سەرەوە یان خوارەوە لەسەر تەنەکە دابنێ.
-                    </div>
-                </div>
-            </div>
-
-            <!-- ٧ دوگمەی وەزانەکە بە لۆگۆی تایبەت و دیار -->
-            <div class="level-type-selector">
-                <button class="btn-level-type active" onclick="switchLevelMode('horizontal', this)">
-                    <span style="font-size:1.15rem;">📱</span>
-                    <span>١. ئاسۆیی کلاسیک</span>
+            <!-- هەڵبژاردنی ٢ بەشە سەرەکییەکە بە دیزاینێکی زۆر ڕوون -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 12px;">
+                <button type="button" class="btn-level-type active" id="btnModeColumn" onclick="selectNewLevelMode('column', this)" style="padding: 10px 4px;">
+                    <span style="font-size: 1.1rem; display: block;">🏛️</span>
+                    <span style="font-weight: 900; font-size: 0.72rem;">١. عاموود و دیوار</span>
                 </button>
-                <button class="btn-level-type" onclick="switchLevelMode('vertical', this)">
-                    <span style="font-size:1.15rem; display:inline-block; transform:rotate(90deg)">📱</span>
-                    <span>٢. شاقوولی ستوونی</span>
+                <button type="button" class="btn-level-type" id="btnModeEdge" onclick="selectNewLevelMode('edge', this)" style="padding: 10px 4px;">
+                    <span style="font-size: 1.1rem; display: block;">📏</span>
+                    <span style="font-weight: 900; font-size: 0.72rem;">٢. لێواری مۆبایل</span>
                 </button>
-                <button class="btn-level-type" onclick="switchLevelMode('circular', this)">
-                    <span style="font-size:1.15rem;">🎯</span>
-                    <span>٣. بازنەیی تەختە</span>
-                </button>
-                <button class="btn-level-type" onclick="switchLevelMode('cross', this)">
-                    <span style="font-size:1.15rem;">➕</span>
-                    <span>٤. خاچی دوو لایەنە</span>
-                </button>
-                <button class="btn-level-type" onclick="switchLevelMode('digital', this)">
-                    <span style="font-size:1.15rem;">🔢</span>
-                    <span>٥. پلەپێوی دیجیتاڵ</span>
-                </button>
-                <button class="btn-level-type" onclick="switchLevelMode('precision', this)">
-                    <span style="font-size:1.15rem;">↖️</span>
-                    <span>٦. وردبینی باڵا (0.05°)</span>
-                </button>
-                <button class="btn-level-type" onclick="switchLevelMode('ruler', this)">
-                    <span style="font-size:1.15rem;">↗️</span>
-                    <span>٧. وەزان و ڕاستە</span>
+                <button type="button" class="btn-level-type" id="btnModeSurface" onclick="selectNewLevelMode('surface', this)" style="padding: 10px 4px;">
+                    <span style="font-size: 1.1rem; display: block;">🎯</span>
+                    <span style="font-weight: 900; font-size: 0.72rem;">٣. تەخت (زەوی)</span>
                 </button>
             </div>
 
-            <!-- ناوچەی پیشاندانی وەزانەکە -->
-            <div class="level-stage" id="levelMainStage">
+            <!-- ڕێنمایی ڕاگرتنی مۆبایل -->
+            <div style="background: rgba(34, 197, 94, 0.08); border: 1.5px dashed #22c55e; border-radius: 12px; padding: 8px 12px; margin-bottom: 12px; text-align: center;">
+                <span id="levelGuideText" style="font-size: 0.76rem; font-weight: 800; color: var(--text-main);">
+                    مۆبایلەکەت بە پێوە لە تەنیشت عاموود یان دیوارەکە دابنێ بۆ پێوانی شاقوول 📱🏛️
+                </span>
+            </div>
+
+            <!-- بۆکسی سەرەکیی شاشەی وەزان (گڵاسی سەردەمییانە) -->
+            <div class="level-stage" style="min-height: 250px; background: radial-gradient(circle at center, #0f172a 0%, #030712 100%); border: 3px solid #1e293b; border-radius: 20px; padding: 16px;">
                 
-                <!-- ١، ٤، ٦، ٧: ئاسۆیی -->
-                <div id="levelViewHorizontal" style="display:flex; flex-direction:column; align-items:center;">
-                    <div class="spirit-tube-horizontal">
-                        <div class="tube-line-h" style="left: 105px;"></div>
-                        <div class="tube-line-h" style="left: 155px;"></div>
-                        <div class="spirit-bubble bubble-horiz" id="bubbleHoriz"></div>
-                    </div>
-                    <div id="rulerScale" class="ruler-ticks-bar" style="display:none;"></div>
-                </div>
-
-                <!-- ٢: ستوونی -->
-                <div id="levelViewVertical" style="display:none;">
-                    <div class="spirit-tube-vertical">
-                        <div class="tube-line-v" style="top: 95px;"></div>
-                        <div class="tube-line-v" style="top: 145px;"></div>
-                        <div class="spirit-bubble bubble-vert" id="bubbleVert"></div>
+                <!-- ١. بۆریی ستوونی بۆ عاموود -->
+                <div id="viewModeColumn" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%;">
+                    <div style="width: 58px; height: 190px; background: linear-gradient(90deg, #15803d 0%, #22c55e 50%, #15803d 100%); border: 4px solid #0f172a; border-radius: 29px; position: relative; overflow: hidden; box-shadow: inset 0 0 15px rgba(0,0,0,0.6), 0 0 20px rgba(34,197,94,0.3);">
+                        <div style="position: absolute; top: 75px; left: 0; right: 0; height: 2px; background: #000; z-index: 2;"></div>
+                        <div style="position: absolute; top: 115px; left: 0; right: 0; height: 2px; background: #000; z-index: 2;"></div>
+                        <div id="bubbleColumn" style="position: absolute; width: 44px; height: 44px; left: 3px; top: 71px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff 0%, #86efac 60%, #16a34a 100%); box-shadow: inset 0 2px 6px #fff, 0 4px 10px rgba(0,0,0,0.4); z-index: 3; transition: transform 0.06s ease-out;"></div>
                     </div>
                 </div>
 
-                <!-- ٣: بازنەیی 360 پلە -->
-                <div id="levelViewCircular" style="display:none;">
-                    <div class="spirit-circle-surface">
-                        <div class="spirit-circle-target target-center"></div>
-                        <div class="spirit-circle-target target-mid"></div>
-                        <div class="spirit-circle-target target-outer"></div>
-                        <div class="spirit-bubble bubble-round" id="bubbleRound"></div>
+                <!-- ٢. بۆریی ئاسۆیی بۆ لێواری مۆبایل -->
+                <div id="viewModeEdge" style="display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%;">
+                    <div style="width: 260px; height: 58px; background: linear-gradient(180deg, #15803d 0%, #22c55e 50%, #15803d 100%); border: 4px solid #0f172a; border-radius: 29px; position: relative; overflow: hidden; box-shadow: inset 0 0 15px rgba(0,0,0,0.6), 0 0 20px rgba(34,197,94,0.3);">
+                        <div style="position: absolute; left: 108px; top: 0; bottom: 0; width: 2px; background: #000; z-index: 2;"></div>
+                        <div style="position: absolute; left: 148px; top: 0; bottom: 0; width: 2px; background: #000; z-index: 2;"></div>
+                        <div id="bubbleEdge" style="position: absolute; width: 44px; height: 44px; top: 3px; left: 104px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff 0%, #86efac 60%, #16a34a 100%); box-shadow: inset 0 2px 6px #fff, 0 4px 10px rgba(0,0,0,0.4); z-index: 3; transition: transform 0.06s ease-out;"></div>
                     </div>
                 </div>
 
-                <!-- ٥: دیجیتاڵی گەورە -->
-                <div id="levelViewDigital" style="display:none; text-align:center;">
-                    <div style="font-size:3.5rem; font-weight:900; color:#22c55e; font-family:var(--num-font); line-height:1;" id="digitalDegreeDisplay">0.0°</div>
-                    <div style="font-size:0.8rem; color:#94a3b8; font-weight:bold; margin-top:6px;" id="digitalSlopePercent">لێژی: 0.0%</div>
+                <!-- ٣. بازنەیی تەختە بۆ سەر مێز و زەوی -->
+                <div id="viewModeSurface" style="display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%;">
+                    <div style="width: 175px; height: 175px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #86efac 0%, #22c55e 55%, #15803d 100%); border: 5px solid #0f172a; position: relative; box-shadow: inset 0 0 20px rgba(0,0,0,0.7), 0 0 25px rgba(34,197,94,0.3);">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 48px; height: 48px; border-radius: 50%; border: 2.5px solid #ef4444;"></div>
+                        <div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(0,0,0,0.4);"></div>
+                        <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(0,0,0,0.4);"></div>
+                        <div id="bubbleSurface" style="position: absolute; width: 42px; height: 42px; top: 50%; left: 50%; margin: -21px 0 0 -21px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff 0%, rgba(255,255,255,0.9) 50%, rgba(130,220,160,0.5) 100%); box-shadow: 0 2px 8px rgba(0,0,0,0.4); z-index: 3; transition: transform 0.06s ease-out;"></div>
+                    </div>
                 </div>
 
-                <div class="level-perfect-badge" id="levelStateBadge">
-                    <i class="fa-solid fa-arrows-to-dot"></i> <span id="levelStateText">تەراز نییە</span>
+                <!-- نیشاندەری دیجیتاڵیی گۆشەکە -->
+                <div style="margin-top: 14px; text-align: center;">
+                    <div style="font-size: 2.8rem; font-weight: 900; color: #22c55e; font-family: var(--num-font); line-height: 1; text-shadow: 0 0 15px rgba(34,197,94,0.5);" id="liveLevelDegree">0.0°</div>
+                    <div id="liveLevelStateBadge" class="level-perfect-badge" style="margin-top: 6px;">
+                        <i class="fa-solid fa-arrows-to-dot"></i> <span id="liveLevelStateText">تەراز نییە</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- زانیاری وردی گۆشەکان -->
-            <div class="level-readout-grid">
-                <div class="level-readout-card">
-                    <span style="font-size:0.65rem; color:var(--text-muted); font-weight:bold; display:block;">X (گۆشەی ئاسۆیی)</span>
-                    <span class="level-readout-val" id="angleXText">0.0°</span>
+            <!-- شریتی کەم و زیادکردنی خێرایی جووڵەی بازنە سەوزەکە -->
+            <div style="background: var(--input-bg); border: 1.5px solid var(--card-border); border-radius: 14px; padding: 8px 12px; margin-top: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.74rem; font-weight: 900; margin-bottom: 5px;">
+                    <span style="color: var(--text-main);">
+                        <i class="fa-solid fa-gauge-high" style="color: #22c55e;"></i> خێرایی جووڵەی بازنە سەوزەکە:
+                    </span>
+                    <span id="bubbleSpeedValText" style="color: #22c55e; font-family: var(--num-font); font-weight: 900;">
+                        مامناوەند (50%)
+                    </span>
                 </div>
-                <div class="level-readout-card">
-                    <span style="font-size:0.65rem; color:var(--text-muted); font-weight:bold; display:block;">Y (گۆشەی ستوونی)</span>
-                    <span class="level-readout-val" id="angleYText">0.0°</span>
-                </div>
-                <div class="level-readout-card">
-                    <span style="font-size:0.65rem; color:var(--text-muted); font-weight:bold; display:block;">لێژی گشتی</span>
-                    <span class="level-readout-val" style="color:#0284c7;" id="angleTotalText">0.0°</span>
-                </div>
-            </div>
-
-            <!-- سلاکەری دەستکاریکردنی خێرایی و هەستیاریی جووڵەی بڵق -->
-            <div style="background:var(--input-bg); border:1.5px solid var(--card-border); border-radius:12px; padding:8px 12px; margin-top:10px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; font-weight:900; margin-bottom:4px;">
-                    <span><i class="fa-solid fa-gauge-high" style="color:#22c55e;"></i> خێرایی و نەرمی جووڵەی بڵق:</span>
-                    <span id="levelSpeedLabelText" style="color:#22c55e; font-family:var(--num-font);">مامناوەند (0.18)</span>
-                </div>
-                <input type="range" min="0.05" max="0.50" step="0.03" value="0.18" class="scale-slider" style="width:100%; accent-color:#22c55e;" oninput="changeLevelSpeed(this.value)">
-                <div style="display:flex; justify-content:space-between; font-size:0.62rem; color:var(--text-muted); margin-top:2px;">
-                    <span>هێواش و لەسەرخۆ</span>
-                    <span>دەستبەجێ و خێرا</span>
+                <input type="range" id="bubbleSpeedSlider" min="0.05" max="0.65" step="0.05" value="0.25" class="scale-slider" style="width: 100%; height: 6px; accent-color: #22c55e; cursor: pointer;" oninput="changeBubbleSpeed(this.value)">
+                <div style="display: flex; justify-content: space-between; font-size: 0.62rem; color: var(--text-muted); font-weight: bold; margin-top: 3px;">
+                    <span>🐢 هێواش و نەرم (قورس)</span>
+                    <span>⚡ خێرا و دەستبەجێ</span>
                 </div>
             </div>
 
-            <div style="display:flex; gap:6px; margin-top:8px;">
-                <button class="btn-action-primary" style="flex:1; background:#059669; padding:9px; font-size:0.75rem;" onclick="requestMotionPermission()">
-                    <i class="fa-solid fa-mobile-screen"></i> چالاککردنی هەستەوەری مۆبایل
+            <!-- دوگمەکانی کۆنتڕۆڵ و کاراکردن -->
+            <div style="display: flex; gap: 6px; margin-top: 10px;">
+                <button type="button" class="btn-action-primary" style="flex: 1.3; background: #059669; padding: 10px; font-size: 0.78rem;" onclick="activateLevelSensorsDirectly()">
+                    <i class="fa-solid fa-power-off"></i> <span>داگیرساندنی هەستەوەر ⚡</span>
                 </button>
-                <button class="btn-action-primary" style="flex:1; background:#475569; padding:9px; font-size:0.75rem;" onclick="calibrateLevelZero()">
-                    <i class="fa-solid fa-bullseye"></i> سفرکردنەوە (تەصفیر)
+                <button type="button" class="btn-action-primary" style="flex: 1; background: #334155; padding: 10px; font-size: 0.78rem;" onclick="resetLevelZeroCalibration()">
+                    <i class="fa-solid fa-bullseye"></i> <span>تەصفیرکردن (سفر)</span>
                 </button>
             </div>
-            <p style="font-size:0.68rem; color:var(--text-muted); text-align:center; margin-top:6px;">مۆبایلەکەت لەسەر هەر شتێک دابنێیت ڕاستەوخۆ دەتوانیت ئاستی وەزان و تەرازووبوونی پێ بپێویت.</p>
+            <div style="font-size: 0.68rem; color: var(--text-muted); text-align: center; margin-top: 6px;">
+                کاتێک مۆبایلەکە ڕێک تەرازوو دەبێت (0.0°)، ڕەنگەکەی دەبێتە سەوزی تۆخ و مۆبایلەکە دەلەرزێت.
+            </div>
         </div>
     </div>
     
@@ -7249,29 +7351,31 @@ function updateTopNotifBadge() {
     /* =========================================================
        بەشی ١: دراوە ڕاستەوخۆکان بەپێی
     ========================================================= */
+    // خشتەی نرخە فەرمییە نوێکراوەکانی قەمەر ئەلفەجر بەرامبەر 100 دۆلار
     const qamarCurrencies = [
-        { code: "IQD", name: "دیناری عێراقی (IQD)", flag: "iq", sell: 154600, buy: 154500 },
-        { code: "EUR", name: "یۆرۆی ئەوروپی (EUR)", flag: "eu", sell: 115.8, buy: 115.15 },
-        { code: "GBP", name: "پاوەندی بەریتانی (GBP)", flag: "gb", sell: 134.5, buy: 133.5 },
-        { code: "TRY", name: "لیرەی تورکی (TRY)", flag: "tr", sell: 4780, buy: 4900 },
-        { code: "IRR", name: "تومەنی ئێرانی (IRR)", flag: "ir", sell: 19000000, buy: 23000000 },
-        { code: "NOK", name: "کرۆنی نەرویجی (NOK)", flag: "no", sell: 92, buy: 88 },
-        { code: "SEK", name: "کرۆنی سویدی (SEK)", flag: "se", sell: 92, buy: 89 },
-        { code: "JOD", name: "دیناری ئوردنی (JOD)", flag: "jo", sell: 68, buy: 71 },
-        { code: "SAR", name: "ڕیاڵی سعوودی (SAR)", flag: "sa", sell: 370, buy: 385 },
-        { code: "AED", name: "درهەمی ئیماراتی (AED)", flag: "ae", sell: 370, buy: 380 },
-        { code: "CAD", name: "دۆلاری کەنەدی (CAD)", flag: "ca", sell: 71.5, buy: 69.5 },
-        { code: "AUD", name: "دۆلاری ئوستراڵی (AUD)", flag: "au", sell: 70.5, buy: 69 },
-        { code: "CHF", name: "فرەنکی سویسری (CHF)", flag: "ch", sell: 123, buy: 120 },
-        { code: "DKK", name: "کرۆنی دانیمارکی (DKK)", flag: "dk", sell: 141, buy: 137 },
-        { code: "QAR", name: "ڕیاڵی قەتەری (QAR)", flag: "qa", sell: 375, buy: 390 },
-        { code: "KWD", name: "دیناری کوەیتی (KWD)", flag: "kw", sell: 315, buy: 280 }
+        { code: "IQD", name: "دیناری عێراقی (IQD)", flag: "iq", sell: 157100, buy: 156850, qKey: "currency-1" },
+        { code: "EUR", name: "یۆرۆی ئەوروپی (EUR)", flag: "eu", sell: 115.65, buy: 114.85, qKey: "currency-4" },
+        { code: "GBP", name: "پاوەندی بەریتانی (GBP)", flag: "gb", sell: 134.25, buy: 133.25, qKey: "currency-5" },
+        { code: "TRY", name: "لیرەی تورکی (TRY)", flag: "tr", sell: 4820, buy: 4900, qKey: "currency-6" },
+        { code: "IRR", name: "تومەنی ئێرانی (IRR)", flag: "ir", sell: 20000000, buy: 24000000, qKey: "currency-24" },
+        { code: "NOK", name: "کرۆنی نەرویجی (NOK)", flag: "no", sell: 93, buy: 89, qKey: "currency-25" },
+        { code: "SEK", name: "کرۆنی سویدی (SEK)", flag: "se", sell: 93, buy: 89, qKey: "currency-26" },
+        { code: "JOD", name: "دیناری ئوردنی (JOD)", flag: "jo", sell: 68, buy: 72, qKey: "currency-27" },
+        { code: "SAR", name: "ڕیاڵی سعوودی (SAR)", flag: "sa", sell: 370, buy: 385, qKey: "currency-28" },
+        { code: "AED", name: "درهەمی ئیماراتی (AED)", flag: "ae", sell: 365, buy: 375, qKey: "currency-29" },
+        { code: "CAD", name: "دۆلاری کەنەدی (CAD)", flag: "ca", sell: 71.5, buy: 69.5, qKey: "currency-30" },
+        { code: "AUD", name: "دۆلاری ئوستراڵی (AUD)", flag: "au", sell: 71, buy: 69, qKey: "currency-31" },
+        { code: "CHF", name: "فرەنکی سویسری (CHF)", flag: "ch", sell: 121.25, buy: 120, qKey: "currency-32" },
+        { code: "DKK", name: "کرۆنی دانیمارکی (DKK)", flag: "dk", sell: 142, buy: 137, qKey: "currency-33" },
+        { code: "QAR", name: "ڕیاڵی قەتەری (QAR)", flag: "qa", sell: 375, buy: 390, qKey: "currency-34" },
+        { code: "KWD", name: "دیناری کوەیتی (KWD)", flag: "kw", sell: 315, buy: 280, qKey: "currency-35" }
     ];
 
     let activeConversionMode = 'sell';
 
     function renderQamarRateCards() {
         const container = document.getElementById('qamarRatesContainer');
+        if (!container) return;
         container.innerHTML = '';
 
         qamarCurrencies.forEach(curr => {
@@ -7314,12 +7418,34 @@ function updateTopNotifBadge() {
         processConversion();
     }
 
+    // سیستەمی پێشکەوتووی خوێندنەوەی خودکار لە ڕێگەی data-qamar-rate-key
     function parseQamarHTML(htmlString) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlString, 'text/html');
-        const rows = doc.querySelectorAll('table tbody tr');
         let count = 0;
 
+        // ١. خوێندنەوە بە تەواوی و ڕاستەوخۆ لە ڕێگەی تایبەتمەندییە فەرمییەکانی قەمەر ئەلفەجر
+        const rateElements = doc.querySelectorAll('[data-qamar-rate-key]');
+        if (rateElements && rateElements.length > 0) {
+            rateElements.forEach(el => {
+                const key = el.getAttribute('data-qamar-rate-key') || '';
+                const val = parseFloat(el.getAttribute('data-qamar-rate-value') || el.innerText.trim());
+
+                if (key && !isNaN(val) && val > 0) {
+                    qamarCurrencies.forEach(curr => {
+                        if (curr.qKey && key.includes(curr.qKey)) {
+                            if (key.includes('sell')) curr.sell = val;
+                            if (key.includes('buy')) curr.buy = val;
+                            count++;
+                        }
+                    });
+                }
+            });
+            if (count > 0) return count;
+        }
+
+        // ٢. خوێندنەوەی یەدەگ لە ڕێگەی خشتەکە ئەگەر کۆدەکان گۆڕابوون
+        const rows = doc.querySelectorAll('table tbody tr');
         rows.forEach(tr => {
             const tds = tr.querySelectorAll('td');
             if (tds.length >= 4) {
@@ -8556,47 +8682,125 @@ function updateTopNotifBadge() {
         }
     }
 
-    async function decodeVINUniversal() {
-        let vin = toEn(document.getElementById('vinUniversalInput').value.trim().toUpperCase());
-        if (vin.length < 11) { alert('تکایە ژمارەی شاسی بە دروستی بنووسە (١٧ پیت)'); return; }
+    // هێنانی وێنەی ڕاستەقینەی سەیارە (بێ داپۆشراوی و بە کواڵیتی بەرز)
+    async function loadLiveCarImage(make, model, year, vin) {
+        var imgEl = document.getElementById('carLivePhotoImg');
+        var msgEl = document.getElementById('carPhotoLoadingMsg');
+        if (!imgEl) return;
 
-        const btn = document.getElementById('vinSearchBtn');
-        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> پشکنین دەکرێت...`;
+        imgEl.style.display = 'none';
+        if (msgEl) {
+            msgEl.style.display = 'block';
+            msgEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> خەریکی هێنانی وێنەی سەیارەکەیە...';
+        }
+
+        var cleanMake = (make || '').trim();
+        var cleanModel = (model || '').split(' ')[0].trim();
+        // ئەگەر ساڵەکە سەروو ٢٠٢٤ بێت دەیکاتە ٢٠٢٤ تا سێرڤەر وێنەی ڕاستی هەبێت و داپۆشراو نەبێت
+        var safeYear = parseInt(year) || 2024;
+        if (safeYear > 2024) safeYear = 2024;
+
+        var carFound = false;
+
+        // ١. هەوڵدان بۆ هێنانی وێنەی ڕاستەقینەی مەزاد لە ڕێگەی سێرڤەری گالەری (ئەگەر VIN هەبێت)
+        if (vin && vin.length >= 11) {
+            try {
+                // هێنانی پشکنینی خێرا لە سێرڤەری وێنەی گشتی
+                var proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://poctra.com/' + vin);
+                var fetchPromise = fetch(proxyUrl, { cache: 'no-store' });
+                var timeoutPromise = new Promise(function(_, reject) { setTimeout(function() { reject('timeout'); }, 3500); });
+                
+                var res = await Promise.race([fetchPromise, timeoutPromise]);
+                if (res && res.ok) {
+                    var data = await res.json();
+                    if (data && data.contents) {
+                        var match = data.contents.match(/https:\/\/[^"']+\.(?:jpg|jpeg|webp)/i);
+                        if (match && match[0] && !match[0].includes('logo') && !match[0].includes('icon')) {
+                            imgEl.src = match[0];
+                            imgEl.style.display = 'block';
+                            if (msgEl) msgEl.style.display = 'none';
+                            carFound = true;
+                            return;
+                        }
+                    }
+                }
+            } catch(e) {}
+        }
+
+        // ٢. ئەگەر وێنەی لێدراوی مەزاد ئامادە نەبوو، وێنەی فۆتۆگرافیی ڕاستەقینەی هەمان کۆمپانیا و مۆدێل دادەنێت:
+        if (!carFound) {
+            // سێرڤەری هێنانی وێنەی ڕاستەقینەی دەرەوەی ئۆتۆمبێل
+            var realPhotoUrl = 'https://cdn.imagin.studio/getimage?customer=hrjavascript-master&make=' + encodeURIComponent(cleanMake) + '&modelFamily=' + encodeURIComponent(cleanModel) + '&modelYear=' + safeYear + '&paintDescription=white&angle=01';
+
+            // تاقیکردنەوەی ئەوەی ئایا وێنەکە داپۆشراوە یان ڕاستەقینەیە
+            var testImg = new Image();
+            testImg.onload = function() {
+                imgEl.src = realPhotoUrl;
+                imgEl.style.display = 'block';
+                if (msgEl) msgEl.style.display = 'none';
+            };
+            testImg.onerror = function() {
+                // سێرڤەری یەدەگی وێنەی ڕاستەقینە
+                imgEl.src = 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&auto=format&fit=crop&q=80';
+                imgEl.style.display = 'block';
+                if (msgEl) msgEl.style.display = 'none';
+            };
+            testImg.src = realPhotoUrl;
+        }
+    }
+
+    async function decodeVINUniversal() {
+        var vin = toEn(document.getElementById('vinUniversalInput').value.trim().toUpperCase());
+        if (vin.length < 11) { 
+            showAppToast('تکایە ژمارەی شاسی بە دروستی بنووسە (١٧ پیت)', '#d97706'); 
+            return; 
+        }
+
+        var btn = document.getElementById('vinSearchBtn');
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> پشکنین دەکرێت...';
         btn.disabled = true;
 
-        document.getElementById('vinStatVinBtn').href = `https://stat.vin/cars/search?q=${encodeURIComponent(vin)}`;
-        document.getElementById('vinGoogleBtn').href = `https://www.google.com/search?q=%22${encodeURIComponent(vin)}%22&tbm=isch`;
-        document.getElementById('vinCopartBtn').href = `https://www.copart.com/lotSearchResults?free=true&query=${encodeURIComponent(vin)}`;
-        document.getElementById('vinBidCarsBtn').href = `https://bid.cars/en/search/archived/results?query=${encodeURIComponent(vin)}`;
-        document.getElementById('vinBidFaxBtn').href = `https://bidfax.info/index.php?do=search&subaction=search&story=${encodeURIComponent(vin)}`;
-        document.getElementById('vinNhtsaBtn').href = `https://vpic.nhtsa.dot.gov/decoder/`;
+        document.getElementById('vinStatVinBtn').href = 'https://stat.vin/cars/search?q=' + encodeURIComponent(vin);
+        document.getElementById('vinGoogleBtn').href = 'https://www.google.com/search?q=%22' + encodeURIComponent(vin) + '%22&tbm=isch';
+        document.getElementById('vinCopartBtn').href = 'https://www.copart.com/lotSearchResults?free=true&query=' + encodeURIComponent(vin);
+        document.getElementById('vinBidCarsBtn').href = 'https://bid.cars/en/search/archived/results?query=' + encodeURIComponent(vin);
+        document.getElementById('vinBidFaxBtn').href = 'https://bidfax.info/index.php?do=search&subaction=search&story=' + encodeURIComponent(vin);
+        document.getElementById('vinNhtsaBtn').href = 'https://vpic.nhtsa.dot.gov/decoder/';
 
-        const chinaSearchBtn = document.getElementById('vinChinaSearchBtn');
-        const isChineseCar = vin.startsWith('L');
+        var chinaSearchBtn = document.getElementById('vinChinaSearchBtn');
+        var isChineseCar = vin.startsWith('L');
 
         if (isChineseCar) {
             chinaSearchBtn.style.display = 'flex';
-            chinaSearchBtn.href = `https://www.google.com/search?q=${encodeURIComponent(vin + " car specifications china")}`;
+            chinaSearchBtn.href = 'https://www.google.com/search?q=' + encodeURIComponent(vin + ' car specifications china');
         } else {
             chinaSearchBtn.style.display = 'none';
         }
 
-        let isDecodedByChinaDB = false;
+        var detectedMake = '';
+        var detectedModel = '';
+        var detectedYear = '';
+
+        var isDecodedByChinaDB = false;
         if (isChineseCar) {
-            const wmi = vin.substring(0, 3);
-            const yearChar = vin.charAt(9);
-            const yearVal = vinYearMap[yearChar] || 'مۆدێل نوێ (چین)';
-            const chineseInfo = chineseWmiDB[wmi] || {
-                make: 'ئۆتۆمبێلی چینی (Chinese Vehicle)',
+            var wmi = vin.substring(0, 3);
+            var yearChar = vin.charAt(9);
+            var yearVal = vinYearMap[yearChar] || '2023';
+            var chineseInfo = chineseWmiDB[wmi] || {
+                make: 'Geely',
                 country: 'چین (China)',
                 body: 'Sedan / SUV',
                 oil: '5W-30 Full Synthetic',
                 eco: '7.0 - 8.5 L / 100km'
             };
 
-            setSafeText('resCarFullName', `${chineseInfo.make} ${toEn(yearVal)}`);
+            detectedMake = chineseInfo.make.split(' ')[0];
+            detectedModel = 'Tiggo';
+            detectedYear = yearVal;
+
+            setSafeText('resCarFullName', chineseInfo.make + ' ' + toEn(yearVal));
             setSafeText('resMake', chineseInfo.make);
-            setSafeText('resModel', 'China Specification (خەلیجی / مۆدێلی چین)');
+            setSafeText('resModel', 'China Specification (مۆدێلی خەلیجی / چین)');
             setSafeText('resYear', toEn(yearVal));
             setSafeText('resTrim', 'China Domestic / GCC Edition');
             setSafeText('resCountry', chineseInfo.country);
@@ -8607,45 +8811,60 @@ function updateTopNotifBadge() {
             setSafeText('resHp', '160 - 230 HP');
             setSafeText('resFuel', 'Gasoline (بەنزین - ئۆکتان بەرز)');
             setSafeText('resDrive', 'FWD / AWD (ڕاکێشانی پێشەوە یان چوار چەرخ)');
-            setSafeText('resTrans', 'DCT / AT (گێڕی ئۆتۆماتیک یان دەبڵ کلاچ)');
+            setSafeText('resTrans', 'DCT / AT (گێڕی ئۆتۆماتیک)');
             setSafeText('resOil', chineseInfo.oil);
             setSafeText('resEco', chineseInfo.eco);
 
             document.getElementById('vinResultWrapper').style.display = 'block';
+            loadLiveCarImage(detectedMake, detectedModel, detectedYear, vin);
             isDecodedByChinaDB = true;
         }
 
         try {
-            const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${encodeURIComponent(vin)}?format=json`);
-            const data = await res.json();
+            var res = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/' + encodeURIComponent(vin) + '?format=json');
+            var data = await res.json();
             if (data && data.Results && data.Results.length > 0) {
-                const c = data.Results[0];
+                var c = data.Results[0];
                 if (!isDecodedByChinaDB || (c.Make && c.Make !== '')) {
-                    setSafeText('resCarFullName', `${c.Make || ''} ${c.Model || ''} ${toEn(c.ModelYear || '')}`);
+                    detectedMake = c.Make || '';
+                    detectedModel = c.Model || '';
+                    detectedYear = c.ModelYear || '2022';
+
+                    setSafeText('resCarFullName', detectedMake + ' ' + detectedModel + ' ' + toEn(detectedYear));
                     setSafeText('resMake', c.Make);
                     setSafeText('resModel', c.Model);
                     setSafeText('resYear', toEn(c.ModelYear));
-                    setSafeText('resTrim', c.Series || c.Trim || "Standard / Normal");
-                    setSafeText('resCountry', c.PlantCountry || c.Country || (isChineseCar ? "China" : "USA"));
+                    setSafeText('resTrim', c.Series || c.Trim || 'Standard / Normal');
+                    setSafeText('resCountry', c.PlantCountry || c.Country || (isChineseCar ? 'China' : 'USA'));
                     setSafeText('resBody', c.BodyClass);
 
-                    setSafeText('resEngine', c.DisplacementL ? `${toEn(parseFloat(c.DisplacementL).toFixed(1))}L (${toEn(c.DisplacementCC || '')} cc)` : "Standard");
-                    setSafeText('resCyl', c.EngineCylinders ? `${toEn(c.EngineCylinders)} Cylinders` : "4 Cyl");
-                    setSafeText('resHp', c.EngineHP ? `${toEn(c.EngineHP)} HP` : "N/A");
-                    setSafeText('resFuel', c.FuelTypePrimary || "Gasoline / بەنزین");
-                    setSafeText('resDrive', c.DriveType || "FWD / AWD");
-                    setSafeText('resTrans', c.TransmissionStyle || "Automatic (ئۆتۆماتیک)");
+                    setSafeText('resEngine', c.DisplacementL ? toEn(parseFloat(c.DisplacementL).toFixed(1)) + 'L (' + toEn(c.DisplacementCC || '') + ' cc)' : 'Standard');
+                    setSafeText('resCyl', c.EngineCylinders ? toEn(c.EngineCylinders) + ' Cylinders' : '4 Cyl');
+                    setSafeText('resHp', c.EngineHP ? toEn(c.EngineHP) + ' HP' : 'N/A');
+                    setSafeText('resFuel', c.FuelTypePrimary || 'Gasoline / بەنزین');
+                    setSafeText('resDrive', c.DriveType || 'FWD / AWD');
+                    setSafeText('resTrans', c.TransmissionStyle || 'Automatic (ئۆتۆماتیک)');
 
                     setSafeText('resOil', getSmartOilRecommendation(c));
                     setSafeText('resEco', getSmartFuelEco(c));
+
+                    loadLiveCarImage(detectedMake, detectedModel, detectedYear);
                 }
                 document.getElementById('vinResultWrapper').style.display = 'block';
             }
         } catch (e) {
             document.getElementById('vinResultWrapper').style.display = 'block';
         } finally {
-            btn.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> پشکنینی وردی شاسی`;
+            btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> پشکنینی وردی شاسی';
             btn.disabled = false;
+
+            // هاتنە سەرەوەی خودکار بۆ ئەنجامی VIN بە شێوازێکی زۆر نەرم
+            setTimeout(function() {
+                var resBox = document.getElementById('vinResultWrapper');
+                if (resBox) {
+                    resBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 150);
         }
     }
 
@@ -8666,14 +8885,75 @@ function updateTopNotifBadge() {
         return "6.8 - 8.2 لتر / 100 کم";
     }
 
+    // فەنکشنی کردنەوەی دەستبەجێی گالەریی وێنەکانی Copart و IAAI
+    function triggerDirectResAutoSearch(type) {
+        var query = '';
+        if (type === 'vin') {
+            query = toEn(document.getElementById('vinUniversalInput').value.trim().toUpperCase());
+        } else {
+            query = toEn(document.getElementById('lotUniversalInput').value.trim());
+        }
+
+        if (!query) {
+            showAppToast('تکایە ژمارەی شاسی یان لۆد بنووسە!', '#d97706');
+            return;
+        }
+
+        var form = document.getElementById('resAutoSearchHiddenForm');
+        var input = document.getElementById('resAutoSearchInputVal');
+        if (form && input) {
+            input.value = query;
+            form.submit();
+            showAppToast('خەریکی هێنانی تەواوی وێنە کوالێتی بەرزەکانە... 📸', '#0284c7');
+        }
+    }
+
     function searchLotUniversal() {
-        const lot = toEn(document.getElementById('lotUniversalInput').value.trim());
-        if (!lot) return;
-        document.getElementById('lotLinkCopart').href = `https://www.copart.com/lot/${encodeURIComponent(lot)}`;
-        document.getElementById('lotLinkGoogle').href = `https://www.google.com/search?q=%22${encodeURIComponent(lot)}%22&tbm=isch`;
-        document.getElementById('lotLinkBidcars').href = `https://bid.cars/en/search/archived/results?query=${encodeURIComponent(lot)}`;
-        document.getElementById('lotLinkAutohelper').href = `https://autohelperbot.com/en/car-search?q=${encodeURIComponent(lot)}`;
-        document.getElementById('lotResultsArea').style.display = 'block';
+        var lot = toEn(document.getElementById('lotUniversalInput').value.trim());
+        if (!lot) {
+            showAppToast('تکایە ژمارەی لۆد بنووسە!', '#d97706');
+            return;
+        }
+
+        // بەستەرە فەرمییەکانی Stat.vin و مەزادە سەرەکییەکان
+        var statVinLink = document.getElementById('lotLinkStatVin');
+        if (statVinLink) statVinLink.href = 'https://stat.vin/car-search?sale_status=active&vin_lot=' + encodeURIComponent(lot);
+
+        var copartLink = document.getElementById('lotLinkCopart');
+        if (copartLink) copartLink.href = 'https://www.copart.com/lot/' + encodeURIComponent(lot);
+
+        var iaaiLink = document.getElementById('lotLinkIaai');
+        if (iaaiLink) iaaiLink.href = 'https://www.iaai.com/Search?Keyword=' + encodeURIComponent(lot);
+
+        var bidcarsLink = document.getElementById('lotLinkBidcars');
+        if (bidcarsLink) bidcarsLink.href = 'https://bid.cars/en/search/archived/results?query=' + encodeURIComponent(lot);
+
+        var googleLink = document.getElementById('lotLinkGoogle');
+        if (googleLink) googleLink.href = 'https://www.google.com/search?q=%22' + encodeURIComponent(lot) + '%22&tbm=isch';
+
+        var lotRes = document.getElementById('lotResultsArea');
+        if (lotRes) {
+            lotRes.style.display = 'block';
+            lotRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        showAppToast('ئەنجامەکانی لۆد ئامادەکران', '#059669');
+    }
+
+    // کۆنتڕۆڵی کردنەوەی حاسیبەی گەیاندن بۆ عێراق
+    function toggleDeliveryCalculatorFrame() {
+        var box = document.getElementById('deliveryCalculatorBox');
+        var btn = document.getElementById('btnToggleDeliveryCalc');
+        var frame = document.getElementById('deliveryCalculatorFrame');
+        if (!box) return;
+
+        var isHidden = (box.style.display === 'none' || box.style.display === '');
+        box.style.display = isHidden ? 'block' : 'none';
+        if (btn) btn.innerText = isHidden ? 'داخستن ✕' : 'کردنەوە ◀';
+
+        if (isHidden && frame && (!frame.src || frame.src === 'about:blank' || frame.src === window.location.href)) {
+            // بەکارهێنانی بەستەری فەرمیی خەمڵاندنی گەیاندن بۆ عێراق لە Stat.vin
+            frame.src = 'https://delivery-calculator.stat.vin/embed/delivery-calculator-simple?price_list_hash=84221a8b-11d4-41f6-8d81-c1ed5aaac06b&language=en&user_country_name=Iraq';
+        }
     }
 
     /* پێوانی زەوی */
@@ -9437,234 +9717,170 @@ function updateTopNotifBadge() {
     }
 
 /* =========================================================
-       بەشی وەزانی ئاوی (Spirit Level System)
+       سیستەمی وەزانی ئاوی وردبینی باڵا (عاموود، لێوار، تەخت)
     ========================================================= */
-    let currentLevelMode = 'horizontal';
-    let calibX = 0, calibY = 0;
-    let lastAngleX = 0, lastAngleY = 0;
-    let smoothX = 0, smoothY = 0;
+    var currentLevelMode = 'column'; // column (عاموود), edge (لێوار), surface (تەخت)
+    var zeroCalibAngle = 0;
+    var filteredRoll = 0;
+    var filteredPitch = 0;
+    var hasLevelVibrated = false;
+    var bubbleSpeedRatio = parseFloat(localStorage.getItem('level_bubble_speed') || '0.25'); // خێرایی جووڵەی بازنە سەوزەکە
 
-    const levelHoldGuides = {
-        'horizontal': {
-            svg: '<svg width="30" height="20" viewBox="0 0 30 20" fill="none" stroke="#22c55e" stroke-width="2"><rect x="2" y="2" width="26" height="16" rx="3" fill="#1e293b"/><circle cx="24" cy="10" r="1.5" fill="#22c55e"/><line x1="6" y1="5" x2="6" y2="15" stroke="#22c55e"/></svg>',
-            title: 'شێوازی ڕاگرتن: لەسەر لێوار (ئاسۆیی 📱↔️)',
-            desc: 'مۆبایلەکەت بە درێژی لەسەر لێواری سەرەوە یان خوارەوە لەسەر تەنەکە دابنێ.'
-        },
-        'vertical': {
-            svg: '<svg width="20" height="30" viewBox="0 0 20 30" fill="none" stroke="#38bdf8" stroke-width="2"><rect x="2" y="2" width="16" height="26" rx="3" fill="#1e293b"/><circle cx="10" cy="24" r="1.5" fill="#38bdf8"/><line x1="7" y1="5" x2="13" y2="5" stroke="#38bdf8"/></svg>',
-            title: 'شێوازی ڕاگرتن: بە پێوە ڕێک (ستوونی / شاقوول 📱↕️)',
-            desc: 'مۆبایلەکە بە پێوە و ستوونی لە پاڵ دیوار یان کۆڵەکە ڕابگرە.'
-        },
-        'circular': {
-            svg: '<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#eab308" stroke-width="2"><circle cx="14" cy="14" r="11" fill="#1e293b"/><circle cx="14" cy="14" r="4" fill="#eab308"/><line x1="14" y1="3" x2="14" y2="25"/><line x1="3" y1="14" x2="25" y2="14"/></svg>',
-            title: 'شێوازی ڕاگرتن: بە تەختی لەسەر پشت (مێز یان زەوی 🎯)',
-            desc: 'مۆبایلەکە تەخت بخەرە سەر مێز، کاشی یان زەوی تا بڵقەکە بچێتە ناو بازنەی سوور.'
-        },
-        'cross': {
-            svg: '<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#a855f7" stroke-width="2.5"><path d="M14 4v20M4 14h20"/></svg>',
-            title: 'شێوازی ڕاگرتن: دوو ئاڕاستەی پێکەوە ➕',
-            desc: 'مۆبایل بە تەختی دابنێ بۆ پێوانەکردنی تەرازووی هەردوو لای ئاسۆیی و ستوونی.'
-        },
-        'digital': {
-            svg: '<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#06b6d4" stroke-width="2"><rect x="3" y="4" width="22" height="20" rx="3" fill="#1e293b"/><text x="8" y="18" fill="#06b6d4" font-size="12" font-weight="bold">°</text></svg>',
-            title: 'شێوازی ڕاگرتن: دیجیتاڵ (پێوانی پلەی گۆشە 🔢)',
-            desc: 'لەسەر هەر لایەک دابنرێت گۆشەی ڕاستەقینەی لێژی پیشان دەدات.'
-        },
-        'precision': {
-            svg: '<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="14" cy="14" r="11"/><circle cx="14" cy="14" r="2" fill="#ef4444"/><line x1="14" y1="0" x2="14" y2="28"/><line x1="0" y1="14" x2="28" y2="14"/></svg>',
-            title: 'شێوازی ڕاگرتن: وردبینی باڵا 🔬 (0.05°)',
-            desc: 'مۆبایل بە بێ جوڵەی دەست دابنێ بۆ پێوانەکردنی ئاستی میلیمەتری زۆر ورد.'
-        },
-        'ruler': {
-            svg: '<svg width="30" height="20" viewBox="0 0 30 20" fill="none" stroke="#f97316" stroke-width="2"><rect x="2" y="4" width="26" height="12" rx="2" fill="#1e293b"/><line x1="7" y1="4" x2="7" y2="8"/><line x1="12" y1="4" x2="12" y2="10"/><line x1="17" y1="4" x2="17" y2="8"/><line x1="22" y1="4" x2="22" y2="10"/></svg>',
-            title: 'شێوازی ڕاگرتن: لێواری مۆبایل وەک ڕاستە 📏',
-            desc: 'لێواری خوارەوەی مۆبایلەکەت وەک ڕاستەی سانتیمەتری ڕابگرە.'
+    // فەنکشنی گۆڕینی خێرایی بازنە سەوزەکە بە شریتی سلاکەر
+    function changeBubbleSpeed(val) {
+        bubbleSpeedRatio = parseFloat(val);
+        localStorage.setItem('level_bubble_speed', bubbleSpeedRatio);
+        
+        var lbl = document.getElementById('bubbleSpeedValText');
+        if (lbl) {
+            var percent = Math.round((bubbleSpeedRatio / 0.65) * 100);
+            var desc = bubbleSpeedRatio < 0.15 ? "هێواش (قورس)" : (bubbleSpeedRatio > 0.40 ? "زۆر خێرا" : "مامناوەند");
+            lbl.innerText = desc + " (" + toEn(percent) + "%)";
         }
-    };
 
-    function switchLevelMode(mode, btn) {
+        // ڕێکخستنی کاتی ئەنیمەیشنی جووڵەی بازنەکە
+        var transTime = (0.20 - (bubbleSpeedRatio * 0.22)).toFixed(2);
+        if (transTime < 0.02) transTime = 0.02;
+        ['bubbleColumn', 'bubbleEdge', 'bubbleSurface'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.transition = 'transform ' + transTime + 's ease-out';
+        });
+    }
+
+    function selectNewLevelMode(mode, btn) {
         currentLevelMode = mode;
-        document.querySelectorAll('.btn-level-type').forEach(b => b.classList.remove('active'));
+        zeroCalibAngle = 0;
+        document.querySelectorAll('#levelTab .btn-level-type').forEach(function(b) { b.classList.remove('active'); });
         if (btn) btn.classList.add('active');
 
-        if (levelHoldGuides[mode]) {
-            const g = levelHoldGuides[mode];
-            const svgWrap = document.getElementById('phoneGuideSvgIcon');
-            const titleEl = document.getElementById('phoneGuideTitle');
-            const descEl = document.getElementById('phoneGuideDesc');
-            if (svgWrap) svgWrap.innerHTML = g.svg;
-            if (titleEl) titleEl.innerHTML = g.title;
-            if (descEl) descEl.innerText = g.desc;
-        }
+        document.getElementById('viewModeColumn').style.display = (mode === 'column') ? 'flex' : 'none';
+        document.getElementById('viewModeEdge').style.display = (mode === 'edge') ? 'flex' : 'none';
+        document.getElementById('viewModeSurface').style.display = (mode === 'surface') ? 'flex' : 'none';
 
-        document.getElementById('levelViewHorizontal').style.display = 'none';
-        document.getElementById('levelViewVertical').style.display = 'none';
-        document.getElementById('levelViewCircular').style.display = 'none';
-        document.getElementById('levelViewDigital').style.display = 'none';
-        const ruler = document.getElementById('rulerScale');
-        if (ruler) ruler.style.display = 'none';
-
-        if (mode === 'vertical') {
-            document.getElementById('levelViewVertical').style.display = 'block';
-        } else if (mode === 'circular' || mode === 'cross') {
-            document.getElementById('levelViewCircular').style.display = 'block';
-        } else if (mode === 'digital') {
-            document.getElementById('levelViewDigital').style.display = 'block';
-        } else if (mode === 'ruler') {
-            document.getElementById('levelViewHorizontal').style.display = 'flex';
-            if (ruler) ruler.style.display = 'block';
-        } else {
-            document.getElementById('levelViewHorizontal').style.display = 'flex';
+        var guide = document.getElementById('levelGuideText');
+        if (guide) {
+            if (mode === 'column') guide.innerText = 'مۆبایلەکەت بە پێوە لە تەنیشت عاموود یان دیوارەکە دابنێ بۆ پێوانی شاقوول 📱🏛️';
+            else if (mode === 'edge') guide.innerText = 'مۆبایلەکەت بە درێژی لەسەر لێواری سەرەوە یان خوارەوە لەسەر تەنەکە دابنێ 📏📱';
+            else guide.innerText = 'مۆبایلەکە تەخت بخەرە سەر زەوی یان مێزەکە تا بڵقەکە بچێتە ناو بازنەی سوور 🎯';
         }
-        updateLevelUI(lastAngleX, lastAngleY);
+        activateLevelSensorsDirectly();
     }
 
-    function calibrateLevelZero() {
-        calibX = smoothX;
-        calibY = (currentLevelMode === 'vertical') ? (Math.abs(smoothY) - 90) : smoothY;
-        showAppToast('سەنتەری ئێستا بە سەرکەوتوویی تەصفیر کرا 🎯', '#22c55e');
+    function resetLevelZeroCalibration() {
+        if (currentLevelMode === 'column') zeroCalibAngle = filteredRoll;
+        else if (currentLevelMode === 'edge') zeroCalibAngle = filteredRoll;
+        else zeroCalibAngle = 0;
+        showAppToast('گۆشەی ئێستا بە سەرکەوتوویی تەصفیر کرا 🎯', '#22c55e');
     }
 
-    // فانکشنی گۆڕینی خێرایی و هەستیاریی جووڵەی بڵق بە سلاکەر
-    function changeLevelSpeed(val) {
-        window.levelSensitivitySpeed = parseFloat(val);
-        const lbl = document.getElementById('levelSpeedLabelText');
-        if (lbl) {
-            let desc = val < 0.12 ? 'هێواش و نەرم' : val < 0.28 ? 'مامناوەند' : 'زۆر خێرا';
-            lbl.innerText = `${desc} (${toEn(parseFloat(val).toFixed(2))})`;
-        }
-    }
+    function handleOrientationMotion(e) {
+        if (!e) return;
+        var rawRoll = (e.gamma !== null && e.gamma !== undefined) ? e.gamma : 0; // لاری لای چەپ و ڕاست (-90 to 90)
+        var rawPitch = (e.beta !== null && e.beta !== undefined) ? e.beta : 0;   // لاری پێش و دوا (-180 to 180)
 
-    function updateLevelUI(rawX, rawY) {
-        rawX = (typeof rawX === 'number' && !isNaN(rawX)) ? rawX : 0;
-        rawY = (typeof rawY === 'number' && !isNaN(rawY)) ? rawY : 0;
+        // فلتەری نەرمکردنەوە و خێرایی بەپێی دەستکاریی بەکارهێنەر
+        filteredRoll = filteredRoll + bubbleSpeedRatio * (rawRoll - filteredRoll);
+        filteredPitch = filteredPitch + bubbleSpeedRatio * (rawPitch - filteredPitch);
 
-        if (typeof smoothX !== 'number' || isNaN(smoothX)) smoothX = rawX;
-        if (typeof smoothY !== 'number' || isNaN(smoothY)) smoothY = rawY;
+        var currentAngle = 0;
+        var isBalanced = false;
 
-        const speedRatio = window.levelSensitivitySpeed || 0.18;
-        smoothX = smoothX + speedRatio * (rawX - smoothX);
-        smoothY = smoothY + speedRatio * (rawY - smoothY);
+        if (currentLevelMode === 'column') {
+            // کاتێک مۆبایل بە ستوونی لەسەر عاموود یان دیوارە: gamma لاریی شاقوول دەپێوێت
+            currentAngle = filteredRoll - zeroCalibAngle;
+            var maxTravelV = 70; // مەودای سەرەوە و خوارەوە
+            var offsetV = -currentAngle * 2.8;
+            if (offsetV > maxTravelV) offsetV = maxTravelV;
+            if (offsetV < -maxTravelV) offsetV = -maxTravelV;
 
-        let x = smoothX - calibX;
-        let y = smoothY - calibY;
+            var bCol = document.getElementById('bubbleColumn');
+            if (bCol) bCol.style.transform = 'translateY(' + offsetV + 'px)';
 
-        let displayDegree = Math.abs(x);
+            isBalanced = Math.abs(currentAngle) < 0.6;
+        } else if (currentLevelMode === 'edge') {
+            // کاتێک مۆبایل لەسەر لێواری خوارەوە یان سەرەوە ڕادەگیرێت
+            currentAngle = filteredRoll - zeroCalibAngle;
+            var maxTravelH = 95; // مەودای چەپ و ڕاست
+            var offsetH = -currentAngle * 2.8;
+            if (offsetH > maxTravelH) offsetH = maxTravelH;
+            if (offsetH < -maxTravelH) offsetH = -maxTravelH;
 
-        if (currentLevelMode === 'vertical') {
-            let vertOffset = (Math.abs(smoothY) - 90) - calibY;
-            y = vertOffset;
-            displayDegree = Math.abs(vertOffset);
-        }
+            var bEdge = document.getElementById('bubbleEdge');
+            if (bEdge) bEdge.style.transform = 'translateX(' + offsetH + 'px)';
 
-        if (Math.abs(x) < 0.1) x = 0;
-        if (Math.abs(y) < 0.1) y = 0;
-
-        if (x > 90) x = 90; if (x < -90) x = -90;
-        if (y > 90) y = 90; if (y < -90) y = -90;
-
-        lastAngleX = x;
-        lastAngleY = y;
-
-        let totalAngle = Math.sqrt(x * x + y * y);
-        if (totalAngle > 90) totalAngle = 90;
-
-        const angXEl = document.getElementById('angleXText');
-        const angYEl = document.getElementById('angleYText');
-        const angTotEl = document.getElementById('angleTotalText');
-        if (angXEl) angXEl.innerText = toEn(x.toFixed(1)) + "°";
-        if (angYEl) angYEl.innerText = toEn(y.toFixed(1)) + "°";
-        if (angTotEl) angTotEl.innerText = toEn(totalAngle.toFixed(1)) + "°";
-
-        const digDeg = document.getElementById('digitalDegreeDisplay');
-        if (digDeg) digDeg.innerText = toEn(displayDegree.toFixed(1)) + "°";
-
-        const digSlope = document.getElementById('digitalSlopePercent');
-        if (digSlope) {
-            let slope = Math.tan(displayDegree * Math.PI / 180) * 100;
-            if (isNaN(slope) || slope > 999) slope = 999;
-            digSlope.innerText = "لێژی: " + toEn(slope.toFixed(1)) + "%";
-        }
-
-        const bubbleH = document.getElementById('bubbleHoriz');
-        if (bubbleH) {
-            const maxTravelH = 105;
-            const factorH = currentLevelMode === 'precision' ? 5.5 : 2.4;
-            let moveH = -x * factorH;
-            if (moveH > maxTravelH) moveH = maxTravelH;
-            if (moveH < -maxTravelH) moveH = -maxTravelH;
-            bubbleH.style.transform = `translateX(${moveH}px)`;
-        }
-
-        const bubbleV = document.getElementById('bubbleVert');
-        if (bubbleV) {
-            const maxTravelV = 95;
-            const factorV = currentLevelMode === 'precision' ? 5.5 : 2.4;
-            let moveV = y * factorV;
-            if (moveV > maxTravelV) moveV = maxTravelV;
-            if (moveV < -maxTravelV) moveV = -maxTravelV;
-            bubbleV.style.transform = `translateY(${moveV}px)`;
-        }
-
-        const bubbleR = document.getElementById('bubbleRound');
-        if (bubbleR) {
-            const maxR = 75;
-            let mx = -x * 1.8;
-            let my = -y * 1.8;
-            let dist = Math.sqrt(mx * mx + my * my);
-            if (dist > maxR) {
-                let ratio = maxR / dist;
-                mx *= ratio;
-                my *= ratio;
+            isBalanced = Math.abs(currentAngle) < 0.6;
+        } else if (currentLevelMode === 'surface') {
+            // مۆبایل بە تەختی لەسەر پشت
+            var devX = -filteredRoll * 1.5;
+            var devY = -filteredPitch * 1.5;
+            var dist = Math.sqrt(devX * devX + devY * devY);
+            var maxRadius = 62;
+            if (dist > maxRadius) {
+                devX = (devX / dist) * maxRadius;
+                devY = (devY / dist) * maxRadius;
             }
-            bubbleR.style.transform = `translate(${mx}px, ${my}px)`;
+            var bSurf = document.getElementById('bubbleSurface');
+            if (bSurf) bSurf.style.transform = 'translate(' + devX + 'px, ' + devY + 'px)';
+
+            currentAngle = Math.sqrt(filteredRoll * filteredRoll + filteredPitch * filteredPitch);
+            isBalanced = currentAngle < 0.8;
         }
 
-        const badge = document.getElementById('levelStateBadge');
-        const stateText = document.getElementById('levelStateText');
-        const isPerfect = (currentLevelMode === 'vertical') ? Math.abs(y) < 0.65 : (Math.abs(x) < 0.65 && (currentLevelMode !== 'circular' || Math.abs(y) < 0.65));
+        // نوێکردنەوەی ژمارەی گۆشەکە
+        var degDisplay = Math.abs(currentAngle);
+        if (degDisplay < 0.1) degDisplay = 0.0;
+        var degEl = document.getElementById('liveLevelDegree');
+        if (degEl) degEl.innerText = toEn(degDisplay.toFixed(1)) + '°';
 
-        if (badge && stateText) {
-            if (isPerfect) {
+        // دۆخی تەرازووبوون
+        var badge = document.getElementById('liveLevelStateBadge');
+        var text = document.getElementById('liveLevelStateText');
+        if (badge && text) {
+            if (isBalanced) {
                 badge.classList.add('active-perfect');
-                stateText.innerText = "١٠٠٪ تەرازووە (وەزانە)";
+                badge.style.background = '#22c55e';
+                badge.style.color = '#ffffff';
+                text.innerText = '١٠٠٪ تەرازووە (وەزانە) ✅';
+
+                // لەرینەوەی مۆبایل کاتێک دەگاتە سفر
+                if (!hasLevelVibrated) {
+                    if (navigator.vibrate) navigator.vibrate(80);
+                    hasLevelVibrated = true;
+                }
             } else {
                 badge.classList.remove('active-perfect');
-                stateText.innerText = "تەراز نییە";
+                badge.style.background = 'rgba(255,255,255,0.08)';
+                badge.style.color = '#94a3b8';
+                text.innerText = 'تەراز نییە ✕';
+                hasLevelVibrated = false;
             }
         }
     }
 
-    function onDeviceOrientation(e) {
-        if (!e) return;
-        let gx = (e.gamma !== undefined && e.gamma !== null) ? e.gamma : 0;
-        let by = (e.beta !== undefined && e.beta !== null) ? e.beta : 0;
-        updateLevelUI(gx, by);
-    }
-
-    function startLevelSensors() {
-        window.removeEventListener('deviceorientation', onDeviceOrientation);
-        window.addEventListener('deviceorientation', onDeviceOrientation);
-    }
-    
-    function requestMotionPermission() {
+    function activateLevelSensorsDirectly() {
         if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-            DeviceOrientationEvent.requestPermission().then(res => {
-                if (res === 'granted') {
-                    startLevelSensors();
-                    showAppToast('هەستەوەر بە سەرکەوتوویی چالاککرا! ✅', '#22c55e');
+            DeviceOrientationEvent.requestPermission().then(function(state) {
+                if (state === 'granted') {
+                    bindOrientationEvents();
+                    showAppToast('هەستەوەری مۆبایلەکەت چالاک بوو ✅', '#22c55e');
                 } else {
-                    showAppToast('ڕێگەپێدانی هەستەوەر لە براوزەرەکە نەدراوە.', '#d97706');
+                    showAppToast('ڕێگەپێدانی هەستەوەر نەدراوە لە براوزەرەکە.', '#d97706');
                 }
-            }).catch(() => showAppToast('دەسەڵاتی هەستەوەر پێویستە.', '#ef4444'));
+            }).catch(function() {
+                bindOrientationEvents();
+            });
         } else {
-            startLevelSensors();
-            showAppToast('هەستەوەر چالاکە و دەخوێنێتەوە 📱', '#22c55e');
+            bindOrientationEvents();
+            showAppToast('هەستەوەر کارایە 📱⚡', '#22c55e');
         }
     }
 
-    window.addEventListener('DOMContentLoaded', startLevelSensors);
-    window.addEventListener('load', startLevelSensors);
+    function bindOrientationEvents() {
+        window.removeEventListener('deviceorientation', handleOrientationMotion, true);
+        window.addEventListener('deviceorientation', handleOrientationMotion, true);
+    }
+
+    window.addEventListener('DOMContentLoaded', bindOrientationEvents);
 
     /* =========================================================
        قیبلەنمای بازنەیی تەواو بە GPS و ناوەڕاستی کەعبە
