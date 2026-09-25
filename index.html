@@ -2137,23 +2137,41 @@
                 <option value="WARAQA">وەرەقـــە ($100)</option>
                 <option value="USD">دۆلاری تاک ($1)</option>
                 <option value="IQD">دیناری عێراقی (IQD)</option>
-                <option value="EUR">یۆرۆ (EUR)</option>
-                <option value="GBP">پاوەند (GBP)</option>
-                <option value="TRY">لیرەی تورکی (TRY)</option>
                 <option value="IRR">تومەنی ئێرانی (IRR)</option>
+                <option value="TRY">لیرەی تورکی (TRY)</option>
                 <option value="SAR">ڕیاڵی سعوودی (SAR)</option>
                 <option value="AED">درهەمی ئیماراتی (AED)</option>
+                <option value="JOD">دیناری ئوردنی (JOD)</option>
+                <option value="EUR">یۆرۆی ئەڵمانیا و ئەوروپا (EUR)</option>
+                <option value="SEK">کرۆنی سویدی (SEK)</option>
+                <option value="GBP">پاوەندی بەریتانی (GBP)</option>
+                <option value="NOK">کرۆنی نەرویجی (NOK)</option>
+                <option value="CAD">دۆلاری کەنەدی (CAD)</option>
+                <option value="AUD">دۆلاری ئوستراڵی (AUD)</option>
+                <option value="CHF">فرەنکی سویسری (CHF)</option>
+                <option value="DKK">کرۆنی دانیمارکی (DKK)</option>
+                <option value="QAR">ڕیاڵی قەتەری (QAR)</option>
+                <option value="KWD">دیناری کوەیتی (KWD)</option>
             </select>
             <div id="results" style="margin-top:8px;">
                 <div class="result-item"><span>وەرەقە ($100)</span><span id="res-WARAQA" class="badge-val">0</span></div>
                 <div class="result-item"><span>دۆلاری تاک ($1)</span><span id="res-USD" class="badge-val">0</span></div>
                 <div class="result-item"><span>دیناری عێراقی</span><span id="res-IQD" class="badge-val">0</span></div>
-                <div class="result-item"><span>یۆرۆی ئەوروپی</span><span id="res-EUR" class="badge-val">0</span></div>
-                <div class="result-item"><span>پاوەندی بەریتانی</span><span id="res-GBP" class="badge-val">0</span></div>
-                <div class="result-item"><span>لیرەی تورکی</span><span id="res-TRY" class="badge-val">0</span></div>
                 <div class="result-item"><span>تومەنی ئێرانی</span><span id="res-IRR" class="badge-val">0</span></div>
+                <div class="result-item"><span>لیرەی تورکی</span><span id="res-TRY" class="badge-val">0</span></div>
                 <div class="result-item"><span>ڕیاڵی سعوودی</span><span id="res-SAR" class="badge-val">0</span></div>
                 <div class="result-item"><span>درهەمی ئیماراتی</span><span id="res-AED" class="badge-val">0</span></div>
+                <div class="result-item"><span>دیناری ئوردنی</span><span id="res-JOD" class="badge-val">0</span></div>
+                <div class="result-item"><span>یۆرۆی ئەوروپی</span><span id="res-EUR" class="badge-val">0</span></div>
+                <div class="result-item"><span>کرۆنی سویدی</span><span id="res-SEK" class="badge-val">0</span></div>
+                <div class="result-item"><span>پاوەندی بەریتانی</span><span id="res-GBP" class="badge-val">0</span></div>
+                <div class="result-item"><span>کرۆنی نەرویجی</span><span id="res-NOK" class="badge-val">0</span></div>
+                <div class="result-item"><span>دۆلاری کەنەدی</span><span id="res-CAD" class="badge-val">0</span></div>
+                <div class="result-item"><span>دۆلاری ئوستراڵی</span><span id="res-AUD" class="badge-val">0</span></div>
+                <div class="result-item"><span>فرەنکی سویسری</span><span id="res-CHF" class="badge-val">0</span></div>
+                <div class="result-item"><span>کرۆنی دانیمارکی</span><span id="res-DKK" class="badge-val">0</span></div>
+                <div class="result-item"><span>ڕیاڵی قەتەری</span><span id="res-QAR" class="badge-val">0</span></div>
+                <div class="result-item"><span>دیناری کوەیتی</span><span id="res-KWD" class="badge-val">0</span></div>
             </div>
 
             <!-- دوگمەی کردنەوەی حاسیبە -->
@@ -8651,43 +8669,109 @@ function updateTopNotifBadge() {
     }
 
     function processConversion() {
-        const rawAmount = document.getElementById('inputAmount')?.value || 0;
-        const amount = parseNum(rawAmount);
-        const selected = document.getElementById('currencySelect')?.value || 'WARAQA';
+        try {
+            const rawAmount = document.getElementById('inputAmount')?.value || 0;
+            const amount = parseNum(rawAmount);
+            const selected = document.getElementById('currencySelect')?.value || 'WARAQA';
 
-        const ratesMap = {};
-        qamarCurrencies.forEach(c => {
-            ratesMap[c.code] = activeConversionMode === 'sell' ? c.sell : c.buy;
-        });
+            const ratesMap = {};
+            qamarCurrencies.forEach(c => {
+                ratesMap[c.code] = activeConversionMode === 'sell' ? c.sell : c.buy;
+            });
 
-        const rateIQD = ratesMap['IQD'] || 154600;
-        const rateEUR = ratesMap['EUR'] || 115.8;
-        const rateGBP = ratesMap['GBP'] || 134.5;
-        const rateTRY = ratesMap['TRY'] || 4780;
-        const rateIRR = ratesMap['IRR'] || 19000000;
-        const rateSAR = ratesMap['SAR'] || 370;
-        const rateAED = ratesMap['AED'] || 370;
+            const rateIQD = ratesMap['IQD'] || 157100;
+            const rateIRR = ratesMap['IRR'] || 20000000;
+            const rateTRY = ratesMap['TRY'] || 4820;
+            const rateSAR = ratesMap['SAR'] || 370;
+            const rateAED = ratesMap['AED'] || 365;
+            const rateJOD = ratesMap['JOD'] || 68;
+            const rateEUR = ratesMap['EUR'] || 115.65;
+            const rateSEK = ratesMap['SEK'] || 93;
+            const rateGBP = ratesMap['GBP'] || 134.25;
+            const rateNOK = ratesMap['NOK'] || 93;
+            const rateCAD = ratesMap['CAD'] || 71.5;
+            const rateAUD = ratesMap['AUD'] || 71;
+            const rateCHF = ratesMap['CHF'] || 121.25;
+            const rateDKK = ratesMap['DKK'] || 142;
+            const rateQAR = ratesMap['QAR'] || 375;
+            const rateKWD = ratesMap['KWD'] || 315;
 
-        let waraqaValue = 0;
-        if (selected === 'WARAQA') waraqaValue = amount;
-        else if (selected === 'USD') waraqaValue = amount / 100;
-        else if (selected === 'IQD') waraqaValue = amount / rateIQD;
-        else if (selected === 'IRR') waraqaValue = amount / rateIRR;
-        else if (selected === 'TRY') waraqaValue = amount / rateTRY;
-        else if (selected === 'EUR') waraqaValue = (amount / rateEUR) * 100;
-        else if (selected === 'GBP') waraqaValue = (amount / rateGBP) * 100;
-        else if (selected === 'SAR') waraqaValue = amount / rateSAR;
-        else if (selected === 'AED') waraqaValue = amount / rateAED;
+            let waraqaValue = 0;
+            if (selected === 'WARAQA') waraqaValue = amount;
+            else if (selected === 'USD') waraqaValue = amount / 100;
+            else if (selected === 'IQD') waraqaValue = amount / rateIQD;
+            else if (selected === 'IRR') waraqaValue = amount / rateIRR;
+            else if (selected === 'TRY') waraqaValue = amount / rateTRY;
+            else if (selected === 'SAR') waraqaValue = amount / rateSAR;
+            else if (selected === 'AED') waraqaValue = amount / rateAED;
+            else if (selected === 'JOD') waraqaValue = amount / rateJOD;
+            else if (selected === 'EUR') waraqaValue = (amount * rateEUR) / 10000;
+            else if (selected === 'SEK') waraqaValue = (amount * rateSEK) / 100000;
+            else if (selected === 'GBP') waraqaValue = (amount * rateGBP) / 10000;
+            else if (selected === 'NOK') waraqaValue = (amount * rateNOK) / 100000;
+            else if (selected === 'CAD') waraqaValue = (amount * rateCAD) / 10000;
+            else if (selected === 'AUD') waraqaValue = (amount * rateAUD) / 10000;
+            else if (selected === 'CHF') waraqaValue = (amount * rateCHF) / 10000;
+            else if (selected === 'DKK') waraqaValue = (amount * rateDKK) / 100000;
+            else if (selected === 'QAR') waraqaValue = amount / rateQAR;
+            else if (selected === 'KWD') waraqaValue = (amount * rateKWD) / 10000;
 
-        setSafeText('res-WARAQA', formatEn(waraqaValue, {maximumFractionDigits: 2}));
-        setSafeText('res-USD', formatEn(waraqaValue * 100, {maximumFractionDigits: 2}));
-        setSafeText('res-IQD', formatEn(Math.floor(waraqaValue * rateIQD)));
-        setSafeText('res-IRR', formatEn(Math.floor(waraqaValue * rateIRR)));
-        setSafeText('res-TRY', formatEn(Math.floor(waraqaValue * rateTRY)));
-        setSafeText('res-EUR', formatEn((waraqaValue * rateEUR) / 100, {maximumFractionDigits: 2}));
-        setSafeText('res-GBP', formatEn((waraqaValue * rateGBP) / 100, {maximumFractionDigits: 2}));
-        setSafeText('res-SAR', formatEn(Math.floor(waraqaValue * rateSAR)));
-        setSafeText('res-AED', formatEn(Math.floor(waraqaValue * rateAED)));
+            setSafeText('res-WARAQA', formatEn(waraqaValue, {maximumFractionDigits: 2}));
+            setSafeText('res-USD', formatEn(waraqaValue * 100, {maximumFractionDigits: 2}));
+            setSafeText('res-IQD', formatEn(Math.floor(waraqaValue * rateIQD)));
+            setSafeText('res-IRR', formatEn(Math.floor(waraqaValue * rateIRR)));
+            setSafeText('res-TRY', formatEn(Math.floor(waraqaValue * rateTRY)));
+            setSafeText('res-SAR', formatEn(Math.floor(waraqaValue * rateSAR)));
+            setSafeText('res-AED', formatEn(Math.floor(waraqaValue * rateAED)));
+            setSafeText('res-JOD', formatEn(waraqaValue * rateJOD, {maximumFractionDigits: 2}));
+            setSafeText('res-EUR', formatEn((waraqaValue * 10000) / rateEUR, {maximumFractionDigits: 2}));
+            setSafeText('res-SEK', formatEn((waraqaValue * 100000) / rateSEK, {maximumFractionDigits: 2}));
+            setSafeText('res-GBP', formatEn((waraqaValue * 10000) / rateGBP, {maximumFractionDigits: 2}));
+            setSafeText('res-NOK', formatEn((waraqaValue * 100000) / rateNOK, {maximumFractionDigits: 2}));
+            setSafeText('res-CAD', formatEn((waraqaValue * 10000) / rateCAD, {maximumFractionDigits: 2}));
+            setSafeText('res-AUD', formatEn((waraqaValue * 10000) / rateAUD, {maximumFractionDigits: 2}));
+            setSafeText('res-CHF', formatEn((waraqaValue * 10000) / rateCHF, {maximumFractionDigits: 2}));
+            setSafeText('res-DKK', formatEn((waraqaValue * 100000) / rateDKK, {maximumFractionDigits: 2}));
+            setSafeText('res-QAR', formatEn(Math.floor(waraqaValue * rateQAR)));
+            setSafeText('res-KWD', formatEn((waraqaValue * 10000) / rateKWD, {maximumFractionDigits: 2}));
+
+            // سەوزکردنی دەستبەجێی ئەو پارەیەی هەڵبژێردراوە وەک نیشانە
+            document.querySelectorAll('#results .result-item').forEach(item => {
+                item.style.background = '';
+                item.style.borderRadius = '';
+                item.style.padding = '';
+            });
+            document.querySelectorAll('#results .badge-val').forEach(badge => {
+                badge.style.background = '';
+                badge.style.color = '';
+                badge.style.borderColor = '';
+                badge.style.boxShadow = '';
+            });
+
+            // نیشانەکردنی ڕیز و باجی ئەو پارەیەی هەڵبژێردراوە بە ڕەنگی سەوز
+            const targetBadge = document.getElementById('res-' + selected);
+            if (targetBadge) {
+                targetBadge.style.background = '#22c55e';
+                targetBadge.style.color = '#ffffff';
+                targetBadge.style.borderColor = '#16a34a';
+                targetBadge.style.boxShadow = '0 0 10px rgba(34, 197, 94, 0.55)';
+                const parentRow = targetBadge.closest('.result-item');
+                if (parentRow) {
+                    parentRow.style.background = 'rgba(34, 197, 94, 0.14)';
+                    parentRow.style.borderRadius = '10px';
+                    parentRow.style.padding = '7px 10px';
+                }
+            }
+
+            // سەوزکردنی چوارچێوەی سەلێکتەکە وەک نیشانەی دیاریکردن
+            const currSelect = document.getElementById('currencySelect');
+            if (currSelect) {
+                currSelect.style.borderColor = '#22c55e';
+                currSelect.style.boxShadow = '0 0 0 3px rgba(34, 197, 94, 0.2)';
+            }
+        } catch (e) {
+            console.error("Conversion error handled:", e);
+        }
     }
 
     /* =========================================================
@@ -9512,13 +9596,63 @@ function updateTopNotifBadge() {
     }
 
     function numberToKurdishWords(num) {
-        if (num === 0) return "سفر";
-        if (num < 0) return "سالب " + numberToKurdishWords(Math.abs(num));
+        if (num === null || num === undefined || num === "") return "سفر";
+        
+        let numStr = String(num).trim();
+        // ئەگەر ژمارەکە زۆر گەورە بوو بە شێوازی زانستی (وەک 1e+21)
+        if (numStr.includes('e') || numStr.includes('E')) {
+            const [base, exp] = numStr.split(/[eE]/);
+            let [lead, dec = ''] = base.split('.');
+            let e = parseInt(exp, 10);
+            if (e > 0) {
+                dec = dec.padEnd(e, '0');
+                numStr = lead + dec.slice(0, e) + (dec.slice(e) ? '.' + dec.slice(e) : '');
+            }
+        }
+
+        let isNegative = false;
+        if (numStr.startsWith('-')) {
+            isNegative = true;
+            numStr = numStr.substring(1);
+        }
+
+        let [intPart, decPart] = numStr.split('.');
+        intPart = intPart.replace(/^0+/, '') || "0";
+
+        if (intPart === "0" && (!decPart || /^0+$/.test(decPart))) {
+            return "سفر";
+        }
 
         const ones = ["", "یەک", "دوو", "سێ", "چوار", "پێنج", "شەش", "حەوت", "هەشت", "نۆ"];
         const teens = ["دە", "یازدە", "دوازدە", "سێزدە", "چواردە", "پازدە", "شازدە", "حەڤدە", "هەژدە", "نۆزدە"];
         const tens = ["", "", "بیست", "سی", "چل", "پەنجا", "شەست", "حەفتا", "هەشتا", "نەوەد"];
         const hundreds = ["", "سەد", "دووسەد", "سێسەد", "چوارسەد", "پێنجسەد", "شەشسەد", "حەوتسەد", "هەشتسەد", "نۆسەد"];
+
+        // هەموو پلە گەورەکانی ئینگلیزی بە کوردی تا 10^63
+        const scales = [
+            "",                      // 10^0
+            "هەزار",                 // 10^3 (Thousand)
+            "ملیۆن",                 // 10^6 (Million)
+            "ملیار",                 // 10^9 (Billion)
+            "تریلیۆن",               // 10^12 (Trillion)
+            "کوادریلیۆن",            // 10^15 (Quadrillion)
+            "کوینتلیۆن",             // 10^18 (Quintillion)
+            "سێکستلیۆن",             // 10^21 (Sextillion)
+            "سێپتلیۆن",              // 10^24 (Septillion)
+            "ئۆکتلیۆن",              // 10^27 (Octillion)
+            "نۆنیلیۆن",              // 10^30 (Nonillion)
+            "دیسیلیۆن",              // 10^33 (Decillion)
+            "ئەندیسیلیۆن",           // 10^36 (Undecillion)
+            "دوودیسیلیۆن",           // 10^39 (Duodecillion)
+            "ترێدیسیلیۆن",           // 10^42 (Tredecillion)
+            "کواتۆردیسیلیۆن",        // 10^45 (Quattuordecillion)
+            "کویندیسیلیۆن",          // 10^48 (Quindecillion)
+            "سێکسدیسیلیۆن",          // 10^51 (Sexdecillion)
+            "سێپتندیسیلیۆن",         // 10^54 (Septendecillion)
+            "ئۆکتۆدیسیلیۆن",         // 10^57 (Octodecillion)
+            "نۆڤەمدیسیلیۆن",         // 10^60 (Novemdecillion)
+            "ڤیجینتیلیۆن"            // 10^63 (Vigintillion)
+        ];
 
         function convertThreeDigits(n) {
             let str = "";
@@ -9544,36 +9678,41 @@ function updateTopNotifBadge() {
             return str;
         }
 
-        let words = "";
-        const trillion = Math.floor(num / 1000000000000);
-        let rem = num % 1000000000000;
-        const billion = Math.floor(rem / 1000000000);
-        rem = rem % 1000000000;
-        const million = Math.floor(rem / 1000000);
-        rem = rem % 1000000;
-        const thousand = Math.floor(rem / 1000);
-        const rest = rem % 1000;
+        // دابەشکردنی ژمارەکە بۆ دەستەی ٣ ژمارەیی لە لای ڕاستەوە
+        let chunks = [];
+        let tempInt = intPart;
+        while (tempInt.length > 0) {
+            let chunk = tempInt.slice(-3);
+            chunks.push(parseInt(chunk, 10));
+            tempInt = tempInt.slice(0, -3);
+        }
 
-        if (trillion > 0) {
-            words += (trillion === 1 ? "یەک تریلیۆن" : convertThreeDigits(trillion) + " تریلیۆن");
-            if (rem > 0) words += " و ";
+        let parts = [];
+        for (let i = chunks.length - 1; i >= 0; i--) {
+            let chunkVal = chunks[i];
+            if (chunkVal > 0) {
+                let scaleName = scales[i] || "";
+                if (scaleName === "") {
+                    parts.push(convertThreeDigits(chunkVal));
+                } else if (chunkVal === 1 && i === 1) {
+                    parts.push("هەزار");
+                } else if (chunkVal === 1) {
+                    parts.push("یەک " + scaleName);
+                } else {
+                    parts.push(convertThreeDigits(chunkVal) + " " + scaleName);
+                }
+            }
         }
-        if (billion > 0) {
-            words += (billion === 1 ? "یەک ملیار" : convertThreeDigits(billion) + " ملیار");
-            if (rem > 0) words += " و ";
+
+        let finalWords = parts.join(" و ");
+        if (finalWords === "") finalWords = "سفر";
+
+        if (decPart && !/^0+$/.test(decPart)) {
+            let decWords = decPart.split('').map(d => ones[parseInt(d, 10)] || "سفر").join(' ');
+            finalWords += " خاڵ " + decWords;
         }
-        if (million > 0) {
-            words += (million === 1 ? "یەک ملیۆن" : convertThreeDigits(million) + " ملیۆن");
-            if (thousand > 0 || rest > 0) words += " و ";
-        }
-        if (thousand > 0) {
-            words += (thousand === 1 ? "هەزار" : convertThreeDigits(thousand) + " هەزار");
-            if (rest > 0) words += " و ";
-        }
-        if (rest > 0) {
-            words += convertThreeDigits(rest);
-        }
-        return words;
+
+        return isNegative ? "سالب " + finalWords : finalWords;
     }
 
     /* ڕێکخستنەکان (چاککراو و پارێزراو) */
