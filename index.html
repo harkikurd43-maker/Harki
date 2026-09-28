@@ -2231,7 +2231,20 @@
             </div>
 
             <!-- گەڕان -->
-            <input type="text" id="fuelSearchInput" class="form-input-custom" placeholder="گەڕان بەدوای وڵات یان دراو (عێراق، TRY، یۆرۆ، USD)..." oninput="filterFuelRows()" style="text-align:right; margin-bottom:10px;">
+            <input type="text" id="fuelSearchInput" class="form-input-custom" placeholder="گەڕان بەدوای وڵات یان دراو (عێراق، TRY، یۆرۆ، USD)..." oninput="filterFuelRows()" style="text-align:right; margin-bottom:8px;">
+
+            <!-- دوگمەکانی ڕیزبەندی بەپێی نرخ -->
+            <div style="display:flex; gap:6px; margin-bottom:10px;">
+                <button type="button" id="btnFuelSortAsc" class="btn-city-pill" style="flex:1; padding:7px 4px; font-size:0.73rem; font-weight:800;" onclick="sortFuelList('asc', this)">
+                    🟢 کەمترین بۆ زۆرترین
+                </button>
+                <button type="button" id="btnFuelSortDesc" class="btn-city-pill" style="flex:1; padding:7px 4px; font-size:0.73rem; font-weight:800;" onclick="sortFuelList('desc', this)">
+                    🔴 بەرزترین بۆ کەمترین
+                </button>
+                <button type="button" id="btnFuelSortDefault" class="btn-city-pill active" style="padding:7px 10px; font-size:0.73rem; font-weight:800;" onclick="sortFuelList('default', this)">
+                    <i class="fa-solid fa-rotate-left"></i> بنەڕەتی
+                </button>
+            </div>
 
             <!-- سەردێڕی ستوونەکان -->
             <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; font-weight:800; padding:0 6px 8px 6px; color:var(--text-muted); border-bottom:1px solid var(--card-border); margin-bottom:8px;">
@@ -2399,12 +2412,8 @@
         <button class="btn-action-primary" id="btnExecuteCloudAction" style="background:#059669;" onclick="executeCloudBackupOrRestore()">
             <i class="fa-solid fa-check"></i> <span id="cloudModalBtnText">پاشەکەوتکردن (Save)</span>
         </button>
-                </label>
-           </div>
-       </div>
-   </div>
+    </div>
 </div>
-
 
 <!-- مۆداڵی پارەدانی بەشی قەرز (بەبێ دەرکەوتنی هیچ لینکێک) -->
 <div id="payDebtModal" class="calc-modal" style="z-index: 99996;">
@@ -2992,43 +3001,6 @@
                     <span>ڕۆژی ٦٠ - ٦٥: گەیشتن بە بەندەر و پاکتاوی گومرگی</span>
                     <span class="badge-val" style="color:#22c55e;">گەیشتن و وەرگرتن</span>
                 </div>
-            </div>
-        </div>
-
-        <div id="vinResultWrapper" style="display:none;">
-            <div class="vin-block-card fire-glow-card">
-                <div class="vin-car-title-badge" id="resCarFullName">-</div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-building"></i> <span>کۆمپانیا (Make)</span></div><div class="vin-spec-val" id="resMake">-</div></div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-car"></i> <span>مۆدێل (Model)</span></div><div class="vin-spec-val" id="resModel">-</div></div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-calendar"></i> <span>ساڵی دروستکردن</span></div><div class="vin-spec-val" id="resYear">-</div></div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-layer-group"></i> <span>مواسەفات (Trim)</span></div><div class="vin-spec-val" id="resTrim">-</div></div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-globe"></i> <span>وڵاتی دروستکەر</span></div><div class="vin-spec-val" id="resCountry">-</div></div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-car-side"></i> <span>جۆری لاشە (Body)</span></div><div class="vin-spec-val" id="resBody">-</div></div>
-            </div>
-
-            <div class="vin-block-card fire-glow-card">
-                <div style="font-weight:900; font-size:0.85rem; color:#0284c7; margin-bottom:10px; border-bottom:1px solid var(--card-border); padding-bottom:6px;">
-                    <i class="fa-solid fa-gears"></i> <span>تایبەتمەندییەکانی بزوێنەر و گێڕ</span>
-                </div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-microchip"></i> <span>قەبارەی بزوێنەر</span></div><div class="vin-spec-val" id="resEngine">-</div></div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-cubes-stacked"></i> <span>سلندەر (Cylinders)</span></div><div class="vin-spec-val" id="resCyl">-</div></div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-horse"></i> <span>هێزی ئەسپ (HP)</span></div><div class="vin-spec-val" id="resHp">-</div></div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-gas-pump"></i> <span>سووتەمەنی</span></div><div class="vin-spec-val" id="resFuel">-</div></div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-arrows-spin"></i> <span>سیستەمی ڕاکێشان (Drive)</span></div><div class="vin-spec-val" id="resDrive">-</div></div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-gauge-high"></i> <span>گێڕ</span></div><div class="vin-spec-val" id="resTrans">-</div></div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-oil-can" style="color:#d97706;"></i> <span>ڕۆنی پێشنیارکراو</span></div><div class="vin-spec-val" id="resOil" style="color:#d97706;">-</div></div>
-                <div class="vin-spec-row"><div class="vin-spec-label"><i class="fa-solid fa-road" style="color:#059669;"></i> <span>سەرف لە ١٠٠ کم</span></div><div class="vin-spec-val" id="resEco" style="color:#059669;">-</div></div>
-            </div>
-
-            <div class="section-card fire-glow-card">
-                <div class="card-header-title"><i class="fa-solid fa-shield-halved" style="color:var(--theme-color);"></i> <span>پشکنینی مەزاد و مێژووی لێدراوی</span></div>
-                <a id="vinStatVinBtn" href="#" target="_blank" class="btn-auction-link" style="background:#059669;">🚒 بینینی مێژووی لێدران لە Stat.vin (سەرەکی)</a>
-                <a id="vinCopartBtn" href="#" target="_blank" class="btn-auction-link" style="background:var(--theme-color);">🏎️ گەڕانی شاسی لە Copart</a>
-                <a id="vinBidCarsBtn" href="#" target="_blank" class="btn-auction-link" style="background:#0284c7;">🚐 گەڕانی شاسی لە Bid.Cars</a>
-                <a id="vinBidFaxBtn" href="#" target="_blank" class="btn-auction-link" style="background:#7c3aed;">🚀 گەڕانی مەزاد لە BidFax</a>
-                <a id="vinGoogleBtn" href="#" target="_blank" class="btn-auction-link" style="background:#ea4335;">📸 بینینی وێنەکانی ڕووداو لە Google</a>
-                <a id="vinChinaSearchBtn" href="#" target="_blank" class="btn-auction-link" style="background:#0284c7; display:none;">🇨🇳 پشکنینی ڕاپۆرتی تایبەت بە چینی</a>
-                <a id="vinNhtsaBtn" href="#" target="_blank" class="btn-auction-link" style="background:#1d4ed8;">🏛️ پشکنینی فەرمی NHTSA</a>
             </div>
         </div>
     </div>
@@ -4787,8 +4759,6 @@
         </div>
     </div>
     
-<div id="drawerBackdrop" class="drawer-backdrop" onclick="closeDrawerMenu()"></div>
-
 <!-- مۆداڵی نیوە شاشەی سێ خاڵ (مینیۆی سەرەکی) -->
 <div id="drawerBackdrop" class="drawer-backdrop" onclick="closeDrawerMenu()"></div>
 
@@ -7451,19 +7421,6 @@ function manualPrevAd(e) {
     if (e) e.stopPropagation();
     prevAdSlide();
     resetAdsAutoPlayTimer();
-}
-
-function updateAdSlidePosition() {
-    const track = document.getElementById('adsTrack');
-    if (!track) return;
-    // جوڵاندن بەرەو پێشەوە بە شێوازی نەرم
-    track.style.transform = `translateX(-${currentAdSlideIndex * 100}%)`;
-
-    // نوێکردنەوەی خاڵە سەوزەکان
-    const dots = document.querySelectorAll('.ad-dot');
-    dots.forEach((d, i) => {
-        d.classList.toggle('active', i === currentAdSlideIndex);
-    });
 }
 
 // کارکردنی خۆکار هەر ١٠ چرکە جارێک
@@ -11132,25 +11089,6 @@ function updateTopNotifBadge() {
         });
     }
 
-    function selectNewLevelMode(mode, btn) {
-        currentLevelMode = mode;
-        zeroCalibAngle = 0;
-        document.querySelectorAll('#levelTab .btn-level-type').forEach(function(b) { b.classList.remove('active'); });
-        if (btn) btn.classList.add('active');
-
-        document.getElementById('viewModeColumn').style.display = (mode === 'column') ? 'flex' : 'none';
-        document.getElementById('viewModeEdge').style.display = (mode === 'edge') ? 'flex' : 'none';
-        document.getElementById('viewModeSurface').style.display = (mode === 'surface') ? 'flex' : 'none';
-
-        var guide = document.getElementById('levelGuideText');
-        if (guide) {
-            if (mode === 'column') guide.innerText = 'مۆبایلەکەت بە پێوە لە تەنیشت عاموود یان دیوارەکە دابنێ بۆ پێوانی شاقوول 📱🏛️';
-            else if (mode === 'edge') guide.innerText = 'مۆبایلەکەت بە درێژی لەسەر لێواری سەرەوە یان خوارەوە لەسەر تەنەکە دابنێ 📏📱';
-            else guide.innerText = 'مۆبایلەکە تەخت بخەرە سەر زەوی یان مێزەکە تا بڵقەکە بچێتە ناو بازنەی سوور 🎯';
-        }
-        activateLevelSensorsDirectly();
-    }
-
     function resetLevelZeroCalibration() {
         var radR = filteredRoll * (Math.PI / 180);
         var radP = filteredPitch * (Math.PI / 180);
@@ -12945,157 +12883,157 @@ function updateTopNotifBadge() {
        داتابەیس و فەنکشنەکانی نرخی بەنزین و گازوایل لە جیهاندا
     ========================================================= */
     const fuelData = [
-        // ڕۆژهەڵاتی ناوەڕاست و دەوروبەری
-        { flag: "🇮🇶", cur: "IQD", name: "عێراق", petrol: "750 دینار", diesel: "650 دینار" },
-        { flag: "🇸🇦", cur: "SAR", name: "سعودیە", petrol: "2.33 ڕیاڵ", diesel: "1.15 ڕیاڵ" },
-        { flag: "🇦🇪", cur: "AED", name: "ئیمارات", petrol: "2.98 درهەم", diesel: "2.85 درهەم" },
-        { flag: "🇰🇼", cur: "KWD", name: "کوەیت", petrol: "0.105 دینار", diesel: "0.115 دینار" },
-        { flag: "🇶🇦", cur: "QAR", name: "قەتەر", petrol: "2.10 ڕیاڵ", diesel: "2.05 ڕیاڵ" },
-        { flag: "🇧🇭", cur: "BHD", name: "بەحرەین", petrol: "0.200 دینار", diesel: "0.180 دینار" },
-        { flag: "🇴🇲", cur: "OMR", name: "عومان", petrol: "0.239 ڕیاڵ", diesel: "0.258 ڕیاڵ" },
-        { flag: "🇮🇷", cur: "IRR", name: "ئێران", petrol: "3,000 تمەن", diesel: "1,500 تمەن" },
-        { flag: "🇹🇷", cur: "TRY", name: "تورکیا", petrol: "43.5 لیرە", diesel: "42.0 لیرە" },
-        { flag: "🇯🇴", cur: "JOD", name: "ئوردن", petrol: "0.95 دینار", diesel: "0.72 دینار" },
-        { flag: "🇵🇸", cur: "ILS", name: "فەلەستین", petrol: "7.40 شیکل", diesel: "7.10 شیکل" },
-        { flag: "🇱🇧", cur: "USD", name: "لوبنان", petrol: "1.08 دۆلار", diesel: "1.02 دۆلار" },
-        { flag: "🇸🇾", cur: "SYP", name: "سووریا", petrol: "11,500 لیرە", diesel: "10,800 لیرە" },
-        { flag: "🇾🇪", cur: "YER", name: "یەمەن", petrol: "1,150 ڕیاڵ", diesel: "1,200 ڕیاڵ" },
-        { flag: "🇪🇬", cur: "EGP", name: "میسر", petrol: "15.0 جونیە", diesel: "11.5 جونیە" },
-        { flag: "🇱🇾", cur: "LYD", name: "لیبیا", petrol: "0.15 دینار", diesel: "0.15 دینار" },
-        { flag: "🇩🇿", cur: "DZD", name: "جەزائیر", petrol: "45.9 دینار", diesel: "29.0 دینار" },
-        { flag: "🇹🇳", cur: "TND", name: "تونس", petrol: "2.52 دینار", diesel: "2.20 دینار" },
-        { flag: "🇲🇦", cur: "MAD", name: "مەغریب", petrol: "14.2 درهەم", diesel: "12.8 درهەم" },
-        { flag: "🇸🇩", cur: "SDG", name: "سودان", petrol: "650 جونیە", diesel: "620 جونیە" },
-        { flag: "🇲🇷", cur: "MRU", name: "مۆریتانیا", petrol: "49.0 ئۆقیە", diesel: "43.5 ئۆقیە" },
-        { flag: "🇸🇴", cur: "SOS", name: "سۆماڵ", petrol: "0.95 دۆلار", diesel: "0.92 دۆلار" },
-        { flag: "🇩🇯", cur: "DJF", name: "جیبووتی", petrol: "360 فرانک", diesel: "310 فرانک" },
+        // کوردستان و ڕۆژهەڵاتی ناوەڕاست
+        { flag: "🇹🇯", cur: "IQD", name: "کوردستان", petrol: "850 دینار", diesel: "450 دینار", usd: 0.55 },
+        { flag: "🇮🇶", cur: "IQD", name: "عێراق", petrol: "750 دینار", diesel: "650 دینار", usd: 0.49 },
+        { flag: "🇸🇦", cur: "SAR", name: "سعودیە", petrol: "2.33 ڕیاڵ", diesel: "1.15 ڕیاڵ", usd: 0.62 },
+        { flag: "🇦🇪", cur: "AED", name: "ئیمارات", petrol: "2.98 درهەم", diesel: "2.85 درهەم", usd: 0.81 },
+        { flag: "🇰🇼", cur: "KWD", name: "کوەیت", petrol: "0.105 دینار", diesel: "0.115 دینار", usd: 0.34 },
+        { flag: "🇶🇦", cur: "QAR", name: "قەتەر", petrol: "2.10 ڕیاڵ", diesel: "2.05 ڕیاڵ", usd: 0.58 },
+        { flag: "🇧🇭", cur: "BHD", name: "بەحرەین", petrol: "0.200 دینار", diesel: "0.180 دینار", usd: 0.53 },
+        { flag: "🇴🇲", cur: "OMR", name: "عومان", petrol: "0.239 ڕیاڵ", diesel: "0.258 ڕیاڵ", usd: 0.62 },
+        { flag: "🇮🇷", cur: "IRR", name: "ئێران", petrol: "3,000 تمەن", diesel: "1,500 تمەن", usd: 0.029 },
+        { flag: "🇹🇷", cur: "TRY", name: "تورکیا", petrol: "43.5 لیرە", diesel: "42.0 لیرە", usd: 1.25 },
+        { flag: "🇯🇴", cur: "JOD", name: "ئوردن", petrol: "0.95 دینار", diesel: "0.72 دینار", usd: 1.34 },
+        { flag: "🇵🇸", cur: "ILS", name: "فەلەستین", petrol: "7.40 شیکل", diesel: "7.10 شیکل", usd: 1.98 },
+        { flag: "🇱🇧", cur: "USD", name: "لوبنان", petrol: "1.08 دۆلار", diesel: "1.02 دۆلار", usd: 1.08 },
+        { flag: "🇸🇾", cur: "SYP", name: "سووریا", petrol: "11,500 لیرە", diesel: "10,800 لیرە", usd: 0.88 },
+        { flag: "🇾🇪", cur: "YER", name: "یەمەن", petrol: "1,150 ڕیاڵ", diesel: "1,200 ڕیاڵ", usd: 0.95 },
+        { flag: "🇪🇬", cur: "EGP", name: "میسر", petrol: "15.0 جونیە", diesel: "11.5 جونیە", usd: 0.31 },
+        { flag: "🇱🇾", cur: "LYD", name: "لیبیا", petrol: "0.15 دینار", diesel: "0.15 دینار", usd: 0.031 },
+        { flag: "🇩🇿", cur: "DZD", name: "جەزائیر", petrol: "45.9 دینار", diesel: "29.0 دینار", usd: 0.34 },
+        { flag: "🇹🇳", cur: "TND", name: "تونس", petrol: "2.52 دینار", diesel: "2.20 دینار", usd: 0.81 },
+        { flag: "🇲🇦", cur: "MAD", name: "مەغریب", petrol: "14.2 درهەم", diesel: "12.8 درهەم", usd: 1.42 },
+        { flag: "🇸🇩", cur: "SDG", name: "سودان", petrol: "650 جونیە", diesel: "620 جونیە", usd: 0.55 },
+        { flag: "🇲🇷", cur: "MRU", name: "مۆریتانیا", petrol: "49.0 ئۆقیە", diesel: "43.5 ئۆقیە", usd: 1.25 },
+        { flag: "🇸🇴", cur: "USD", name: "سۆماڵ", petrol: "0.95 دۆلار", diesel: "0.92 دۆلار", usd: 0.95 },
+        { flag: "🇩🇯", cur: "DJF", name: "جیبووتی", petrol: "360 فرانک", diesel: "310 فرانک", usd: 2.02 },
 
         // ئەوروپا
-        { flag: "🇩🇪", cur: "EUR", name: "ئەڵمانیا", petrol: "1.78 یۆرۆ", diesel: "1.65 یۆرۆ" },
-        { flag: "🇫🇷", cur: "EUR", name: "فەرەنسا", petrol: "1.82 یۆرۆ", diesel: "1.70 یۆرۆ" },
-        { flag: "🇬🇧", cur: "GBP", name: "بەریتانیا", petrol: "1.45 پاوەند", diesel: "1.52 پاوەند" },
-        { flag: "🇮🇹", cur: "EUR", name: "ئیتاڵیا", petrol: "1.85 یۆرۆ", diesel: "1.73 یۆرۆ" },
-        { flag: "🇪🇸", cur: "EUR", name: "ئیسپانیا", petrol: "1.64 یۆرۆ", diesel: "1.54 یۆرۆ" },
-        { flag: "🇳🇱", cur: "EUR", name: "هۆڵەندا", petrol: "2.05 یۆرۆ", diesel: "1.82 یۆرۆ" },
-        { flag: "🇧🇪", cur: "EUR", name: "بەلجیکا", petrol: "1.72 یۆرۆ", diesel: "1.78 یۆرۆ" },
-        { flag: "🇨🇭", cur: "CHF", name: "سویسرا", petrol: "1.78 فرانک", diesel: "1.86 فرانک" },
-        { flag: "🇦🇹", cur: "EUR", name: "نەمسا", petrol: "1.60 یۆرۆ", diesel: "1.64 یۆرۆ" },
-        { flag: "🇸🇪", cur: "SEK", name: "سوید", petrol: "18.2 کرۆن", diesel: "18.5 کرۆن" },
-        { flag: "🇳🇴", cur: "NOK", name: "نەرویج", petrol: "21.5 کرۆن", diesel: "20.2 کرۆن" },
-        { flag: "🇩🇰", cur: "DKK", name: "دانیمارک", petrol: "13.8 کرۆن", diesel: "12.7 کرۆن" },
-        { flag: "🇫🇮", cur: "EUR", name: "فینلەندا", petrol: "1.85 یۆرۆ", diesel: "1.79 یۆرۆ" },
-        { flag: "🇮🇪", cur: "EUR", name: "ئێرلەندا", petrol: "1.78 یۆرۆ", diesel: "1.72 یۆرۆ" },
-        { flag: "🇵🇹", cur: "EUR", name: "پورتوگال", petrol: "1.74 یۆرۆ", diesel: "1.60 یۆرۆ" },
-        { flag: "🇬🇷", cur: "EUR", name: "یۆنان", petrol: "1.88 یۆرۆ", diesel: "1.62 یۆرۆ" },
-        { flag: "🇵🇱", cur: "PLN", name: "پۆڵەندا", petrol: "6.45 زلۆتی", diesel: "6.52 زلۆتی" },
-        { flag: "🇨🇿", cur: "CZK", name: "چیک", petrol: "38.5 کرۆن", diesel: "37.2 کرۆن" },
-        { flag: "🇭🇺", cur: "HUF", name: "هەنگاریا", petrol: "610 فۆرینت", diesel: "625 فۆرینت" },
-        { flag: "🇷🇴", cur: "RON", name: "ڕۆمانیا", petrol: "7.35 لیو", diesel: "7.42 لیو" },
-        { flag: "🇧🇬", cur: "BGN", name: "بولگاریا", petrol: "2.65 لیڤ", diesel: "2.68 لیڤ" },
-        { flag: "🇭🇷", cur: "EUR", name: "کڕواتیا", petrol: "1.52 یۆرۆ", diesel: "1.45 یۆرۆ" },
-        { flag: "🇷🇸", cur: "RSD", name: "سڕبیا", petrol: "192 دینار", diesel: "201 دینار" },
-        { flag: "🇸🇰", cur: "EUR", name: "سلۆڤاکیا", petrol: "1.58 یۆرۆ", diesel: "1.54 یۆرۆ" },
-        { flag: "🇸🇮", cur: "EUR", name: "سلۆڤینیا", petrol: "1.50 یۆرۆ", diesel: "1.54 یۆرۆ" },
-        { flag: "🇺🇦", cur: "UAH", name: "ئۆکراینا", petrol: "56.8 هریڤنیا", diesel: "54.2 هریڤنیا" },
-        { flag: "🇧🇾", cur: "BYN", name: "بیلاڕووس", petrol: "2.40 ڕۆبڵ", diesel: "2.40 ڕۆبڵ" },
-        { flag: "🇷🇺", cur: "RUB", name: "ڕووسیا", petrol: "56.5 ڕۆبڵ", diesel: "65.2 ڕۆبڵ" },
-        { flag: "🇮🇸", cur: "ISK", name: "ئایسلەندا", petrol: "312 کرۆن", diesel: "318 کرۆن" },
-        { flag: "🇨🇾", cur: "EUR", name: "قوبرس", petrol: "1.48 یۆرۆ", diesel: "1.55 یۆرۆ" },
-        { flag: "🇲🇹", cur: "EUR", name: "ماڵتا", petrol: "1.34 یۆرۆ", diesel: "1.21 یۆرۆ" },
-        { flag: "🇱🇺", cur: "EUR", name: "لۆکسمبۆرگ", petrol: "1.55 یۆرۆ", diesel: "1.50 یۆرۆ" },
-        { flag: "🇲🇩", cur: "MDL", name: "مۆڵدۆڤا", petrol: "24.5 لیو", diesel: "21.2 لیو" },
-        { flag: "🇦🇱", cur: "ALL", name: "ئەلبانیا", petrol: "185 لێک", diesel: "188 لێک" },
-        { flag: "🇧🇦", cur: "BAM", name: "بۆسنە", petrol: "2.65 مارک", diesel: "2.68 مارک" },
-        { flag: "🇲🇰", cur: "MKD", name: "مەقدۆنیا", petrol: "81.5 دینار", diesel: "73.0 دینار" },
-        { flag: "🇲🇪", cur: "EUR", name: "مۆنتینیگرۆ", petrol: "1.54 یۆرۆ", diesel: "1.46 یۆرۆ" },
-        { flag: "🇪🇪", cur: "EUR", name: "ئێستۆنیا", petrol: "1.68 یۆرۆ", diesel: "1.59 یۆرۆ" },
-        { flag: "🇱🇻", cur: "EUR", name: "لاتڤیا", petrol: "1.65 یۆرۆ", diesel: "1.62 یۆرۆ" },
-        { flag: "🇱🇹", cur: "EUR", name: "لیتوانیا", petrol: "1.55 یۆرۆ", diesel: "1.52 یۆرۆ" },
-        { flag: "🇲🇨", cur: "EUR", name: "مۆناکۆ", petrol: "2.12 یۆرۆ", diesel: "2.05 یۆرۆ" },
+        { flag: "🇭🇰", cur: "HKD", name: "هۆنگ کۆنگ", petrol: "24.5 دۆلار", diesel: "22.1 دۆلار", usd: 3.15 },
+        { flag: "🇲🇨", cur: "EUR", name: "مۆناکۆ", petrol: "2.12 یۆرۆ", diesel: "2.05 یۆرۆ", usd: 2.30 },
+        { flag: "🇮🇸", cur: "ISK", name: "ئایسلەندا", petrol: "312 کرۆن", diesel: "318 کرۆن", usd: 2.28 },
+        { flag: "🇳🇱", cur: "EUR", name: "هۆڵەندا", petrol: "2.05 یۆرۆ", diesel: "1.82 یۆرۆ", usd: 2.23 },
+        { flag: "🇸🇬", cur: "SGD", name: "سەنگاپورە", petrol: "2.85 دۆلار", diesel: "2.60 دۆلار", usd: 2.15 },
+        { flag: "🇬🇷", cur: "EUR", name: "یۆنان", petrol: "1.88 یۆرۆ", diesel: "1.62 یۆرۆ", usd: 2.05 },
+        { flag: "🇳🇴", cur: "NOK", name: "نەرویج", petrol: "21.5 کرۆن", diesel: "20.2 کرۆن", usd: 2.02 },
+        { flag: "🇨🇭", cur: "CHF", name: "سویسرا", petrol: "1.78 فرانک", diesel: "1.86 فرانک", usd: 2.02 },
+        { flag: "🇫🇮", cur: "EUR", name: "فینلەندا", petrol: "1.85 یۆرۆ", diesel: "1.79 یۆرۆ", usd: 2.01 },
+        { flag: "🇮🇹", cur: "EUR", name: "ئیتاڵیا", petrol: "1.85 یۆرۆ", diesel: "1.73 یۆرۆ", usd: 2.01 },
+        { flag: "🇩🇰", cur: "DKK", name: "دانیمارک", petrol: "13.8 کرۆن", diesel: "12.7 کرۆن", usd: 2.00 },
+        { flag: "🇫🇷", cur: "EUR", name: "فەرەنسا", petrol: "1.82 یۆرۆ", diesel: "1.70 یۆرۆ", usd: 1.98 },
+        { flag: "🇩🇪", cur: "EUR", name: "ئەڵمانیا", petrol: "1.78 یۆرۆ", diesel: "1.65 یۆرۆ", usd: 1.94 },
+        { flag: "🇮🇪", cur: "EUR", name: "ئێرلەندا", petrol: "1.78 یۆرۆ", diesel: "1.72 یۆرۆ", usd: 1.94 },
+        { flag: "🇵🇹", cur: "EUR", name: "پورتوگال", petrol: "1.74 یۆرۆ", diesel: "1.60 یۆرۆ", usd: 1.89 },
+        { flag: "🇬🇧", cur: "GBP", name: "بەریتانیا", petrol: "1.45 پاوەند", diesel: "1.52 پاوەند", usd: 1.86 },
+        { flag: "🇪🇪", cur: "EUR", name: "ئێستۆنیا", petrol: "1.68 یۆرۆ", diesel: "1.59 یۆرۆ", usd: 1.83 },
+        { flag: "🇱🇻", cur: "EUR", name: "لاتڤیا", petrol: "1.65 یۆرۆ", diesel: "1.62 یۆرۆ", usd: 1.80 },
+        { flag: "🇪🇸", cur: "EUR", name: "ئیسپانیا", petrol: "1.64 یۆرۆ", diesel: "1.54 یۆرۆ", usd: 1.78 },
+        { flag: "🇦🇹", cur: "EUR", name: "نەمسا", petrol: "1.60 یۆرۆ", diesel: "1.64 یۆرۆ", usd: 1.74 },
+        { flag: "🇸🇪", cur: "SEK", name: "سوید", petrol: "18.2 کرۆن", diesel: "18.5 کرۆن", usd: 1.73 },
+        { flag: "🇸🇰", cur: "EUR", name: "سلۆڤاکیا", petrol: "1.58 یۆرۆ", diesel: "1.54 یۆرۆ", usd: 1.72 },
+        { flag: "🇱🇹", cur: "EUR", name: "لیتوانیا", petrol: "1.55 یۆرۆ", diesel: "1.52 یۆرۆ", usd: 1.69 },
+        { flag: "🇱🇺", cur: "EUR", name: "لۆکسمبۆرگ", petrol: "1.55 یۆرۆ", diesel: "1.50 یۆرۆ", usd: 1.69 },
+        { flag: "🇲🇪", cur: "EUR", name: "مۆنتینیگرۆ", petrol: "1.54 یۆرۆ", diesel: "1.46 یۆرۆ", usd: 1.68 },
+        { flag: "🇭🇷", cur: "EUR", name: "کڕواتیا", petrol: "1.52 یۆرۆ", diesel: "1.45 یۆرۆ", usd: 1.65 },
+        { flag: "🇸🇮", cur: "EUR", name: "سلۆڤینیا", petrol: "1.50 یۆرۆ", diesel: "1.54 یۆرۆ", usd: 1.63 },
+        { flag: "🇨🇾", cur: "EUR", name: "قوبرس", petrol: "1.48 یۆرۆ", diesel: "1.55 یۆرۆ", usd: 1.61 },
+        { flag: "🇵🇱", cur: "PLN", name: "پۆڵەندا", petrol: "6.45 زلۆتی", diesel: "6.52 زلۆتی", usd: 1.61 },
+        { flag: "🇷🇴", cur: "RON", name: "ڕۆمانیا", petrol: "7.35 لیو", diesel: "7.42 لیو", usd: 1.60 },
+        { flag: "🇨🇿", cur: "CZK", name: "چیک", petrol: "38.5 کرۆن", diesel: "37.2 کرۆن", usd: 1.65 },
+        { flag: "🇭🇺", cur: "HUF", name: "هەنگاریا", petrol: "610 فۆرینت", diesel: "625 فۆرینت", usd: 1.68 },
+        { flag: "🇷🇸", cur: "RSD", name: "سڕبیا", petrol: "192 دینار", diesel: "201 دینار", usd: 1.78 },
+        { flag: "🇧🇦", cur: "BAM", name: "بۆسنە", petrol: "2.65 مارک", diesel: "2.68 مارک", usd: 1.48 },
+        { flag: "🇧🇬", cur: "BGN", name: "بولگاریا", petrol: "2.65 لیڤ", diesel: "2.68 لیڤ", usd: 1.48 },
+        { flag: "🇲🇰", cur: "MKD", name: "مەقدۆنیا", petrol: "81.5 دینار", diesel: "73.0 دینار", usd: 1.44 },
+        { flag: "🇲🇹", cur: "EUR", name: "ماڵتا", petrol: "1.34 یۆرۆ", diesel: "1.21 یۆرۆ", usd: 1.46 },
+        { flag: "🇲🇩", cur: "MDL", name: "مۆڵدۆڤا", petrol: "24.5 لیو", diesel: "21.2 لیو", usd: 1.38 },
+        { flag: "🇦🇱", cur: "ALL", name: "ئەلبانیا", petrol: "185 لێک", diesel: "188 لێک", usd: 2.00 },
+        { flag: "🇺🇦", cur: "UAH", name: "ئۆکراینا", petrol: "56.8 هریڤنیا", diesel: "54.2 هریڤنیا", usd: 1.37 },
+        { flag: "🇧🇾", cur: "BYN", name: "بیلاڕووس", petrol: "2.40 ڕۆبڵ", diesel: "2.40 ڕۆبڵ", usd: 0.74 },
+        { flag: "🇷🇺", cur: "RUB", name: "ڕووسیا", petrol: "56.5 ڕۆبڵ", diesel: "65.2 ڕۆبڵ", usd: 0.61 },
 
         // ئاسیا و ئۆقیانووسیا
-        { flag: "🇭🇰", cur: "HKD", name: "هۆنگ کۆنگ", petrol: "24.5 دۆلار", diesel: "22.1 دۆلار" },
-        { flag: "🇨🇳", cur: "CNY", name: "چین", petrol: "8.25 یوان", diesel: "7.80 یوان" },
-        { flag: "🇯🇵", cur: "JPY", name: "ژاپۆن", petrol: "174 یێن", diesel: "154 یێن" },
-        { flag: "🇮🇳", cur: "INR", name: "هیندستان", petrol: "96.7 ڕووپیە", diesel: "89.6 ڕووپیە" },
-        { flag: "🇵🇰", cur: "PKR", name: "پاکستان", petrol: "260 ڕووپیە", diesel: "270 ڕووپیە" },
-        { flag: "🇰🇷", cur: "KRW", name: "کۆریای باشوور", petrol: "1,680 وۆن", diesel: "1,550 وۆن" },
-        { flag: "🇮🇩", cur: "IDR", name: "ئەندۆنیزیا", petrol: "13,700 ڕووپیە", diesel: "14,500 ڕووپیە" },
-        { flag: "🇲🇾", cur: "MYR", name: "مالیزیا", petrol: "2.05 ڕینگیت", diesel: "3.35 ڕینگیت" },
-        { flag: "🇹🇭", cur: "THB", name: "تایلاند", petrol: "38.5 بات", diesel: "32.9 بات" },
-        { flag: "🇻🇳", cur: "VND", name: "ڤێتنام", petrol: "23,500 دۆنگ", diesel: "21,000 دۆنگ" },
-        { flag: "🇵🇭", cur: "PHP", name: "فلیپین", petrol: "62.5 پێسۆ", diesel: "58.2 پێسۆ" },
-        { flag: "🇸🇬", cur: "SGD", name: "سەنگاپورە", petrol: "2.85 دۆلار", diesel: "2.60 دۆلار" },
-        { flag: "🇦🇺", cur: "AUD", name: "ئوسترالیا", petrol: "1.82 دۆلار", diesel: "1.88 دۆلار" },
-        { flag: "🇳🇿", cur: "NZD", name: "نیوزلەندا", petrol: "2.68 دۆلار", diesel: "2.10 دۆلار" },
-        { flag: "🇦🇫", cur: "AFN", name: "ئەفغانستان", petrol: "65.0 ئەفغانی", diesel: "61.5 ئەفغانی" },
-        { flag: "🇧🇩", cur: "BDT", name: "بەنگلادیش", petrol: "125 تاکا", diesel: "106 تاکا" },
-        { flag: "🇱🇰", cur: "LKR", name: "سریلانکا", petrol: "355 ڕووپیە", diesel: "320 ڕووپیە" },
-        { flag: "🇳🇵", cur: "NPR", name: "نیپال", petrol: "172 ڕووپیە", diesel: "160 ڕووپیە" },
-        { flag: "🇰🇿", cur: "KZT", name: "کازاخستان", petrol: "215 تێنگە", diesel: "295 تێنگە" },
-        { flag: "🇺🇿", cur: "UZS", name: "ئۆزبەکستان", petrol: "11,200 سۆم", diesel: "12,000 سۆم" },
-        { flag: "🇹🇲", cur: "TMT", name: "تورکمانستان", petrol: "1.50 مانات", diesel: "1.35 مانات" },
-        { flag: "🇰🇬", cur: "KGS", name: "کیرگیزیستان", petrol: "68.5 سۆم", diesel: "72.0 سۆم" },
-        { flag: "🇹🇯", cur: "TJS", name: "تاجیکستان", petrol: "10.5 سۆمۆنی", diesel: "11.2 سۆمۆنی" },
-        { flag: "🇦🇿", cur: "AZN", name: "ئازەربایجان", petrol: "1.00 مانات", diesel: "0.80 مانات" },
-        { flag: "🇬🇪", cur: "GEL", name: "جۆرجیا", petrol: "3.15 لاری", diesel: "3.20 لاری" },
-        { flag: "🇦🇲", cur: "AMD", name: "ئەرمینیا", petrol: "520 درام", diesel: "540 درام" },
-        { flag: "🇲🇳", cur: "MNT", name: "مەنگۆلیا", petrol: "2,420 تۆگرۆگ", diesel: "3,380 تۆگرۆگ" },
-        { flag: "🇲🇲", cur: "MMK", name: "میانمار", petrol: "2,750 کیات", diesel: "2,550 کیات" },
-        { flag: "🇰🇭", cur: "KHR", name: "کەمبۆدیا", petrol: "4,600 ڕیاڵ", diesel: "4,200 ڕیاڵ" },
-        { flag: "🇱🇦", cur: "LAK", name: "لاوس", petrol: "27,500 کیپ", diesel: "20,500 کیپ" },
-        { flag: "🇧🇳", cur: "BND", name: "بروونای", petrol: "0.53 دۆلار", diesel: "0.31 دۆلار" },
-        { flag: "🇵🇬", cur: "PGK", name: "پاپوا گینێ", petrol: "4.85 کینا", diesel: "4.65 کینا" },
-        { flag: "🇫🇯", cur: "FJD", name: "فیجی", petrol: "2.80 دۆلار", diesel: "2.65 دۆلار" },
+        { flag: "🇳🇿", cur: "NZD", name: "نیوزلەندا", petrol: "2.68 دۆلار", diesel: "2.10 دۆلار", usd: 1.65 },
+        { flag: "🇯🇵", cur: "JPY", name: "ژاپۆن", petrol: "174 یێن", diesel: "154 یێن", usd: 1.16 },
+        { flag: "🇰🇷", cur: "KRW", name: "کۆریای باشوور", petrol: "1,680 وۆن", diesel: "1,550 وۆن", usd: 1.25 },
+        { flag: "🇦🇺", cur: "AUD", name: "ئوسترالیا", petrol: "1.82 دۆلار", diesel: "1.88 دۆلار", usd: 1.22 },
+        { flag: "🇨🇳", cur: "CNY", name: "چین", petrol: "8.25 یوان", diesel: "7.80 یوان", usd: 1.15 },
+        { flag: "🇮🇳", cur: "INR", name: "هیندستان", petrol: "96.7 ڕووپیە", diesel: "89.6 ڕووپیە", usd: 1.15 },
+        { flag: "🇹🇭", cur: "THB", name: "تایلاند", petrol: "38.5 بات", diesel: "32.9 بات", usd: 1.15 },
+        { flag: "🇵🇭", cur: "PHP", name: "فلیپین", petrol: "62.5 پێسۆ", diesel: "58.2 پێسۆ", usd: 1.10 },
+        { flag: "🇧🇩", cur: "BDT", name: "بەنگلادیش", petrol: "125 تاکا", diesel: "106 تاکا", usd: 1.04 },
+        { flag: "🇻🇳", cur: "VND", name: "ڤێتنام", petrol: "23,500 دۆنگ", diesel: "21,000 دۆنگ", usd: 0.94 },
+        { flag: "🇵🇰", cur: "PKR", name: "پاکستان", petrol: "260 ڕووپیە", diesel: "270 ڕووپیە", usd: 0.93 },
+        { flag: "🇦🇫", cur: "AFN", name: "ئەفغانستان", petrol: "65.0 ئەفغانی", diesel: "61.5 ئەفغانی", usd: 0.92 },
+        { flag: "🇮🇩", cur: "IDR", name: "ئەندۆنیزیا", petrol: "13,700 ڕووپیە", diesel: "14,500 ڕووپیە", usd: 0.89 },
+        { flag: "🇱🇰", cur: "LKR", name: "سریلانکا", petrol: "355 ڕووپیە", diesel: "320 ڕووپیە", usd: 1.18 },
+        { flag: "🇳🇵", cur: "NPR", name: "نیپال", petrol: "172 ڕووپیە", diesel: "160 ڕووپیە", usd: 1.28 },
+        { flag: "🇲🇾", cur: "MYR", name: "مالیزیا", petrol: "2.05 ڕینگیت", diesel: "3.35 ڕینگیت", usd: 0.48 },
+        { flag: "🇰🇿", cur: "KZT", name: "کازاخستان", petrol: "215 تێنگە", diesel: "295 تێنگە", usd: 0.45 },
+        { flag: "🇦🇿", cur: "AZN", name: "ئازەربایجان", petrol: "1.00 مانات", diesel: "0.80 مانات", usd: 0.59 },
+        { flag: "🇬🇪", cur: "GEL", name: "جۆرجیا", petrol: "3.15 لاری", diesel: "3.20 لاری", usd: 1.15 },
+        { flag: "🇦🇲", cur: "AMD", name: "ئەرمینیا", petrol: "520 درام", diesel: "540 درام", usd: 1.34 },
+        { flag: "🇺🇿", cur: "UZS", name: "ئۆزبەکستان", petrol: "11,200 سۆم", diesel: "12,000 سۆم", usd: 0.88 },
+        { flag: "🇹🇲", cur: "TMT", name: "تورکمانستان", petrol: "1.50 مانات", diesel: "1.35 مانات", usd: 0.43 },
+        { flag: "🇰🇬", cur: "KGS", name: "کیرگیزیستان", petrol: "68.5 سۆم", diesel: "72.0 سۆم", usd: 0.80 },
+        { flag: "🇹🇯", cur: "TJS", name: "تاجیکستان", petrol: "10.5 سۆمۆنی", diesel: "11.2 سۆمۆنی", usd: 0.98 },
+        { flag: "🇲🇳", cur: "MNT", name: "مەنگۆلیا", petrol: "2,420 تۆگرۆگ", diesel: "3,380 تۆگرۆگ", usd: 0.70 },
+        { flag: "🇲🇲", cur: "MMK", name: "میانمار", petrol: "2,750 کیات", diesel: "2,550 کیات", usd: 1.30 },
+        { flag: "🇰🇭", cur: "KHR", name: "کەمبۆدیا", petrol: "4,600 ڕیاڵ", diesel: "4,200 ڕیاڵ", usd: 1.13 },
+        { flag: "🇱🇦", cur: "LAK", name: "لاوس", petrol: "27,500 کیپ", diesel: "20,500 کیپ", usd: 1.25 },
+        { flag: "🇧🇳", cur: "BND", name: "بروونای", petrol: "0.53 دۆلار", diesel: "0.31 دۆلار", usd: 0.40 },
+        { flag: "🇵🇬", cur: "PGK", name: "پاپوا گینێ", petrol: "4.85 کینا", diesel: "4.65 کینا", usd: 1.22 },
+        { flag: "🇫🇯", cur: "FJD", name: "فیجی", petrol: "2.80 دۆلار", diesel: "2.65 دۆلار", usd: 1.25 },
 
-        // کیشوەری ئەمریکا
-        { flag: "🇺🇸", cur: "USD", name: "ئەمریکا", petrol: "0.96 دۆلار", diesel: "1.02 دۆلار" },
-        { flag: "🇨🇦", cur: "CAD", name: "کەنەدا", petrol: "1.58 دۆلار", diesel: "1.64 دۆلار" },
-        { flag: "🇲🇽", cur: "MXN", name: "مەکسیک", petrol: "24.1 پێسۆ", diesel: "25.2 پێسۆ" },
-        { flag: "🇧🇷", cur: "BRL", name: "بەڕازیل", petrol: "6.10 ڕیاڵ", diesel: "5.95 ڕیاڵ" },
-        { flag: "🇦🇷", cur: "ARS", name: "ئەرجەنتین", petrol: "1,050 پێسۆ", diesel: "1,120 پێسۆ" },
-        { flag: "🇨🇱", cur: "CLP", name: "چیلی", petrol: "1,320 پێسۆ", diesel: "1,050 پێسۆ" },
-        { flag: "🇨🇴", cur: "COP", name: "کۆڵۆمبیا", petrol: "4,100 پێسۆ", diesel: "3,950 پێسۆ" },
-        { flag: "🇵🇪", cur: "PEN", name: "پیرۆ", petrol: "16.8 سۆڵ", diesel: "15.9 سۆڵ" },
-        { flag: "🇻🇪", cur: "VES", name: "ڤەنزوێلا", petrol: "0.035 دۆلار", diesel: "0.020 دۆلار" },
-        { flag: "🇪🇨", cur: "USD", name: "ئیکوادۆر", petrol: "0.64 دۆلار", diesel: "0.48 دۆلار" },
-        { flag: "🇧🇴", cur: "BOB", name: "بۆلیڤیا", petrol: "3.74 بۆلیڤیانۆ", diesel: "3.72 بۆلیڤیانۆ" },
-        { flag: "🇵🇾", cur: "PYG", name: "پاراگوای", petrol: "6,800 گوارانی", diesel: "7,200 گوارانی" },
-        { flag: "🇺🇾", cur: "UYU", name: "ئۆروگوای", petrol: "77.5 پێسۆ", diesel: "55.0 پێسۆ" },
-        { flag: "🇵🇦", cur: "USD", name: "پەنەما", petrol: "0.98 دۆلار", diesel: "0.92 دۆلار" },
-        { flag: "🇨🇷", cur: "CRC", name: "کۆستاریکا", petrol: "710 کۆڵۆن", diesel: "620 کۆڵۆن" },
-        { flag: "🇬🇹", cur: "GTQ", name: "گواتیمالا", petrol: "33.5 کواتزال", diesel: "29.8 کواتزال" },
-        { flag: "🇭🇳", cur: "HNL", name: "هۆندۆراس", petrol: "105.0 لێمپێرا", diesel: "92.5 لێمپێرا" },
-        { flag: "🇸🇻", cur: "USD", name: "ئێلسالڤادۆر", petrol: "4.15 دۆلار", diesel: "3.85 دۆلار" },
-        { flag: "🇳🇮", cur: "NIO", name: "نیکاراگوا", petrol: "48.5 کۆردۆبا", diesel: "43.2 کۆردۆبا" },
-        { flag: "🇨🇺", cur: "CUP", name: "کوبا", petrol: "30.0 پێسۆ", diesel: "28.0 پێسۆ" },
-        { flag: "🇩🇴", cur: "DOP", name: "دۆمینیکان", petrol: "290 پێسۆ", diesel: "225 پێسۆ" },
-        { flag: "🇯🇲", cur: "JMD", name: "جامایکا", petrol: "215 دۆلار", diesel: "205 دۆلار" },
-        { flag: "🇹🇹", cur: "TTD", name: "ترینیداد", petrol: "6.75 دۆلار", diesel: "4.41 دۆلار" },
-        { flag: "🇭🇹", cur: "HTG", name: "هایتی", petrol: "570 گۆرد", diesel: "620 گۆرد" },
+        // ئەمریکاکان
+        { flag: "🇺🇸", cur: "USD", name: "ئەمریکا", petrol: "0.96 دۆلار", diesel: "1.02 دۆلار", usd: 0.96 },
+        { flag: "🇨🇦", cur: "CAD", name: "کەنەدا", petrol: "1.58 دۆلار", diesel: "1.64 دۆلار", usd: 1.16 },
+        { flag: "🇲🇽", cur: "MXN", name: "مەکسیک", petrol: "24.1 پێسۆ", diesel: "25.2 پێسۆ", usd: 1.22 },
+        { flag: "🇧🇷", cur: "BRL", name: "بەڕازیل", petrol: "6.10 ڕیاڵ", diesel: "5.95 ڕیاڵ", usd: 1.10 },
+        { flag: "🇦🇷", cur: "ARS", name: "ئەرجەنتین", petrol: "1,050 پێسۆ", diesel: "1,120 پێسۆ", usd: 1.05 },
+        { flag: "🇨🇱", cur: "CLP", name: "چیلی", petrol: "1,320 پێسۆ", diesel: "1,050 پێسۆ", usd: 1.40 },
+        { flag: "🇨🇴", cur: "COP", name: "کۆڵۆمبیا", petrol: "4,100 پێسۆ", diesel: "3,950 پێسۆ", usd: 0.98 },
+        { flag: "🇵🇪", cur: "PEN", name: "پیرۆ", petrol: "16.8 سۆڵ", diesel: "15.9 سۆڵ", usd: 1.25 },
+        { flag: "🇻🇪", cur: "USD", name: "ڤەنزوێلا", petrol: "0.035 دۆلار", diesel: "0.020 دۆلار", usd: 0.035 },
+        { flag: "🇪🇨", cur: "USD", name: "ئیکوادۆر", petrol: "0.64 دۆلار", diesel: "0.48 دۆلار", usd: 0.64 },
+        { flag: "🇧🇴", cur: "BOB", name: "بۆلیڤیا", petrol: "3.74 بۆلیڤیانۆ", diesel: "3.72 بۆلیڤیانۆ", usd: 0.54 },
+        { flag: "🇵🇾", cur: "PYG", name: "پاراگوای", petrol: "6,800 گوارانی", diesel: "7,200 گوارانی", usd: 0.88 },
+        { flag: "🇺🇾", cur: "UYU", name: "ئۆروگوای", petrol: "77.5 پێسۆ", diesel: "55.0 پێسۆ", usd: 1.86 },
+        { flag: "🇵🇦", cur: "USD", name: "پەنەما", petrol: "0.98 دۆلار", diesel: "0.92 دۆلار", usd: 0.98 },
+        { flag: "🇨🇷", cur: "CRC", name: "کۆستاریکا", petrol: "710 کۆڵۆن", diesel: "620 کۆڵۆن", usd: 1.38 },
+        { flag: "🇬🇹", cur: "GTQ", name: "گواتیمالا", petrol: "33.5 کواتزال", diesel: "29.8 کواتزال", usd: 1.15 },
+        { flag: "🇭🇳", cur: "HNL", name: "هۆندۆراس", petrol: "105.0 لێمپێرا", diesel: "92.5 لێمپێرا", usd: 1.06 },
+        { flag: "🇸🇻", cur: "USD", name: "ئێلسالڤادۆر", petrol: "1.05 دۆلار", diesel: "0.98 دۆلار", usd: 1.05 },
+        { flag: "🇳🇮", cur: "NIO", name: "نیکاراگوا", petrol: "48.5 کۆردۆبا", diesel: "43.2 کۆردۆبا", usd: 1.32 },
+        { flag: "🇨🇺", cur: "USD", name: "کوبا", petrol: "1.10 دۆلار", diesel: "1.00 دۆلار", usd: 1.10 },
+        { flag: "🇩🇴", cur: "DOP", name: "دۆمینیکان", petrol: "75.0 پێسۆ", diesel: "60.0 پێسۆ", usd: 1.25 },
+        { flag: "🇯🇲", cur: "JMD", name: "جامایکا", petrol: "215 دۆلار", diesel: "205 دۆلار", usd: 1.38 },
+        { flag: "🇹🇹", cur: "TTD", name: "ترینیداد", petrol: "6.75 دۆلار", diesel: "4.41 دۆلار", usd: 1.00 },
+        { flag: "🇭🇹", cur: "HTG", name: "هایتی", petrol: "155 گۆرد", diesel: "160 گۆرد", usd: 1.18 },
 
         // ئەفریقا
-        { flag: "🇿🇦", cur: "ZAR", name: "باشووری ئەفریقا", petrol: "22.8 ڕاند", diesel: "23.1 ڕاند" },
-        { flag: "🇳🇬", cur: "NGN", name: "نێجیریا", petrol: "850 نایرا", diesel: "1,200 نایرا" },
-        { flag: "🇰🇪", cur: "KES", name: "کینیا", petrol: "188 شیلینگ", diesel: "175 شیلینگ" },
-        { flag: "🇬🇭", cur: "GHS", name: "غانا", petrol: "14.5 سێدی", diesel: "15.2 سێدی" },
-        { flag: "🇪🇹", cur: "ETB", name: "ئەسیوپیا", petrol: "92.0 بیر", diesel: "88.0 بیر" },
-        { flag: "🇦🇴", cur: "AOA", name: "ئەنگۆلا", petrol: "300 کوانزا", diesel: "210 کوانزا" },
-        { flag: "🇹🇿", cur: "TZS", name: "تانزانیا", petrol: "3,150 شیلینگ", diesel: "3,050 شیلینگ" },
-        { flag: "🇺🇬", cur: "UGX", name: "ئۆگەندا", petrol: "5,350 شیلینگ", diesel: "4,900 شیلینگ" },
-        { flag: "🇨🇲", cur: "XAF", name: "کامیروون", petrol: "840 فرانک", diesel: "828 فرانک" },
-        { flag: "🇨🇮", cur: "XOF", name: "کۆتدیڤوار", petrol: "875 فرانک", diesel: "715 فرانک" },
-        { flag: "🇸🇳", cur: "XOF", name: "سەنیگال", petrol: "990 فرانک", diesel: "755 فرانک" },
-        { flag: "🇿🇲", cur: "ZMW", name: "زامبیا", petrol: "32.5 کواچا", diesel: "29.8 کواچا" },
-        { flag: "🇿🇼", cur: "USD", name: "زیمبابوی", petrol: "1.65 دۆلار", diesel: "1.72 دۆلار" },
-        { flag: "🇲🇿", cur: "MZN", name: "مۆزەمبیق", petrol: "86.5 مێتیکاڵ", diesel: "87.8 مێتیکاڵ" },
-        { flag: "🇲🇬", cur: "MGA", name: "مەدەگاسکەر", petrol: "5,900 ئاریاری", diesel: "4,900 ئاریاری" },
-        { flag: "🇲🇺", cur: "MUR", name: "مۆریس", petrol: "66.2 ڕووپیە", diesel: "63.9 ڕووپیە" },
-        { flag: "🇷🇼", cur: "RWF", name: "ڕواندا", petrol: "1,680 فرانک", diesel: "1,650 فرانک" },
-        { flag: "🇧🇼", cur: "BWP", name: "بۆتسوانا", petrol: "14.8 پۆلا", diesel: "15.2 پۆلا" },
-        { flag: "🇳🇦", cur: "NAD", name: "نامیبیا", petrol: "22.5 دۆلار", diesel: "22.2 دۆلار" },
-        { flag: "🇬🇦", cur: "XAF", name: "گابۆن", petrol: "605 فرانک", diesel: "585 فرانک" },
-        { flag: "🇨🇩", cur: "CDF", name: "کۆنگۆ", petrol: "3,250 فرانک", diesel: "3,200 فرانک" }
+        { flag: "🇿🇦", cur: "ZAR", name: "باشووری ئەفریقا", petrol: "22.8 ڕاند", diesel: "23.1 ڕاند", usd: 1.28 },
+        { flag: "🇰🇪", cur: "KES", name: "کینیا", petrol: "188 شیلینگ", diesel: "175 شیلینگ", usd: 1.45 },
+        { flag: "🇳🇬", cur: "NGN", name: "نێجیریا", petrol: "850 نایرا", diesel: "1,200 نایرا", usd: 0.53 },
+        { flag: "🇬🇭", cur: "GHS", name: "غانا", petrol: "14.5 سێدی", diesel: "15.2 سێدی", usd: 0.92 },
+        { flag: "🇪🇹", cur: "ETB", name: "ئەسیوپیا", petrol: "92.0 بیر", diesel: "88.0 بیر", usd: 0.78 },
+        { flag: "🇦🇴", cur: "AOA", name: "ئەنگۆلا", petrol: "300 کوانزا", diesel: "210 کوانزا", usd: 0.33 },
+        { flag: "🇹🇿", cur: "TZS", name: "تانزانیا", petrol: "3,150 شیلینگ", diesel: "3,050 شیلینگ", usd: 1.17 },
+        { flag: "🇺🇬", cur: "UGX", name: "ئۆگەندا", petrol: "5,350 شیلینگ", diesel: "4,900 شیلینگ", usd: 1.45 },
+        { flag: "🇨🇲", cur: "XAF", name: "کامیروون", petrol: "840 فرانک", diesel: "828 فرانک", usd: 1.40 },
+        { flag: "🇨🇮", cur: "XOF", name: "کۆتدیڤوار", petrol: "875 فرانک", diesel: "715 فرانک", usd: 1.45 },
+        { flag: "🇸🇳", cur: "XOF", name: "سەنیگال", petrol: "990 فرانک", diesel: "755 فرانک", usd: 1.65 },
+        { flag: "🇿🇲", cur: "ZMW", name: "زامبیا", petrol: "32.5 کواچا", diesel: "29.8 کواچا", usd: 1.25 },
+        { flag: "🇿🇼", cur: "USD", name: "زیمبابوی", petrol: "1.65 دۆلار", diesel: "1.72 دۆلار", usd: 1.65 },
+        { flag: "🇲🇿", cur: "MZN", name: "مۆزەمبیق", petrol: "86.5 مێتیکاڵ", diesel: "87.8 مێتیکاڵ", usd: 1.35 },
+        { flag: "🇲🇬", cur: "MGA", name: "مەدەگاسکەر", petrol: "5,900 ئاریاری", diesel: "4,900 ئاریاری", usd: 1.30 },
+        { flag: "🇲🇺", cur: "MUR", name: "مۆریس", petrol: "66.2 ڕووپیە", diesel: "63.9 ڕووپیە", usd: 1.44 },
+        { flag: "🇷🇼", cur: "RWF", name: "ڕواندا", petrol: "1,680 فرانک", diesel: "1,650 فرانک", usd: 1.24 },
+        { flag: "🇧🇼", cur: "BWP", name: "بۆتسوانا", petrol: "14.8 پۆلا", diesel: "15.2 پۆلا", usd: 1.10 },
+        { flag: "🇳🇦", cur: "NAD", name: "نامیبیا", petrol: "22.5 دۆلار", diesel: "22.2 دۆلار", usd: 1.28 },
+        { flag: "🇬🇦", cur: "XAF", name: "گابۆن", petrol: "605 فرانک", diesel: "585 فرانک", usd: 1.00 },
+        { flag: "🇨🇩", cur: "CDF", name: "کۆنگۆ", petrol: "3,250 فرانک", diesel: "3,200 فرانک", usd: 1.15 }
     ];
 
     function renderFuelList(items) {
@@ -13124,15 +13062,57 @@ function updateTopNotifBadge() {
         if (countEl) countEl.innerText = `${toEn(items.length)} وڵات`;
     }
 
+    // خشتەی بەراوردی بەهای دراوەکان بە دۆلار بۆ ڕیزبەندییەکی ١٠٠٪ وورد
+    const fuelRateToUSD = {
+        "USD": 1, "HKD": 0.128, "EUR": 1.09, "GBP": 1.30, "CHF": 1.15, "SGD": 0.76, "ILS": 0.27, "NZD": 0.62, "AUD": 0.67, "CAD": 0.74,
+        "IQD": 0.00065, "SAR": 0.267, "AED": 0.272, "KWD": 3.27, "QAR": 0.275, "BHD": 2.65, "OMR": 2.60, "IRR": 0.00001, "TRY": 0.029,
+        "JOD": 1.41, "SYP": 0.000077, "YER": 0.004, "EGP": 0.021, "LYD": 0.21, "DZD": 0.0075, "TND": 0.32, "MAD": 0.10, "SDG": 0.0016,
+        "MRU": 0.025, "SOS": 1, "DJF": 0.0056, "SEK": 0.096, "NOK": 0.094, "DKK": 0.146, "PLN": 0.25, "CZK": 0.043, "HUF": 0.0028,
+        "RON": 0.22, "BGN": 0.56, "RSD": 0.0093, "UAH": 0.024, "BYN": 0.31, "RUB": 0.011, "ISK": 0.0073, "MDL": 0.056, "ALL": 0.011,
+        "BAM": 0.56, "MKD": 0.018, "CNY": 0.14, "JPY": 0.0067, "INR": 0.012, "PKR": 0.0036, "KRW": 0.00075, "IDR": 0.000065, "MYR": 0.23,
+        "THB": 0.030, "VND": 0.00004, "PHP": 0.0175, "AFN": 0.014, "BDT": 0.0083, "LKR": 0.0033, "NPR": 0.0075, "KZT": 0.0021,
+        "UZS": 0.000079, "TMT": 0.285, "KGS": 0.0117, "TJS": 0.093, "AZN": 0.59, "GEL": 0.37, "AMD": 0.0026, "MNT": 0.00029,
+        "MMK": 0.00048, "KHR": 0.00025, "LAK": 0.000045, "BND": 0.76, "PGK": 0.25, "FJD": 0.45, "MXN": 0.051, "BRL": 0.18, "ARS": 0.001,
+        "CLP": 0.0011, "COP": 0.00024, "PEN": 0.27, "VES": 1, "BOB": 0.145, "PYG": 0.00013, "UYU": 0.024, "CRC": 0.0019, "GTQ": 0.13,
+        "HNL": 0.040, "NIO": 0.027, "CUP": 0.042, "DOP": 0.017, "JMD": 0.0064, "TTD": 0.147, "HTG": 0.0076, "ZAR": 0.057, "NGN": 0.00062,
+        "KES": 0.0077, "GHS": 0.062, "ETB": 0.0083, "AOA": 0.0011, "TZS": 0.00037, "UGX": 0.00027, "XAF": 0.0017, "XOF": 0.0017,
+        "ZMW": 0.038, "MZN": 0.016, "MGA": 0.00022, "MUR": 0.022, "RWF": 0.00074, "BWP": 0.074, "NAD": 0.057, "CDF": 0.00035
+    };
+
+    function getFuelPriceUSD(item) {
+        if (item.usd !== undefined && item.usd !== null) return item.usd;
+        const clean = toEn(item.petrol).replace(/,/g, '').replace(/[^\d.]/g, '');
+        return parseFloat(clean) || 0;
+    }
+
+    let currentFuelSort = 'default';
+
+    function sortFuelList(mode, btn) {
+        currentFuelSort = mode;
+        document.getElementById('btnFuelSortAsc')?.classList.remove('active');
+        document.getElementById('btnFuelSortDesc')?.classList.remove('active');
+        document.getElementById('btnFuelSortDefault')?.classList.remove('active');
+        if (btn) btn.classList.add('active');
+        filterFuelRows();
+    }
+
     function filterFuelRows() {
         const query = toEn(document.getElementById("fuelSearchInput").value.trim().toLowerCase());
-        const filtered = fuelData.filter(item => 
+        let list = fuelData.filter(item => 
             item.name.toLowerCase().includes(query) || 
             item.cur.toLowerCase().includes(query) ||
             item.petrol.toLowerCase().includes(query) ||
             item.diesel.toLowerCase().includes(query)
         );
-        renderFuelList(filtered);
+
+        // ڕیزبەندییەکی ١٠٠٪ تەواو بەپێی بەهای ڕاستەقینەی بەنزین لە جیهاندا
+        if (currentFuelSort === 'asc') {
+            list.sort((a, b) => getFuelPriceUSD(a) - getFuelPriceUSD(b));
+        } else if (currentFuelSort === 'desc') {
+            list.sort((a, b) => getFuelPriceUSD(b) - getFuelPriceUSD(a));
+        }
+
+        renderFuelList(list);
     }
 
     window.onload = function() {
